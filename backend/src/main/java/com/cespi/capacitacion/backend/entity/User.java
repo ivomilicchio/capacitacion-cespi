@@ -40,7 +40,7 @@ public class User implements UserDetails {
     )
     private List<NumberPlate> numberPlates;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "current_account_id")
     private CurrentAccount currentAccount;
 

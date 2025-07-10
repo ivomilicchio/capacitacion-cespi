@@ -2,6 +2,8 @@ package com.cespi.capacitacion.backend.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "current_accounts")
 public class CurrentAccount {
@@ -16,6 +18,8 @@ public class CurrentAccount {
             nullable = false
     )
     private float balance;
+    @OneToMany(mappedBy = "currentAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ParkingSession> parkingSessions;
 
     public CurrentAccount() {
         this.balance = 0;

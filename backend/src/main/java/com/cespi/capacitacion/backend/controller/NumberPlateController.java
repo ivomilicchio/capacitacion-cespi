@@ -19,7 +19,7 @@ public class NumberPlateController {
     }
 
     @PostMapping()
-    public NumberPlate save(@RequestBody String numberPlateCreationDTO) {
-        return numberPlateServiceImpl.save(numberPlateCreationDTO);
+    public NumberPlate save(@RequestBody NumberPlateCreationDTO numberPlateCreationDTO) {
+        return numberPlateServiceImpl.save(numberPlateCreationDTO.getNumber());
     }
 }
