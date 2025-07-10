@@ -6,7 +6,7 @@ import com.cespi.capacitacion.backend.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth/users")
 public class UserController {
 
     private final UserService userService;
