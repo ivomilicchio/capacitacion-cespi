@@ -6,7 +6,7 @@ import com.cespi.capacitacion.backend.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -18,5 +18,10 @@ public class UserController {
     @PostMapping()
     public User save(@RequestBody UserCreationRequestDTO userCreationRequestDTO) {
         return userService.save(userCreationRequestDTO.getPhoneNumber(), userCreationRequestDTO.getPassword());
+    }
+
+    @GetMapping()
+    public String prueba() {
+        return "Hola login";
     }
 }

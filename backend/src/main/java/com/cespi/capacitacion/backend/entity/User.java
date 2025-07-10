@@ -2,13 +2,17 @@ package com.cespi.capacitacion.backend.entity;
 
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(
@@ -89,5 +93,36 @@ public class User {
 
     public void setCurrentAccount(CurrentAccount currentAccount) {
         this.currentAccount = currentAccount;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("USER"));
+    }
+
+    //Si bien el usuario en la aplicacion no posee username, debo implementar este metodo porque la clase User implementa la interfaz UserDetails
+    @Override
+    public String getUsername() {
+        return getPhoneNumber();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
