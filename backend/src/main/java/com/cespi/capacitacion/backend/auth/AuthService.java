@@ -25,7 +25,6 @@ public class AuthService {
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getPhoneNumber(),
                 request.getPassword()));
-        System.out.println("Pasa la autenticación");
         UserDetails user = userRepository.findByPhoneNumber(request.getPhoneNumber()).orElseThrow();
         return new AuthResponse(jwtService.getToken(user));
     }
