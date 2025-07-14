@@ -1,0 +1,27 @@
+<button class="btn btn-success">Botón</button>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Ciudad</th>
+            <th>Activo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (item of estudiantes; track $index) {
+            <tr>
+                <td>{{$index}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.ciudad}}</td>
+                @if (item.isActive == true) {
+                    <td>Active</td>
+                }
+                @else {
+                    <td>Deactive</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
