@@ -1,2 +1,9 @@
-<h2>Welcome</h2>
-<router-outlet></router-outlet>
+<div class="d-flex flex-column min-vh-100">
+    <app-header></app-header>
+    <main class="flex-fill">
+        <router-outlet></router-outlet>
+    </main>
+    <footer class="bg-body-tertiary text-center text-md-start">
+        <app-footer></app-footer>
+    </footer>
+</div>

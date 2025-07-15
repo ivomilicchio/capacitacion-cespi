@@ -1,13 +1,11 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { User } from './components/user/user';
-import { DataBinding } from './components/data-binding/data-binding';
-import { SignalsEx } from './components/signals-ex/signals-ex';
-import { ControlFlow } from './components/control-flow/control-flow';
+import { Footer } from './components/footer/footer';
+import { Header } from './components/header/header';
 
 @Component({
   selector: 'app-root',
-  imports: [ControlFlow, RouterLink, RouterOutlet],
+  imports: [RouterLink, RouterOutlet, Footer, Header],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

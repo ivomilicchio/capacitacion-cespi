@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DataBinding } from './data-binding';
+import { Header } from './header';
 
-describe('DataBinding', () => {
-  let component: DataBinding;
-  let fixture: ComponentFixture<DataBinding>;
+describe('Header', () => {
+  let component: Header;
+  let fixture: ComponentFixture<Header>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DataBinding]
+      imports: [Header]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DataBinding);
+    fixture = TestBed.createComponent(Header);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
