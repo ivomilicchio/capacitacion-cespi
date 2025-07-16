@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, Inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,20 +15,21 @@ export class LoginForm {
   router = inject(Router);
 
   loginForm: FormGroup = new FormGroup({
-    phoneNumber: new FormControl(""),
-    password: new FormControl(""),
+    phoneNumber: new FormControl("", [Validators.required]),
+    password: new FormControl("", Validators.required),
   });
 
-  onLogIn() {
+  onSubmit() {
     const formValue = this.loginForm.value;
     this.http.post("http://localhost:8080/api/auth/login", formValue).subscribe({
-      next: (result) => {
+      next: (result: any) => {
         console.log(result)
-        this.router.navigateByUrl("/parking")
+        localStorage.setItem('token', result.token);
+        this.router.navigateByUrl("/parking");
         
       },
       error: (error) => {
-        alert(error.error)
+        alert(error.error);
       }
     })
   }

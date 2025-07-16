@@ -1,42 +1,61 @@
-<section class="d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+<section class="d-flex align-items-center justify-content-center py-5 flex-fill">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-12 col-lg-10 col-xl-8">
-                <div class="row gy-5 justify-content-center">
-                    <div class="col-12 col-lg-5">
-                        <div class="mb-5">
-                            <h1 class="fw-bold text-center">Inicio de sesión</h1>
-                        </div>
-                        <form [formGroup]="loginForm">
-                            <div class="row gy-3 overflow-hidden">
-                                <div class="col-12">
-                                    <div class="form-floating mb-3">
-                                        <input type="tel" class="form-control border-0 border-bottom rounded-0"
-                                            placeholder="PhoneNumber" formControlName="phoneNumber">
-                                        <label class="form-label">Número de teléfono</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating mb-3">
-                                        <input type="password" class="form-control border-0 border-bottom rounded-0"
-                                            name="password" id="password" value="" placeholder="Password" required
-                                            formControlName="password">
-                                        <label for="password" class="form-label">Contraseña</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="d-grid">
-                                        <button class="btn btn-lg rounded-1 fs-6 text-white" type="submit"
-                                            style="background-color: rgb(52, 58, 84);" (click)="onLogIn()">Iniciar sesión</button>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <p class="text-center m-0">No tenés cuenta? <a href="#!">Registrate</a></p>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+            <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 border p-4 p-md-5 rounded"
+                style="font-size: 1.1rem;">
+                <div class="mb-4">
+                    <h1 class="fw-bold text-center display-6">Inicio de sesión</h1>
                 </div>
+                <form [formGroup]="loginForm">
+                    <div class="row gy-3 overflow-hidden">
+                        <div class="col-12">
+                            <div class="form-floating mb-2">
+                                <input type="tel" class="form-control border-0 border-bottom rounded-0"
+                                    placeholder="PhoneNumber" formControlName="phoneNumber">
+                                <label class="form-label">Número de teléfono</label>
+                                @if (loginForm.controls['phoneNumber'].touched) {
+                                <div class="text-danger mt-1 small">
+                                    @if (loginForm.controls['phoneNumber'].errors?.['required']) {
+                                    <span>Campo requerido</span>
+                                    }
+                                </div>
+                                }
+                            </div>
+                            <ul class="small mb-3 ps-3">
+                                <li>Código de área + número (sin 0 ni 15)</li>
+                                <li>Ejemplo: 221 1234567</li>
+                            </ul>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating mb-2">
+                                <input type="password" class="form-control border-0 border-bottom rounded-0"
+                                    placeholder="Password" formControlName="password">
+                                <label class="form-label">Contraseña</label>
+                                @if (loginForm.controls['password'].touched) {
+                                <div class="text-danger mt-1 small">
+                                    @if (loginForm.controls['password'].errors?.['required']) {
+                                    <span>Campo requerido</span>
+                                    }
+                                </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-grid">
+                                <button class="btn btn-lg rounded-1 fs-6 text-white"
+                                    style="background-color: rgb(52, 58, 84);" type="submit"
+                                    [disabled]="loginForm.invalid" (click)="onSubmit()">
+                                    Iniciar sesión
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <p class="text-center m-0 mt-3 small">
+                                No tenés cuenta? <a href="#!">Registrate</a>
+                            </p>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -18,7 +18,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
-
+        System.out.println("Hola desde Auth");
         return ResponseEntity.ok(authService.login(request));
     }
 
