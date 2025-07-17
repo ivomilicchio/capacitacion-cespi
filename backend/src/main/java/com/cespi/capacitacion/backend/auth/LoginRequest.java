@@ -1,8 +1,14 @@
 package com.cespi.capacitacion.backend.auth;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public class LoginRequest {
 
+    @NotEmpty(message = "El campo 'phoneNumber' es requerido")
     private String phoneNumber;
+    @NotEmpty(message = "El campo 'password' es requerido")
     private String password;
 
 
