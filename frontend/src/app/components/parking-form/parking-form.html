@@ -1,1 +1,40 @@
-<p>parking-form works!</p>
+<!-- <div class="p-2 text-start">
+    <h1>Hola usuario!</h1>
+</div> -->
+<section class="d-flex align-items-center justify-content-center py-5 flex-fill">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7 border p-4 p-md-5 rounded"
+                style="font-size: 1.1rem;">
+
+                <div class="mb-4">
+                    <h1 class="fw-bold text-center" style="white-space: nowrap;">Estacionamiento medido</h1>
+                </div>
+                <form [formGroup]="parkingForm">
+                    <div class="row gy-3 overflow-hidden">
+                        <div class="d-flex gap-2">
+                            <select class="form-control form-control-lg" formControlName="numberPlate">
+                                <option disabled selected>Seleccione la patente</option>
+                                @for (item of numberPlates; track $index) {
+                                <option>{{item}}</option>
+                                }
+                            </select>
+                            <button class="btn btn-primary d-flex justify-content-center align-items-center p-0"
+                                style="width: 48px; height: 48px; border-radius: 6;">
+                                +
+                            </button>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-grid">
+                                <button class="btn btn-lg  btn-success rounded-1 text-white" type="submit"
+                                    style="height: 48px;" (click)="onSubmit()">
+                                    Iniciar estacionamiento
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

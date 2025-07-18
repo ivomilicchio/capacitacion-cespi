@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, Inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-login-form',
@@ -13,6 +14,7 @@ export class LoginForm {
 
   http = inject(HttpClient);
   router = inject(Router);
+  service = inject(AuthService);
 
   loginForm: FormGroup = new FormGroup({
     phoneNumber: new FormControl("", [Validators.required]),
@@ -20,18 +22,7 @@ export class LoginForm {
   });
 
   onSubmit() {
-    const formValue = this.loginForm.value;
-    this.http.post("http://localhost:8080/api/auth/login", formValue).subscribe({
-      next: (result: any) => {
-        console.log(result)
-        localStorage.setItem('token', result.token);
-        this.router.navigateByUrl("/parking");
-        
-      },
-      error: (error) => {
-        alert(error.error);
-      }
-    })
+    this.service.login(this.loginForm.value);
   }
 
 }

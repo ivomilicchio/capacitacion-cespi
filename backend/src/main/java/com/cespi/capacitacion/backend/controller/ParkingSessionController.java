@@ -4,10 +4,7 @@ import com.cespi.capacitacion.backend.dto.ParkingSessionRequest;
 import com.cespi.capacitacion.backend.dto.ParkingSessionResponse;
 import com.cespi.capacitacion.backend.entity.ParkingSession;
 import com.cespi.capacitacion.backend.service.ParkingSessionServiceImpl;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/parking-sessions")
@@ -20,10 +17,10 @@ public class ParkingSessionController {
     }
 
     @PostMapping
-    public ParkingSessionResponse startParkingSession(@RequestBody ParkingSessionRequest parkingSessionRequest) {
-
-        return parkingSessionService.startParkingSession(parkingSessionRequest.getPhoneNumber(),
-                parkingSessionRequest.getNumberPlate());
+    public ParkingSessionResponse startParkingSession(@RequestBody ParkingSessionRequest parkingSessionRequest,
+                                                      @RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        return parkingSessionService.startParkingSession(token, parkingSessionRequest.getNumberPlate());
 
     }
 }

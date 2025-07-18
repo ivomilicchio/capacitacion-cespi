@@ -35,9 +35,4 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/users/{phoneNumber}")
-    public ResponseEntity<User> findUserByPhoneNumber(@PathVariable String phoneNumber){
-        return ResponseEntity.ok(authService.findUserByPhoneNumber(phoneNumber));
-    }
-
 }

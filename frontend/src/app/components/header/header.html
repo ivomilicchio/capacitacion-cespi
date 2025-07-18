@@ -15,7 +15,7 @@
       <ul class="navbar-nav mb-2 mb-lg-0">
         <li class="nav-item">
           @if (authService.isLoggedIn()) {
-            <a class="nav-link text-white" (click)="authService.logout()">Cerrar sesión</a>
+            <a class="text-white text-decoration-none" (click)="authService.logout()">Cerrar sesión</a>
           }
           @else {
             <a href="" class="nav-link text-white">Registrate</a>

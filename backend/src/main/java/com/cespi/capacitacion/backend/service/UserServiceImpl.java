@@ -1,6 +1,7 @@
 package com.cespi.capacitacion.backend.service;
 
 import com.cespi.capacitacion.backend.entity.User;
+import com.cespi.capacitacion.backend.jwt.JwtService;
 import com.cespi.capacitacion.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,11 @@ import java.util.regex.Pattern;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final JwtService jwtService;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, JwtService jwtService) {
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
     }
 
     @Transactional
@@ -27,6 +30,13 @@ public class UserServiceImpl implements UserService {
         }
         User user = new User(sanitizedPhoneNumber, password);
         return userRepository.save(user);
+    }
+
+    @Override
+    public List<String> getNumberPlatesOfUser(String token) {
+        String phoneNumber = jwtService.getPhoneNumberFromToken(token);
+        User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
+        return userRepository.getAllNumberPlatesByUserId(user.getId());
     }
 
     private String sanitizePhoneNumber(String phoneNumber) {

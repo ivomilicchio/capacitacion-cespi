@@ -32,7 +32,7 @@ public class AuthService {
         } catch (AuthenticationException e) {
             throw new InvalidCredentialsException();
         }
-        UserDetails user = userRepository.findByPhoneNumber(request.getPhoneNumber()).orElseThrow(()
+        User user = userRepository.findByPhoneNumber(request.getPhoneNumber()).orElseThrow(()
                 -> new ResourceNotFoundException("usuario", "número de telefono", request.getPhoneNumber()));
         return new AuthResponse(jwtService.getToken(user));
     }
