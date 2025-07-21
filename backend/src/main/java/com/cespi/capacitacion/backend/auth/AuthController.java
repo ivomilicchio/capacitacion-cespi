@@ -28,11 +28,4 @@ public class AuthController {
         return ResponseEntity.ok(authService.register(request));
     }
 
-    @GetMapping("/prueba")
-    public ResponseEntity<Map<String, String>> prueba() {
-        Map<String, String> response = new HashMap<>();
-        response.put("mensaje", "Prueba de API");
-        return ResponseEntity.ok(response);
-    }
-
 }

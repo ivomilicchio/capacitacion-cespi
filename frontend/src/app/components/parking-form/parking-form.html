@@ -20,7 +20,8 @@
                                 }
                             </select>
                             <button class="btn btn-primary d-flex justify-content-center align-items-center p-0"
-                                style="width: 48px; height: 48px; border-radius: 6;">
+                                style="width: 48px; height: 48px; border-radius: 6;" data-bs-toggle="modal"
+                                data-bs-target="#numberPlateModal">
                                 +
                             </button>
                         </div>
@@ -38,3 +39,26 @@
         </div>
     </div>
 </section>
+
+<div class="modal fade" id="numberPlateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Ingrese la nueva patente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="numberPlateForm">
+                    <input class="form-control border-bottom" placeholder="Patente" formControlName="number">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="onSubmitNumberPlateForm()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>

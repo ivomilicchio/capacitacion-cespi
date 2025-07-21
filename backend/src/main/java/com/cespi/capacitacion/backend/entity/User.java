@@ -95,6 +95,10 @@ public class User implements UserDetails {
         this.currentAccount = currentAccount;
     }
 
+    public void addNumberPlate(NumberPlate numberPlate) {
+        this.numberPlates.add(numberPlate);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("USER"));
