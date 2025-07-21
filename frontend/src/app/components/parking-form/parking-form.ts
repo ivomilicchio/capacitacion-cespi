@@ -41,12 +41,18 @@ export class ParkingForm {
 
 
   onSubmitNumberPlateForm() {
-    this.service.addNumberPlate(this.numberPlateForm.value);
+    this.service.addNumberPlate(this.numberPlateForm.value).subscribe({ 
+        next: (result: any) => {
+        this.numberPlates.push(result.number);
+        
+      }
+    });
     const modalEl = document.getElementById('numberPlateModal');
     if (modalEl) {
       const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
       modalInstance.hide();
     }
+    console.log(this.numberPlates);
   }
 
 }

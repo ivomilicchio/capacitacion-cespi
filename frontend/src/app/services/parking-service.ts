@@ -25,12 +25,6 @@ export class ParkingService {
   }
 
   addNumberPlate(formValue: any) {
-     this.http.post("http://localhost:8080/api/users/number-plates", formValue).subscribe({ 
-        next: (result: any) => {
-        console.log(result)
-        
-      }
-    });;
-    
+    return this.http.post("http://localhost:8080/api/users/number-plates", formValue);
   }
 }

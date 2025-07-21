@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "parking_sessions")
@@ -19,9 +20,9 @@ public class ParkingSession {
     @Column(
             nullable = false
     )
-    private LocalDateTime startTime;
+    private Date startTime;
     @Column
-    private LocalDateTime endTime;
+    private Date endTime;
     @ManyToOne
     @JoinColumn(name = "number_plate_id")
     private NumberPlate numberPlate;
@@ -37,7 +38,7 @@ public class ParkingSession {
     public ParkingSession(NumberPlate numberPlate, CurrentAccount currentAccount) {
         this.numberPlate = numberPlate;
         this.currentAccount = currentAccount;
-        this.startTime = LocalDateTime.now();
+        this.startTime = new Date();
     }
 
     public Long getId() {
@@ -56,24 +57,24 @@ public class ParkingSession {
         this.numberPlate = numberPlate;
     }
 
-    public LocalDateTime getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
-    public long getDuration() {
-        return Duration.between(startTime, endTime).toMinutes();
-
-    }
+//    public long getDuration() {
+//        return Duration.between(startTime, endTime).toMinutes();
+//
+//    }
 }

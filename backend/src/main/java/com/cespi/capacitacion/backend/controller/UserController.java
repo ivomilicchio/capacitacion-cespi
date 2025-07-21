@@ -3,7 +3,9 @@ package com.cespi.capacitacion.backend.controller;
 import com.cespi.capacitacion.backend.dto.NumberPlateCreationDTO;
 import com.cespi.capacitacion.backend.dto.UserCreationRequestDTO;
 import com.cespi.capacitacion.backend.dto.UserRequestDTO;
+import com.cespi.capacitacion.backend.entity.CurrentAccount;
 import com.cespi.capacitacion.backend.entity.NumberPlate;
+import com.cespi.capacitacion.backend.entity.ParkingSession;
 import com.cespi.capacitacion.backend.entity.User;
 import com.cespi.capacitacion.backend.service.UserService;
 import com.cespi.capacitacion.backend.service.UserServiceImpl;
@@ -38,6 +40,12 @@ public class UserController {
                             @RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         return userService.saveNumberPlate(numberPlateCreationDTO.getNumber(), token);
+    }
+
+    @GetMapping("/parking-sessions/started")
+    public ResponseEntity<ParkingSession> hasSessionStarted(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        return ResponseEntity.ok(userService.hasSessionStarted(token));
     }
 
 }
