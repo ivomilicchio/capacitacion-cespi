@@ -1,46 +1,64 @@
 package com.cespi.capacitacion.backend.exception;
 
-import com.cespi.capacitacion.backend.auth.AuthResponse;
-import com.cespi.capacitacion.backend.entity.payload.ApiResponse;
+import com.cespi.capacitacion.backend.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiResponse> handlerResourceNotFoundException(ResourceNotFoundException exception,
-                                                                   WebRequest webRequest) {
-        ApiResponse apiResponse = new ApiResponse(exception.getMessage(), webRequest.getDescription(
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException exception,
+                                                                          WebRequest webRequest) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
                 false));
-        return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<ApiResponse> handlerInvalidCredentialsException(InvalidCredentialsException exception,
-                                                                        WebRequest webRequest) {
-        ApiResponse apiResponse = new ApiResponse(exception.getMessage(), webRequest.getDescription(
-                false));
-        return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse> handlerMethodArgumentNotValidException(MethodArgumentNotValidException exception,
-                                                                          WebRequest webRequest) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException exception, WebRequest webRequest) {
         String errors = exception.getBindingResult().getAllErrors().stream().map( e -> e.getDefaultMessage())
                 .collect(Collectors.joining(" | "));
 
-        ApiResponse apiResponse = new ApiResponse(errors, webRequest.getDescription(
+        ErrorResponse errorResponse = new ErrorResponse(errors, webRequest.getDescription(
                 false));
-        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
+            HttpMessageNotReadableException exception,WebRequest webRequest) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                "El cuerpo de la solicitud no se pudo leer. Asegúrese de enviar un JSON válido.",
+                webRequest.getDescription(false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException exception,
+                                                                       WebRequest webRequest) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                "Número de teléfono o contraseña incorrectos",
+                webRequest.getDescription(false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(BadFormatNumberPlateException.class)
+    public ResponseEntity<ErrorResponse> handleBadFormatNumberPlateException(BadFormatNumberPlateException exception,
+                                                                         WebRequest webRequest) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+                false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

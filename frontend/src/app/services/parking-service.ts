@@ -11,7 +11,7 @@ export class ParkingService {
   router = inject(Router);
 
   getNumberPlates(): any {
-    return this.http.get("http://localhost:8080/api/users/number-plates");
+    return this.http.get("http://localhost:8080/api/number-plates");
   }
   
   startParkingSession(formValue: any) {
@@ -25,7 +25,7 @@ export class ParkingService {
   }
 
   addNumberPlate(formValue: any) {
-    return this.http.post("http://localhost:8080/api/users/number-plates", formValue);
+    return this.http.post("http://localhost:8080/api/number-plates", formValue);
   }
 
   finishParkingSession() {

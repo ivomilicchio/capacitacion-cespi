@@ -2,7 +2,6 @@ package com.cespi.capacitacion.backend.controller;
 
 import com.cespi.capacitacion.backend.dto.ParkingSessionRequest;
 import com.cespi.capacitacion.backend.dto.ParkingSessionResponse;
-import com.cespi.capacitacion.backend.entity.ParkingSession;
 import com.cespi.capacitacion.backend.service.ParkingSessionServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

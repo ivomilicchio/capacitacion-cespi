@@ -1,14 +1,11 @@
 package com.cespi.capacitacion.backend.auth;
 
 import com.cespi.capacitacion.backend.entity.User;
-import com.cespi.capacitacion.backend.exception.InvalidCredentialsException;
 import com.cespi.capacitacion.backend.exception.ResourceNotFoundException;
 import com.cespi.capacitacion.backend.jwt.JwtService;
 import com.cespi.capacitacion.backend.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,14 +23,10 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getPhoneNumber(),
-                    request.getPassword()));
-        } catch (AuthenticationException e) {
-            throw new InvalidCredentialsException();
-        }
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getPhoneNumber(),
+                request.getPassword()));
         User user = userRepository.findByPhoneNumber(request.getPhoneNumber()).orElseThrow(()
-                -> new ResourceNotFoundException("usuario", "número de telefono", request.getPhoneNumber()));
+                -> new ResourceNotFoundException());
         return new AuthResponse(jwtService.getToken(user));
     }
 
@@ -45,6 +38,6 @@ public class AuthService {
 
     public User findUserByPhoneNumber(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(()
-                -> new ResourceNotFoundException("usuario", "número de teléfono", phoneNumber));
+                -> new ResourceNotFoundException());
     }
 }

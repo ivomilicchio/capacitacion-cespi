@@ -28,7 +28,7 @@ export class ParkingForm {
   constructor() {
     this.numberPlates = this.service.getNumberPlates().subscribe({
       next: (result: any) => {
-        this.numberPlates = result;
+        this.numberPlates = result.numberPlates;
 
       }
     });

@@ -58,22 +58,8 @@ public class UserServiceImpl implements UserService {
         return matcher.matches();
     }
 
+
     @Transactional
-    public NumberPlate saveNumberPlate(String number, String token) {
-        String sanitizedNumber = sanitizeNumberPlate(number);
-        if (!validFormatOfNumberPlate(sanitizedNumber)) {
-            return null; //MANEJAR EXCEPCIONES ACA
-        }
-        String phoneNumber = jwtService.getPhoneNumberFromToken(token);
-        User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
-        NumberPlate numberPlate = new NumberPlate(sanitizedNumber);
-        user.addNumberPlate(numberPlate);
-        userRepository.save(user);
-        return numberPlate;
-
-    }
-
-    @Override
     public ParkingSession hasSessionStarted(String token) {
         String phoneNumber = jwtService.getPhoneNumberFromToken(token);
         User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
@@ -82,17 +68,4 @@ public class UserServiceImpl implements UserService {
         return parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId);
     }
 
-    private String sanitizeNumberPlate(String number) {
-        return number.toUpperCase().replaceAll("[\\s-]", "");
-    }
-
-    private boolean validFormatOfNumberPlate(String number) {
-        Pattern pattern1 = Pattern.compile("[A-Z]{2}[0-9]{3}[A-Z]{2}");
-        Pattern pattern2 = Pattern.compile("[A-Z]{3}[0-9]{3}");
-
-        Matcher matcher1 = pattern1.matcher(number);
-        Matcher matcher2 = pattern2.matcher(number);
-
-        return matcher1.matches() || matcher2.matches();
-    }
 }

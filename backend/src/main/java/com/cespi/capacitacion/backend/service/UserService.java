@@ -10,7 +10,6 @@ public interface UserService {
 
     User save(String phoneNumber, String password);
     List<String> getNumberPlatesOfUser(String token);
-    NumberPlate saveNumberPlate(String number, String token);
     ParkingSession hasSessionStarted(String token);
 
 }
