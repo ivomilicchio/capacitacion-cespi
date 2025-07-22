@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -10,28 +11,32 @@ export class AuthService {
 
   router = inject(Router);
   http = inject(HttpClient);
-  numberPlates: String[];
 
-  constructor() {
-    this.numberPlates = [];
-  }
+  constructor() { }
 
   login(formValue: any) {
-      this.http.post("http://localhost:8080/api/auth/login", formValue).subscribe({
+    this.http.post("http://localhost:8080/api/auth/login", formValue).subscribe({
       next: (result: any) => {
         localStorage.setItem('token', result.token);
-        this.router.navigateByUrl("/parking");
-        
-      },
-      error: (error) => {
-        alert(error.error);
+        this.userHasSessionStarted().subscribe({
+          next: (result: any) => {
+            if (result == null) {
+              this.router.navigateByUrl('parking')
+            }
+            else {
+              this.router.navigateByUrl('/parking-session')
+            }
+
+          }
+        })
+
       }
     })
   }
 
   isLoggedIn() {
     const token = localStorage.getItem('token');
-    return !!token;
+    return (token && !this.isTokenExpired(token));
   }
 
   logout() {
@@ -40,8 +45,24 @@ export class AuthService {
 
   }
 
-  getNumberPlates() {
-    return this.numberPlates;
+  isTokenExpired(token: string): boolean {
+    try {
+      const payloadBase64 = token.split('.')[1];
+      const payload = JSON.parse(atob(payloadBase64));
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (payload.exp < currentTime) {
+        localStorage.removeItem("token");
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Token inválido:', error);
+      return true;
+    }
   }
-  
+
+  userHasSessionStarted() {
+    return this.http.get("http://localhost:8080/api/users/parking-sessions/started");
+
+  }
 }

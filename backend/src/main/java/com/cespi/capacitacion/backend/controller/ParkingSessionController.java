@@ -4,6 +4,7 @@ import com.cespi.capacitacion.backend.dto.ParkingSessionRequest;
 import com.cespi.capacitacion.backend.dto.ParkingSessionResponse;
 import com.cespi.capacitacion.backend.entity.ParkingSession;
 import com.cespi.capacitacion.backend.service.ParkingSessionServiceImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,5 +23,10 @@ public class ParkingSessionController {
         String token = authHeader.replace("Bearer ", "");
         return parkingSessionService.startParkingSession(token, parkingSessionRequest.getNumberPlate());
 
+    }
+    @GetMapping
+    public ResponseEntity<Boolean> finishParkingSession(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        return ResponseEntity.ok(parkingSessionService.finishParkingSession(token));
     }
 }

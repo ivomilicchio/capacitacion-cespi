@@ -2,12 +2,9 @@ package com.cespi.capacitacion.backend.controller;
 
 import com.cespi.capacitacion.backend.dto.NumberPlateCreationDTO;
 import com.cespi.capacitacion.backend.dto.UserCreationRequestDTO;
-import com.cespi.capacitacion.backend.dto.UserRequestDTO;
-import com.cespi.capacitacion.backend.entity.CurrentAccount;
 import com.cespi.capacitacion.backend.entity.NumberPlate;
 import com.cespi.capacitacion.backend.entity.ParkingSession;
 import com.cespi.capacitacion.backend.entity.User;
-import com.cespi.capacitacion.backend.service.UserService;
 import com.cespi.capacitacion.backend.service.UserServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

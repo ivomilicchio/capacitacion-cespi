@@ -12,6 +12,8 @@ import com.cespi.capacitacion.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class ParkingSessionServiceImpl implements ParkingSessionService {
 
@@ -37,6 +39,17 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
         ParkingSession parkingSession = new ParkingSession(numberPlate, currentAccount);
         parkingSession = parkingSessionRepository.save(parkingSession);
         return new ParkingSessionResponse(parkingSession.getStartTime().toString());
+    }
+
+    @Transactional
+    public Boolean finishParkingSession(String token) {
+        String phoneNumber = jwtService.getPhoneNumberFromToken(token);
+        User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
+        Long accountId = user.getCurrentAccount().getId();
+        ParkingSession parkingSession = parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId);
+        parkingSession.setEndTime(new Date());
+        parkingSessionRepository.save(parkingSession);
+        return true;
     }
 
 

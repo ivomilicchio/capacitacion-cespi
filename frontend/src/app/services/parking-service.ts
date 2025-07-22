@@ -20,11 +20,15 @@ export class ParkingService {
         console.log(result)
         
       }
-    });;
+    });
     this.router.navigateByUrl('/parking-session')
   }
 
   addNumberPlate(formValue: any) {
     return this.http.post("http://localhost:8080/api/users/number-plates", formValue);
+  }
+
+  finishParkingSession() {
+    return this.http.get("http://localhost:8080/api/parking-sessions");
   }
 }
