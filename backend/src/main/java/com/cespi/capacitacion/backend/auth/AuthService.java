@@ -25,8 +25,7 @@ public class AuthService {
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getPhoneNumber(),
                 request.getPassword()));
-        User user = userRepository.findByPhoneNumber(request.getPhoneNumber()).orElseThrow(()
-                -> new ResourceNotFoundException());
+        User user = this.findUserByPhoneNumber(request.getPhoneNumber());
         return new AuthResponse(jwtService.getToken(user));
     }
 
@@ -38,6 +37,6 @@ public class AuthService {
 
     public User findUserByPhoneNumber(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(()
-                -> new ResourceNotFoundException());
+                -> new ResourceNotFoundException("Usuario"));
     }
 }

@@ -6,9 +6,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -38,7 +37,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "number_plate_id")
     )
-    private List<NumberPlate> numberPlates;
+    private Set<NumberPlate> numberPlates;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "current_account_id")
@@ -51,7 +50,7 @@ public class User implements UserDetails {
     public User(String phoneNumber, String password) {
         this.phoneNumber = phoneNumber;
         this.password = password;
-        numberPlates = new ArrayList<NumberPlate>();
+        numberPlates = new HashSet<>();
         currentAccount = new CurrentAccount();
     }
 
@@ -79,11 +78,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public List<NumberPlate> getNumberPlates() {
+    public Set<NumberPlate> getNumberPlates() {
         return numberPlates;
     }
 
-    public void setNumberPlates(List<NumberPlate> numberPlates) {
+    public void setNumberPlates(Set<NumberPlate> numberPlates) {
         this.numberPlates = numberPlates;
     }
 
@@ -99,12 +98,17 @@ public class User implements UserDetails {
         this.numberPlates.add(numberPlate);
     }
 
+    public Set<String> getAllNumberPlatesStrings() {
+        return this.numberPlates.stream().map(NumberPlate::getNumber).collect(Collectors.toSet());
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("USER"));
     }
 
-    //Si bien el usuario en la aplicacion no posee username, debo implementar este metodo porque la clase User implementa la interfaz UserDetails
+    //Si bien el usuario en la aplicacion no posee username, debo implementar este metodo porque la clase User
+    // implementa la interfaz UserDetails
     @Override
     public String getUsername() {
         return getPhoneNumber();

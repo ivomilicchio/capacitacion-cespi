@@ -56,9 +56,33 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadFormatNumberPlateException.class)
     public ResponseEntity<ErrorResponse> handleBadFormatNumberPlateException(BadFormatNumberPlateException exception,
-                                                                         WebRequest webRequest) {
+                                                                             WebRequest webRequest) {
         ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
                 false));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OutOfServiceHourException.class)
+    public ResponseEntity<ErrorResponse> handleOutOfServiceHourException(OutOfServiceHourException exception,
+                                                                         WebRequest webRequest) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+                false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(HasSessionStartedException.class)
+    public ResponseEntity<ErrorResponse> handleHasSessionStartedException(HasSessionStartedException exception,
+                                                                         WebRequest webRequest) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+                false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(AlreadyUsedNumberPlateException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyUsedNumberPlateException(AlreadyUsedNumberPlateException exception,
+                                                                          WebRequest webRequest) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+                false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 }

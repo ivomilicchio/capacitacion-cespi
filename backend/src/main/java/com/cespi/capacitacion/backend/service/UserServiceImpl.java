@@ -1,11 +1,9 @@
 package com.cespi.capacitacion.backend.service;
 
-import com.cespi.capacitacion.backend.entity.CurrentAccount;
-import com.cespi.capacitacion.backend.entity.NumberPlate;
 import com.cespi.capacitacion.backend.entity.ParkingSession;
 import com.cespi.capacitacion.backend.entity.User;
+import com.cespi.capacitacion.backend.exception.ResourceNotFoundException;
 import com.cespi.capacitacion.backend.jwt.JwtService;
-import com.cespi.capacitacion.backend.repository.CurrentAccountRepository;
 import com.cespi.capacitacion.backend.repository.ParkingSessionRepository;
 import com.cespi.capacitacion.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -40,11 +38,20 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    @Override
+    @Transactional
     public List<String> getNumberPlatesOfUser(String token) {
         String phoneNumber = jwtService.getPhoneNumberFromToken(token);
         User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
         return userRepository.getAllNumberPlatesByUserId(user.getId());
+    }
+
+    @Transactional
+    public ParkingSession hasSessionStarted(String token) {
+        String phoneNumber = jwtService.getPhoneNumberFromToken(token);
+        User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
+        Long accountId = user.getCurrentAccount().getId();
+        System.out.println(parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId));
+        return parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId).orElse(null);
     }
 
     private String sanitizePhoneNumber(String phoneNumber) {
@@ -58,14 +65,18 @@ public class UserServiceImpl implements UserService {
         return matcher.matches();
     }
 
-
-    @Transactional
-    public ParkingSession hasSessionStarted(String token) {
+    //ELIMINAR CUANDO NO HAYA MAS INVOCACIONES
+    public User getUserFromToken(String token) {
         String phoneNumber = jwtService.getPhoneNumberFromToken(token);
-        User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
-        Long accountId = user.getCurrentAccount().getId();
-        System.out.println(parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId));
-        return parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId);
+        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() ->
+                new ResourceNotFoundException("Usuario"));
+    }
+
+    public User getUserFromAuthHeader(String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        String phoneNumber = jwtService.getPhoneNumberFromToken(token);
+        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() ->
+                new ResourceNotFoundException("Usuario"));
     }
 
 }

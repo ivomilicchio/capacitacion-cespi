@@ -1,25 +1,27 @@
 package com.cespi.capacitacion.backend.dto;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class NumberPlateListResponse {
 
-    List<String> numberPlates;
+    Set<String> numberPlates;
 
     public NumberPlateListResponse() {
-       numberPlates = new ArrayList<>();
+       numberPlates = new HashSet<>();
     }
 
-    public NumberPlateListResponse(List<String> numberPlates) {
+    public NumberPlateListResponse(Set<String> numberPlates) {
         this.numberPlates = numberPlates;
     }
 
-    public List<String> getNumberPlates() {
+    public Set<String> getNumberPlates() {
         return numberPlates;
     }
 
-    public void setNumberPlates(List<String> numberPlates) {
+    public void setNumberPlates(Set<String> numberPlates) {
         this.numberPlates = numberPlates;
     }
 }

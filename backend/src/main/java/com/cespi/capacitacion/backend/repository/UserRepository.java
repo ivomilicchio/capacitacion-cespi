@@ -13,8 +13,8 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByPhoneNumber(String phoneNumber);
-    Optional<User> findByPhoneNumberAndPassword(String phoneNumber, String password);
     @Query("SELECT n.number FROM User u JOIN u.numberPlates n WHERE u.id = :id")
     List<String>getAllNumberPlatesByUserId(@Param("id") Long id);
+
 
 }

@@ -14,7 +14,7 @@ declare var bootstrap: any;
 export class ParkingForm {
 
   service = inject(ParkingService);
-  numberPlates: String[];
+  numberPlates: Set<String>;
 
   parkingForm: FormGroup = new FormGroup({
     numberPlate: new FormControl("Seleccione la patente", [Validators.required])
@@ -28,8 +28,7 @@ export class ParkingForm {
   constructor() {
     this.numberPlates = this.service.getNumberPlates().subscribe({
       next: (result: any) => {
-        this.numberPlates = result.numberPlates;
-
+        this.numberPlates = new Set(result.numberPlates);
       }
     });
 
@@ -43,7 +42,7 @@ export class ParkingForm {
   onSubmitNumberPlateForm() {
     this.service.addNumberPlate(this.numberPlateForm.value).subscribe({ 
         next: (result: any) => {
-        this.numberPlates.push(result.number);
+        this.numberPlates.add(result.number);
         
       }
     });

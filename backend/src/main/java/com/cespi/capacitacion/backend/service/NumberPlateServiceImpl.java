@@ -5,12 +5,14 @@ import com.cespi.capacitacion.backend.dto.NumberPlateListResponse;
 import com.cespi.capacitacion.backend.entity.NumberPlate;
 import com.cespi.capacitacion.backend.entity.User;
 import com.cespi.capacitacion.backend.exception.BadFormatNumberPlateException;
+import com.cespi.capacitacion.backend.exception.ResourceNotFoundException;
 import com.cespi.capacitacion.backend.jwt.JwtService;
 import com.cespi.capacitacion.backend.repository.NumberPlateRepository;
 import com.cespi.capacitacion.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,32 +22,28 @@ public class NumberPlateServiceImpl implements NumberPlateService {
 
     private final NumberPlateRepository numberPlateRepository;
     private final UserRepository userRepository;
-    private final JwtService jwtService;
+    private final UserService userService;
 
     public NumberPlateServiceImpl(NumberPlateRepository numberPlateRepository, UserRepository userRepository,
-                                  JwtService jwtService) {
+                                  UserService userService) {
         this.numberPlateRepository = numberPlateRepository;
         this.userRepository = userRepository;
-        this.jwtService = jwtService;
+        this.userService = userService;
     }
 
     @Transactional
-    public NumberPlateListResponse getNumberPlatesOfUser(String token) {
-        User user = userRepository.findByPhoneNumber(jwtService.getPhoneNumberFromToken(token)).orElseThrow();
-        return new NumberPlateListResponse(user.getNumberPlates().stream().map(NumberPlate::getNumber).toList());
-
+    public NumberPlateListResponse getNumberPlatesOfUser(String authHeader) {
+        User user = userService.getUserFromAuthHeader(authHeader);
+        return new NumberPlateListResponse(user.getAllNumberPlatesStrings());
     }
 
     @Transactional
-    public NumberPlateCreation saveNumberPlate(String number, String token) {
+    public NumberPlateCreation saveNumberPlate(String number, String authHeader) {
         String sanitizedNumber = sanitizeNumberPlate(number);
-        if (!validFormatOfNumberPlate(sanitizedNumber)) {
-            throw new BadFormatNumberPlateException();
-        }
-        String phoneNumber = jwtService.getPhoneNumberFromToken(token);
-        User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
-        
-        NumberPlate numberPlate = new NumberPlate(sanitizedNumber);
+        validFormatOfNumberPlate(sanitizedNumber);
+        User user = userService.getUserFromAuthHeader(authHeader);
+        Optional<NumberPlate> optionalNumberPlate = numberPlateRepository.findByNumber(sanitizedNumber);
+        NumberPlate numberPlate = optionalNumberPlate.orElseGet(() -> new NumberPlate(sanitizedNumber));
         user.addNumberPlate(numberPlate);
         userRepository.save(user);
         return new NumberPlateCreation(sanitizedNumber);
@@ -55,13 +53,15 @@ public class NumberPlateServiceImpl implements NumberPlateService {
         return number.toUpperCase().replaceAll("[\\s-]", "");
     }
 
-    private boolean validFormatOfNumberPlate(String number) {
+    private void validFormatOfNumberPlate(String number) {
         Pattern pattern1 = Pattern.compile("[A-Z]{2}[0-9]{3}[A-Z]{2}");
         Pattern pattern2 = Pattern.compile("[A-Z]{3}[0-9]{3}");
 
         Matcher matcher1 = pattern1.matcher(number);
         Matcher matcher2 = pattern2.matcher(number);
 
-        return matcher1.matches() || matcher2.matches();
+        if (!(matcher1.matches() || matcher2.matches())) {
+            throw new BadFormatNumberPlateException();
+        }
     }
 }

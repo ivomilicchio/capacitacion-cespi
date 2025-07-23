@@ -11,5 +11,7 @@ public interface UserService {
     User save(String phoneNumber, String password);
     List<String> getNumberPlatesOfUser(String token);
     ParkingSession hasSessionStarted(String token);
+    User getUserFromToken(String token);
+    User getUserFromAuthHeader(String authHeader);
 
 }
