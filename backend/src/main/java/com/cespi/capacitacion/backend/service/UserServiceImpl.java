@@ -38,12 +38,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    @Transactional
-    public List<String> getNumberPlatesOfUser(String token) {
-        String phoneNumber = jwtService.getPhoneNumberFromToken(token);
-        User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
-        return userRepository.getAllNumberPlatesByUserId(user.getId());
-    }
 
     @Transactional
     public ParkingSession hasSessionStarted(String token) {

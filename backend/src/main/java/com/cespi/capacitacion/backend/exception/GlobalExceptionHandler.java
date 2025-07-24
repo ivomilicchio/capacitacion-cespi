@@ -85,4 +85,20 @@ public class GlobalExceptionHandler {
                 false));
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(InsufficientBalanceException.class)
+    public ResponseEntity<ErrorResponse> handleInsufficientBalanceException(InsufficientBalanceException exception,
+                                                                               WebRequest webRequest) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+                false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(NotSessionStartedException.class)
+    public ResponseEntity<ErrorResponse> handleNotSessionStartedException(NotSessionStartedException exception,
+                                                                            WebRequest webRequest) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+                false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
 }

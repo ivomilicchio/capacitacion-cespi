@@ -18,7 +18,7 @@ public class CurrentAccount {
             nullable = false
     )
     private float balance;
-    @OneToMany(mappedBy = "currentAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "currentAccount", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ParkingSession> parkingSessions;
 
     public CurrentAccount() {

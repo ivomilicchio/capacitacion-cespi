@@ -1,6 +1,3 @@
-<!-- <div class="p-2 text-start">
-    <h1>Hola usuario!</h1>
-</div> -->
 <section class="d-flex align-items-center justify-content-center py-5 flex-fill">
     <div class="container">
         <div class="row justify-content-center">
@@ -12,6 +9,14 @@
                 </div>
                 <form [formGroup]="parkingForm">
                     <div class="row gy-3 overflow-hidden">
+                        <div class="col-12">
+                            <div class="alert alert-info d-flex justify-content-between align-items-center px-4 py-2 rounded-3"
+                                style="font-size: 1.1rem; width: fit-content;">
+                                <strong class="mb-0">
+                                    Saldo disponible: <span class="fw-bold text-success mb-0">$2000</span>
+                                </strong>
+                            </div>
+                        </div>
                         <div class="d-flex gap-2">
                             <select class="form-control form-control-lg" formControlName="numberPlate">
                                 <option disabled selected>Seleccione la patente</option>

@@ -5,96 +5,98 @@ import com.cespi.capacitacion.backend.entity.CurrentAccount;
 import com.cespi.capacitacion.backend.entity.NumberPlate;
 import com.cespi.capacitacion.backend.entity.ParkingSession;
 import com.cespi.capacitacion.backend.entity.User;
-import com.cespi.capacitacion.backend.exception.AlreadyUsedNumberPlateException;
-import com.cespi.capacitacion.backend.exception.HasSessionStartedException;
-import com.cespi.capacitacion.backend.exception.OutOfServiceHourException;
-import com.cespi.capacitacion.backend.jwt.JwtService;
+import com.cespi.capacitacion.backend.exception.*;
 import com.cespi.capacitacion.backend.repository.NumberPlateRepository;
 import com.cespi.capacitacion.backend.repository.ParkingSessionRepository;
-import com.cespi.capacitacion.backend.repository.UserRepository;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 
 @Service
 public class ParkingSessionServiceImpl implements ParkingSessionService {
 
-    private final UserRepository userRepository;
     private final NumberPlateRepository numberPlateRepository;
     private final ParkingSessionRepository parkingSessionRepository;
-    private final JwtService jwtService;
     private final UserService userService;
 
     @Value("${parking.start-time}")
-    private String startTimeString;
+    private LocalTime startTime;
     @Value("${parking.end-time}")
-    private String endTimeString;
+    private LocalTime endTime;
     @Value("${parking.price-per-hour}")
     private Double pricePerHour;
 
-    private LocalTime startTime;
-    private LocalTime endTime;
-
-    public ParkingSessionServiceImpl(UserRepository userRepository, NumberPlateRepository numberPlateRepository,
-                                     ParkingSessionRepository parkingSessionRepository, JwtService jwtService,
-                                     UserService userService) {
-        this.userRepository = userRepository;
+    public ParkingSessionServiceImpl(NumberPlateRepository numberPlateRepository,
+                                     ParkingSessionRepository parkingSessionRepository, UserService userService) {
         this.numberPlateRepository = numberPlateRepository;
         this.parkingSessionRepository = parkingSessionRepository;
-        this.jwtService = jwtService;
         this.userService = userService;
-    }
-
-    @PostConstruct
-    public void init() {
-        startTime = LocalTime.parse(startTimeString);
-        endTime = LocalTime.parse(endTimeString);
     }
 
     @Transactional
     public ParkingSessionResponse startParkingSession(String authHeader, String number) {
-        if (this.outOfServiceHour()) {
-            throw new OutOfServiceHourException(this.startTimeString, this.endTimeString);
-        }
+        this.checkOutOfServiceHour();
         User user = userService.getUserFromAuthHeader(authHeader);
         CurrentAccount currentAccount = user.getCurrentAccount();
-        if (this.hasSessionStarted(currentAccount.getId())) {
-            throw new HasSessionStartedException();
-        }
-        NumberPlate numberPlate = numberPlateRepository.findByNumber(number).orElseThrow();
-        if (parkingSessionRepository.findByNumberPlateIdAndEndTimeIsNull(numberPlate.getId()).isPresent()) {
-            throw new AlreadyUsedNumberPlateException();
-        }
+        this.checkHasSessionStarted(currentAccount.getId());
+        NumberPlate numberPlate = this.findNumberPlateByNumber(number);
+        this.checkAlreadyUsedNumberPlate(numberPlate.getId());
+        this.checkInsufficientBalance(currentAccount);
         ParkingSession parkingSession = new ParkingSession(numberPlate, currentAccount);
         parkingSession = parkingSessionRepository.save(parkingSession);
         return new ParkingSessionResponse(parkingSession.getStartTime().toString());
     }
 
+    private void checkOutOfServiceHour() {
+        LocalTime now = LocalTime.now();
+        if (now.isBefore(startTime) || now.isAfter(endTime)) {
+            throw new OutOfServiceHourException(this.startTime.toString(), this.endTime.toString());
+        }
+    }
+
+    private void checkHasSessionStarted(Long accountId) {
+        if (parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId).isPresent()) {
+            throw new HasSessionStartedException();
+        }
+    }
+
+    private void checkAlreadyUsedNumberPlate(Long numberPlateId) {
+        if (parkingSessionRepository.findByNumberPlateIdAndEndTimeIsNull(numberPlateId).isPresent()) {
+            throw new AlreadyUsedNumberPlateException();
+        }
+    }
+
+    private void checkInsufficientBalance(CurrentAccount currentAccount) {
+        if (currentAccount.getBalance() < this.pricePerHour) {
+            throw new InsufficientBalanceException();
+        }
+    }
+
+    private NumberPlate findNumberPlateByNumber(String number) {
+        return numberPlateRepository.findByNumber(number).orElseThrow(() -> new ResourceNotFoundException("Patente"));
+    }
+
     @Transactional
-    public Boolean finishParkingSession(String token) {
-        String phoneNumber = jwtService.getPhoneNumberFromToken(token);
-        User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
-        Long accountId = user.getCurrentAccount().getId();
-        ParkingSession parkingSession = parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId).orElseThrow();
+    public Boolean finishParkingSession(String authHeader) {
+        User user = userService.getUserFromAuthHeader(authHeader);
+        CurrentAccount currentAccount = user.getCurrentAccount();
+        ParkingSession parkingSession = this.getSessionStarted(currentAccount.getId());
         parkingSession.setEndTime(new Date());
+        this.chargeService(currentAccount, parkingSession.getHours());
         parkingSessionRepository.save(parkingSession);
         return true;
     }
 
-    private boolean hasSessionStarted(Long accountId) {
-        return parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId).isPresent();
+    private ParkingSession getSessionStarted(Long accountId) {
+        return parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId).orElseThrow(() ->
+                new NotSessionStartedException());
     }
 
-    private boolean outOfServiceHour() {
-        LocalTime now = LocalTime.now();
-        return now.isBefore(startTime) || now.isAfter(endTime);
+    private void chargeService(CurrentAccount currentAccount, long hours) {
+        float balance = currentAccount.getBalance();
+        currentAccount.setBalance((float) (balance - hours * this.pricePerHour));
     }
-
-
 }

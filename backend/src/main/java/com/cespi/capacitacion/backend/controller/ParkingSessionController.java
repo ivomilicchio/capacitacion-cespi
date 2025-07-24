@@ -28,8 +28,7 @@ public class ParkingSessionController {
     }
     @GetMapping
     public ResponseEntity<Boolean> finishParkingSession(@RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.replace("Bearer ", "");
-        return ResponseEntity.ok(parkingSessionService.finishParkingSession(token));
+        return ResponseEntity.ok(parkingSessionService.finishParkingSession(authHeader));
     }
 
     @GetMapping("/started")

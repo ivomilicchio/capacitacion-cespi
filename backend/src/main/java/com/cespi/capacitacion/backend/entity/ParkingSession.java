@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Entity
 @Table(name = "parking_sessions")
@@ -73,8 +74,13 @@ public class ParkingSession {
         this.endTime = endTime;
     }
 
-//    public long getDuration() {
-//        return Duration.between(startTime, endTime).toMinutes();
-//
-//    }
+    public long getHours() {
+        long diffMillis = endTime.getTime() - startTime.getTime();
+        long hours = TimeUnit.MILLISECONDS.toHours(diffMillis);
+        long minutes =  TimeUnit.MILLISECONDS.toMinutes(diffMillis) % 60;
+        if (minutes > 0) {
+            hours++;
+        }
+        return hours;
+    }
 }
