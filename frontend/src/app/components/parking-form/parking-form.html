@@ -1,39 +1,41 @@
 <section class="d-flex align-items-center justify-content-center py-5 flex-fill">
-    <div class="container">
+    <div class="container-fluid px-3">
         <div class="row justify-content-center">
-            <div class="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7 border p-4 p-md-5 rounded"
-                style="font-size: 1.1rem;">
-
-                <div class="mb-4">
-                    <h1 class="fw-bold text-center" style="white-space: nowrap;">Estacionamiento medido</h1>
+            <div class="col-12 col-sm-11 col-md-11 col-lg-10 col-xl-9 border p-5 p-md-6 rounded shadow-sm" 
+                 style="font-size: 1.3rem; max-width: 1000px;">
+                <div class="mb-5">
+                    <h1 class="fw-bold text-center display-4" style="white-space: nowrap; font-size: 2.5rem;">
+                        Estacionamiento medido
+                    </h1>
                 </div>
                 <form [formGroup]="parkingForm">
-                    <div class="row gy-3 overflow-hidden">
+                    <div class="row gy-4 overflow-hidden">
                         <div class="col-12">
-                            <div class="alert alert-info d-flex justify-content-between align-items-center px-4 py-2 rounded-3"
-                                style="font-size: 1.1rem; width: fit-content;">
+                             <div class="alert alert-info d-flex justify-content-between align-items-center px-4 py-2 rounded-3"
+                                style="font-size: 1.4rem; width: fit-content;">
                                 <strong class="mb-0">
-                                    Saldo disponible: <span class="fw-bold text-success mb-0">$2000</span>
+                                    Saldo disponible: <span class="fw-bold text-success mb-0">${{balance}}</span>
                                 </strong>
                             </div>
                         </div>
-                        <div class="d-flex gap-2">
-                            <select class="form-control form-control-lg" formControlName="numberPlate">
+                        <div class="d-flex gap-3">
+                            <select class="form-control form-control-lg" formControlName="numberPlate" 
+                                    style="font-size: 1.3rem; height: 60px; padding: 15px;">
                                 <option disabled selected>Seleccione la patente</option>
                                 @for (item of numberPlates; track $index) {
                                 <option>{{item}}</option>
                                 }
                             </select>
                             <button class="btn btn-primary d-flex justify-content-center align-items-center p-0"
-                                style="width: 48px; height: 48px; border-radius: 6;" data-bs-toggle="modal"
-                                data-bs-target="#numberPlateModal">
+                                    style="width: 60px; height: 60px; border-radius: 8px; font-size: 1.5rem; font-weight: bold;" 
+                                    data-bs-toggle="modal" data-bs-target="#numberPlateModal">
                                 +
                             </button>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 mt-4">
                             <div class="d-grid">
-                                <button class="btn btn-lg  btn-success rounded-1 text-white" type="submit"
-                                    style="height: 48px;" (click)="onSubmit()">
+                                <button class="btn btn-lg btn-success rounded-2 text-white fw-bold" type="submit"
+                                        style="height: 60px; font-size: 1.3rem; padding: 15px;" (click)="onSubmit()">
                                     Iniciar estacionamiento
                                 </button>
                             </div>

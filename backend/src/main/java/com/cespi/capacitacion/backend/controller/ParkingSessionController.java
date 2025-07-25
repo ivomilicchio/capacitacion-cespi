@@ -21,9 +21,11 @@ public class ParkingSessionController {
     }
 
     @PostMapping
-    public ParkingSessionResponse startParkingSession(@RequestBody ParkingSessionRequest parkingSessionRequest,
-                                                      @RequestHeader("Authorization") String authHeader) {
-        return parkingSessionService.startParkingSession(authHeader, parkingSessionRequest.getNumberPlate());
+    public ResponseEntity<ParkingSessionResponse> startParkingSession(
+            @RequestBody ParkingSessionRequest parkingSessionRequest,
+            @RequestHeader("Authorization") String authHeader) {
+        return ResponseEntity.ok(parkingSessionService.startParkingSession(authHeader,
+                parkingSessionRequest.getNumberPlate()));
 
     }
     @GetMapping

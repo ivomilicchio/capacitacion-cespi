@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
+import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,26 +13,8 @@ export class AuthService {
   router = inject(Router);
   http = inject(HttpClient);
 
-  constructor() { }
-
   login(formValue: any) {
-    this.http.post("http://localhost:8080/api/auth/login", formValue).subscribe({
-      next: (result: any) => {
-        localStorage.setItem('token', result.token);
-        this.userHasSessionStarted().subscribe({
-          next: (result: any) => {
-            if (result == null) {
-              this.router.navigateByUrl('parking')
-            }
-            else {
-              this.router.navigateByUrl('/parking-session')
-            }
-
-          }
-        })
-
-      }
-    })
+    return this.http.post("http://localhost:8080/api/auth/login", formValue);
   }
 
   isLoggedIn() {

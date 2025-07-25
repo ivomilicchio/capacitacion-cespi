@@ -31,4 +31,9 @@ export class ParkingService {
   finishParkingSession() {
     return this.http.get("http://localhost:8080/api/parking-sessions");
   }
+
+  getBalance() {
+  return this.http.get("http://localhost:8080/api/current-accounts/balance");
+  }
+
 }

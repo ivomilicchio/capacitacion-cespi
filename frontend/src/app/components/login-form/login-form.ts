@@ -12,17 +12,34 @@ import { AuthService } from '../../services/auth-service';
 })
 export class LoginForm {
 
-  http = inject(HttpClient);
-  router = inject(Router);
   service = inject(AuthService);
+  router = inject(Router);
 
   loginForm: FormGroup = new FormGroup({
     phoneNumber: new FormControl("", [Validators.required]),
     password: new FormControl("", Validators.required),
   });
 
-  onSubmit() {
-    this.service.login(this.loginForm.value);
-  }
+  login() {
+    this.service.login(this.loginForm.value).subscribe({
+      next: (result: any) => {
+        localStorage.setItem('token', result.token);
+        this.service.userHasSessionStarted().subscribe({
+          next: (result: any) => {
+            if (result == null) {
+              this.router.navigateByUrl('parking')
+            }
+            else {
+              this.router.navigateByUrl('/parking-session')
+            }
 
+          }
+        })
+
+      },
+    error: (err) => {
+    }
+  })
+
+}
 }

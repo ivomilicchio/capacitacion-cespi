@@ -14,7 +14,8 @@ declare var bootstrap: any;
 export class ParkingForm {
 
   service = inject(ParkingService);
-  numberPlates: Set<String>;
+  numberPlates: Set<String> = new Set();
+  balance: number | undefined;
 
   parkingForm: FormGroup = new FormGroup({
     numberPlate: new FormControl("Seleccione la patente", [Validators.required])
@@ -26,9 +27,14 @@ export class ParkingForm {
 
 
   constructor() {
-    this.numberPlates = this.service.getNumberPlates().subscribe({
+    this.service.getNumberPlates().subscribe({
       next: (result: any) => {
         this.numberPlates = new Set(result.numberPlates);
+      }
+    });
+    this.service.getBalance().subscribe({
+      next: (result: any) => {
+        this.balance = result.balance;
       }
     });
 
