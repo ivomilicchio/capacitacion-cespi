@@ -5,12 +5,12 @@ import com.cespi.capacitacion.backend.entity.ParkingSession;
 import com.cespi.capacitacion.backend.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
-    User save(String phoneNumber, String password);
-    ParkingSession hasSessionStarted(String token);
-    User getUserFromToken(String token);
+    Optional<ParkingSession> hasSessionStarted(String token);
     User getUserFromAuthHeader(String authHeader);
+
 
 }

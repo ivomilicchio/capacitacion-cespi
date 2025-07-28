@@ -7,6 +7,8 @@ import com.cespi.capacitacion.backend.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -17,15 +19,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping()
-    public User save(@RequestBody UserCreationRequestDTO userCreationRequestDTO) {
-        return userService.save(userCreationRequestDTO.getPhoneNumber(), userCreationRequestDTO.getPassword());
-    }
+
 
     @GetMapping("/parking-sessions/started")
     public ResponseEntity<ParkingSession> hasSessionStarted(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
-        return ResponseEntity.ok(userService.hasSessionStarted(token));
+        Optional<ParkingSession> parkingSession = userService.hasSessionStarted(token);
+        if (parkingSession.isPresent()) {
+            return ResponseEntity.ok(parkingSession.get());
+        }
+        return ResponseEntity.noContent().build();
     }
 
 }

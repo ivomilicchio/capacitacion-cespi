@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class BadFormatNumberPlateException extends RuntimeException {
 
     public BadFormatNumberPlateException() {
-        super("El formato de la patente no es correcto");
+        super("El formato de la patente introducida no es correcto");
     }
 }

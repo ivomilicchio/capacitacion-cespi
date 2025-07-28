@@ -101,4 +101,12 @@ public class GlobalExceptionHandler {
                 false));
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(BadFormatPhoneNumberException.class)
+    public ResponseEntity<ErrorResponse> handleBadFormatPhoneNumberException(BadFormatPhoneNumberException exception,
+                                                                          WebRequest webRequest) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+                false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }

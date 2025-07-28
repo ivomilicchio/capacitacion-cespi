@@ -17,11 +17,9 @@ export class ParkingService {
   startParkingSession(formValue: any) {
     this.http.post("http://localhost:8080/api/parking-sessions", formValue).subscribe({ 
         next: (result: any) => {
-        console.log(result)
-        
+        this.router.navigateByUrl('/parking-session')
       }
     });
-    this.router.navigateByUrl('/parking-session')
   }
 
   addNumberPlate(formValue: any) {

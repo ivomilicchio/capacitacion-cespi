@@ -16,7 +16,6 @@ export class App implements OnInit {
   protected readonly title = signal('SEM');
 
   service = inject(AuthService);
-  http = inject(HttpClient);
   router = inject(Router);
 
   ngOnInit(): void {
@@ -25,12 +24,13 @@ export class App implements OnInit {
     }
     else {
       this.service.userHasSessionStarted().subscribe({
-        next: (result: any) => {
-          if (result == null) {
-            this.router.navigateByUrl('parking')
+        next: (response: any) => {
+          if (response == 200) {
+            this.router.navigateByUrl('/parking-session');
+            
           }
           else {
-            this.router.navigateByUrl('/parking-session')
+            this.router.navigateByUrl('parking');
           }
 
         }

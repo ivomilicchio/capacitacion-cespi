@@ -36,6 +36,6 @@ public class ParkingSessionController {
     @GetMapping("/started")
     public ResponseEntity<ParkingSession> hasSessionStarted(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
-        return ResponseEntity.ok(userService.hasSessionStarted(token));
+        return ResponseEntity.ok(userService.hasSessionStarted(token).get());
     }
 }

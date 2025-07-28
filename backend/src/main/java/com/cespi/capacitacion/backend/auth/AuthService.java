@@ -1,12 +1,17 @@
 package com.cespi.capacitacion.backend.auth;
 
 import com.cespi.capacitacion.backend.entity.User;
+import com.cespi.capacitacion.backend.exception.BadFormatPhoneNumberException;
 import com.cespi.capacitacion.backend.exception.ResourceNotFoundException;
 import com.cespi.capacitacion.backend.jwt.JwtService;
 import com.cespi.capacitacion.backend.repository.UserRepository;
+import com.cespi.capacitacion.backend.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class AuthService {
@@ -23,9 +28,11 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getPhoneNumber(),
+        String sanitizedPhoneNumber = this.sanitizePhoneNumber(request.getPhoneNumber());
+        this.validFormatOfPhoneNumber(sanitizedPhoneNumber);
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(sanitizedPhoneNumber,
                 request.getPassword()));
-        User user = this.findUserByPhoneNumber(request.getPhoneNumber());
+        User user = this.findUserByPhoneNumber(sanitizedPhoneNumber);
         return new AuthResponse(jwtService.getToken(user));
     }
 
@@ -38,5 +45,18 @@ public class AuthService {
     public User findUserByPhoneNumber(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(()
                 -> new ResourceNotFoundException("Usuario"));
+    }
+
+    private String sanitizePhoneNumber(String phoneNumber) {
+        return phoneNumber.replaceAll("[\\s-]", "");
+    }
+
+    private void validFormatOfPhoneNumber(String phoneNumber) {
+        Pattern pattern = Pattern.compile("[0-9]{10}");
+        Matcher matcher = pattern.matcher(phoneNumber);
+
+        if  (!matcher.matches()) {
+            throw new BadFormatPhoneNumberException();
+        }
     }
 }

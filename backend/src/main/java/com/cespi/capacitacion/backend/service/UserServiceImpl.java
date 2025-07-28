@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,36 +29,17 @@ public class UserServiceImpl implements UserService {
         this.parkingSessionRepository = parkingSessionRepository;
     }
 
-    @Transactional
-    public User save(String phoneNumber, String password) {
-        String sanitizedPhoneNumber = sanitizePhoneNumber(phoneNumber);
-        if (!validFormatOfPhoneNumber(sanitizedPhoneNumber)) {
-            return null; //MANEJAR EXCEPCIONES ACA
-        }
-        User user = new User(sanitizedPhoneNumber, password);
-        return userRepository.save(user);
-    }
-
 
     @Transactional
-    public ParkingSession hasSessionStarted(String token) {
+    public Optional<ParkingSession> hasSessionStarted(String token) {
         String phoneNumber = jwtService.getPhoneNumberFromToken(token);
         User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
         Long accountId = user.getCurrentAccount().getId();
         System.out.println(parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId));
-        return parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId).orElse(null);
+        return parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId);
     }
 
-    private String sanitizePhoneNumber(String phoneNumber) {
-        return phoneNumber.replaceAll("[\\s-]", "");
-    }
 
-    private boolean validFormatOfPhoneNumber(String phoneNumber) {
-        Pattern pattern = Pattern.compile("[0-9]{10}");
-        Matcher matcher = pattern.matcher(phoneNumber);
-
-        return matcher.matches();
-    }
 
     //ELIMINAR CUANDO NO HAYA MAS INVOCACIONES
     public User getUserFromToken(String token) {

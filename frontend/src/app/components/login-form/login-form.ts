@@ -24,22 +24,23 @@ export class LoginForm {
     this.service.login(this.loginForm.value).subscribe({
       next: (result: any) => {
         localStorage.setItem('token', result.token);
-        this.service.userHasSessionStarted().subscribe({
-          next: (result: any) => {
-            if (result == null) {
-              this.router.navigateByUrl('parking')
-            }
-            else {
-              this.router.navigateByUrl('/parking-session')
-            }
+        this.userHasSessionStarted();
+      }
+    })
 
-          }
-        })
+  }
 
-      },
-    error: (err) => {
-    }
-  })
-
-}
+  userHasSessionStarted() {
+    this.service.userHasSessionStarted().subscribe({
+      next: (response: any) => {
+        if (response == 200) {
+          this.router.navigateByUrl('/parking-session');
+          
+        }
+        else {
+          this.router.navigateByUrl('parking');
+        }
+      }
+    })
+  }
 }
