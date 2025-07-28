@@ -5,6 +5,6 @@ import com.cespi.capacitacion.backend.dto.ParkingSessionResponse;
 public interface ParkingSessionService {
 
     ParkingSessionResponse startParkingSession(String authHeader, String numberPlate);
-    Boolean finishParkingSession(String authHeader);
+    void finishParkingSession(String authHeader);
 
 }

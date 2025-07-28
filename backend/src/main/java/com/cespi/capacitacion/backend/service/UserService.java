@@ -9,8 +9,9 @@ import java.util.Optional;
 
 public interface UserService {
 
-    Optional<ParkingSession> hasSessionStarted(String token);
+    Optional<ParkingSession> hasSessionStarted(String authHeader);
     User getUserFromAuthHeader(String authHeader);
+    User save(User user);
 
 
 }

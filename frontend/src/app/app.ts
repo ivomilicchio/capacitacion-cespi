@@ -7,34 +7,12 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterLink, RouterOutlet, Footer, Header],
+  imports: [RouterOutlet, Footer, Header],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App implements OnInit {
+export class App {
 
   protected readonly title = signal('SEM');
 
-  service = inject(AuthService);
-  router = inject(Router);
-
-  ngOnInit(): void {
-    if (!this.service.isLoggedIn()) {
-      this.router.navigateByUrl('/login');
-    }
-    else {
-      this.service.userHasSessionStarted().subscribe({
-        next: (response: any) => {
-          if (response == 200) {
-            this.router.navigateByUrl('/parking-session');
-            
-          }
-          else {
-            this.router.navigateByUrl('parking');
-          }
-
-        }
-      })
-    }
-  }
 }

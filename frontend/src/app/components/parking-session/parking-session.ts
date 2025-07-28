@@ -16,10 +16,9 @@ export class ParkingSession {
   onSubmit() {
     this.service.finishParkingSession().subscribe({ 
         next: (result: any) => {
-        console.log(result)
-        
+        this.router.navigateByUrl('/parking');
       }
     });
-    this.router.navigateByUrl('/parking');
+
   }
 }

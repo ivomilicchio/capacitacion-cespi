@@ -45,7 +45,7 @@ export class AuthService {
   }
 
   userHasSessionStarted() {
-    return this.http.get("http://localhost:8080/api/users/parking-sessions/started", {
+    return this.http.get("http://localhost:8080/api/parking-sessions/started", {
       observe: 'response'
     });
 

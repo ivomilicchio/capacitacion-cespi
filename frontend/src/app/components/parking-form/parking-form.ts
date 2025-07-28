@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ParkingService } from '../../services/parking-service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 
 declare var bootstrap: any;
@@ -11,9 +12,10 @@ declare var bootstrap: any;
   templateUrl: './parking-form.html',
   styleUrl: './parking-form.css'
 })
-export class ParkingForm {
+export class ParkingForm implements OnInit {
 
   service = inject(ParkingService);
+  router = inject(Router);
   numberPlates: Set<String> = new Set();
   balance: number | undefined;
 
@@ -25,8 +27,7 @@ export class ParkingForm {
     number: new FormControl("", [Validators.required]),
   });
 
-
-  constructor() {
+  ngOnInit(): void {
     this.service.getNumberPlates().subscribe({
       next: (result: any) => {
         this.numberPlates = new Set(result.numberPlates);
@@ -37,19 +38,22 @@ export class ParkingForm {
         this.balance = result.balance;
       }
     });
-
   }
 
-  onSubmit() {
-    this.service.startParkingSession(this.parkingForm.value);
-  }
+  onSubmitParkingForm() {
+    this.service.startParkingSession(this.parkingForm.value).subscribe({
+      next: (result: any) => {
+        this.router.navigateByUrl('/parking-session')
+      }
+    });
 
+  }
 
   onSubmitNumberPlateForm() {
-    this.service.addNumberPlate(this.numberPlateForm.value).subscribe({ 
-        next: (result: any) => {
+    this.service.addNumberPlate(this.numberPlateForm.value).subscribe({
+      next: (result: any) => {
         this.numberPlates.add(result.number);
-        
+
       }
     });
     const modalEl = document.getElementById('numberPlateModal');
@@ -57,7 +61,6 @@ export class ParkingForm {
       const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
       modalInstance.hide();
     }
-    console.log(this.numberPlates);
   }
 
 }

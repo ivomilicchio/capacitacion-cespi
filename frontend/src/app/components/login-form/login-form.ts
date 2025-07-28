@@ -33,12 +33,12 @@ export class LoginForm {
   userHasSessionStarted() {
     this.service.userHasSessionStarted().subscribe({
       next: (response: any) => {
-        if (response == 200) {
+        if (response.status === 200) {
           this.router.navigateByUrl('/parking-session');
           
         }
         else {
-          this.router.navigateByUrl('parking');
+          this.router.navigateByUrl('/parking');
         }
       }
     })

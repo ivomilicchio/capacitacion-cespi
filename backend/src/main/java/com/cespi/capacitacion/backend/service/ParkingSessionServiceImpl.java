@@ -6,7 +6,6 @@ import com.cespi.capacitacion.backend.entity.NumberPlate;
 import com.cespi.capacitacion.backend.entity.ParkingSession;
 import com.cespi.capacitacion.backend.entity.User;
 import com.cespi.capacitacion.backend.exception.*;
-import com.cespi.capacitacion.backend.repository.NumberPlateRepository;
 import com.cespi.capacitacion.backend.repository.ParkingSessionRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +17,7 @@ import java.util.Date;
 @Service
 public class ParkingSessionServiceImpl implements ParkingSessionService {
 
-    private final NumberPlateRepository numberPlateRepository;
+    private final NumberPlateService numberPlateService;
     private final ParkingSessionRepository parkingSessionRepository;
     private final UserService userService;
 
@@ -29,9 +28,9 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     @Value("${parking.price-per-hour}")
     private Double pricePerHour;
 
-    public ParkingSessionServiceImpl(NumberPlateRepository numberPlateRepository,
+    public ParkingSessionServiceImpl(NumberPlateService numberPlateService,
                                      ParkingSessionRepository parkingSessionRepository, UserService userService) {
-        this.numberPlateRepository = numberPlateRepository;
+        this.numberPlateService = numberPlateService;
         this.parkingSessionRepository = parkingSessionRepository;
         this.userService = userService;
     }
@@ -42,12 +41,12 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
         User user = userService.getUserFromAuthHeader(authHeader);
         CurrentAccount currentAccount = user.getCurrentAccount();
         this.checkHasSessionStarted(currentAccount.getId());
-        NumberPlate numberPlate = this.findNumberPlateByNumber(number);
+        NumberPlate numberPlate = numberPlateService.findByNumber(number);
         this.checkAlreadyUsedNumberPlate(numberPlate.getId());
         this.checkInsufficientBalance(currentAccount);
         ParkingSession parkingSession = new ParkingSession(numberPlate, currentAccount);
-        parkingSession = parkingSessionRepository.save(parkingSession);
-        return new ParkingSessionResponse(parkingSession.getStartTime().toString(), numberPlate.getNumber());
+        parkingSession = this.save(parkingSession);
+        return new ParkingSessionResponse(parkingSession.getStartTime().toString());
     }
 
     private void checkOutOfServiceHour() {
@@ -75,19 +74,18 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
         }
     }
 
-    private NumberPlate findNumberPlateByNumber(String number) {
-        return numberPlateRepository.findByNumber(number).orElseThrow(() -> new ResourceNotFoundException("Patente"));
+    private ParkingSession save(ParkingSession parkingSession) {
+        return parkingSessionRepository.save(parkingSession);
     }
 
     @Transactional
-    public Boolean finishParkingSession(String authHeader) {
+    public void finishParkingSession(String authHeader) {
         User user = userService.getUserFromAuthHeader(authHeader);
         CurrentAccount currentAccount = user.getCurrentAccount();
         ParkingSession parkingSession = this.getSessionStarted(currentAccount.getId());
         parkingSession.setEndTime(new Date());
         this.chargeService(currentAccount, parkingSession.getHours());
         parkingSessionRepository.save(parkingSession);
-        return true;
     }
 
     private ParkingSession getSessionStarted(Long accountId) {

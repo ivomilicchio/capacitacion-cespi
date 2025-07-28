@@ -21,13 +21,10 @@ import java.util.regex.Pattern;
 public class NumberPlateServiceImpl implements NumberPlateService {
 
     private final NumberPlateRepository numberPlateRepository;
-    private final UserRepository userRepository;
     private final UserService userService;
 
-    public NumberPlateServiceImpl(NumberPlateRepository numberPlateRepository, UserRepository userRepository,
-                                  UserService userService) {
+    public NumberPlateServiceImpl(NumberPlateRepository numberPlateRepository, UserService userService) {
         this.numberPlateRepository = numberPlateRepository;
-        this.userRepository = userRepository;
         this.userService = userService;
     }
 
@@ -42,11 +39,21 @@ public class NumberPlateServiceImpl implements NumberPlateService {
         String sanitizedNumber = sanitizeNumberPlate(number);
         validFormatOfNumberPlate(sanitizedNumber);
         User user = userService.getUserFromAuthHeader(authHeader);
-        Optional<NumberPlate> optionalNumberPlate = numberPlateRepository.findByNumber(sanitizedNumber);
-        NumberPlate numberPlate = optionalNumberPlate.orElseGet(() -> new NumberPlate(sanitizedNumber));
+        NumberPlate numberPlate;
+        try {
+            numberPlate = this.findByNumber(sanitizedNumber);
+        }
+        catch (ResourceNotFoundException e) {
+            numberPlate = new NumberPlate(sanitizedNumber);
+        }
         user.addNumberPlate(numberPlate);
-        userRepository.save(user);
+        userService.save(user);
         return new NumberPlateCreation(sanitizedNumber);
+    }
+
+    public NumberPlate findByNumber(String number) {
+        return this.numberPlateRepository.findByNumber(number).orElseThrow(() ->
+                new ResourceNotFoundException("Patente"));
     }
 
     private String sanitizeNumberPlate(String number) {

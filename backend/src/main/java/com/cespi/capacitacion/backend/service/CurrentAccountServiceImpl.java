@@ -14,7 +14,6 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
         this.userService = userService;
     }
 
-
     public CurrentAccountBalanceResponse getCurrentAccountBalance(String authHeader) {
         User user = userService.getUserFromAuthHeader(authHeader);
         return new CurrentAccountBalanceResponse(user.getCurrentAccount().getBalance());

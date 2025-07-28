@@ -31,28 +31,30 @@ public class UserServiceImpl implements UserService {
 
 
     @Transactional
-    public Optional<ParkingSession> hasSessionStarted(String token) {
-        String phoneNumber = jwtService.getPhoneNumberFromToken(token);
-        User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow();
+    public Optional<ParkingSession> hasSessionStarted(String authHeader) {
+        User user = this.getUserFromAuthHeader(authHeader);
         Long accountId = user.getCurrentAccount().getId();
-        System.out.println(parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId));
         return parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId);
     }
 
-
-
-    //ELIMINAR CUANDO NO HAYA MAS INVOCACIONES
-    public User getUserFromToken(String token) {
-        String phoneNumber = jwtService.getPhoneNumberFromToken(token);
-        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() ->
-                new ResourceNotFoundException("Usuario"));
-    }
+//
+//
+//    //ELIMINAR CUANDO NO HAYA MAS INVOCACIONES
+//    public User getUserFromToken(String token) {
+//        String phoneNumber = jwtService.getPhoneNumberFromToken(token);
+//        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() ->
+//                new ResourceNotFoundException("Usuario"));
+//    }
 
     public User getUserFromAuthHeader(String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         String phoneNumber = jwtService.getPhoneNumberFromToken(token);
         return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() ->
                 new ResourceNotFoundException("Usuario"));
+    }
+
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
 }
