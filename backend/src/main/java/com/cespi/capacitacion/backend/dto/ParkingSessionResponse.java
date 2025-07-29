@@ -4,7 +4,6 @@ public class ParkingSessionResponse {
 
     private String startTime;
 
-
     public ParkingSessionResponse(String startTime) {
         this.startTime = startTime;
     }

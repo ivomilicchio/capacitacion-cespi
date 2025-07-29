@@ -5,6 +5,7 @@ import com.cespi.capacitacion.backend.dto.ParkingSessionResponse;
 import com.cespi.capacitacion.backend.entity.ParkingSession;
 import com.cespi.capacitacion.backend.service.ParkingSessionService;
 import com.cespi.capacitacion.backend.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class ParkingSessionController {
 
     @PostMapping
     public ResponseEntity<ParkingSessionResponse> startParkingSession(
-            @RequestBody ParkingSessionRequest parkingSessionRequest,
+            @RequestBody @Valid ParkingSessionRequest parkingSessionRequest,
             @RequestHeader("Authorization") String authHeader) {
         return ResponseEntity.ok(parkingSessionService.startParkingSession(authHeader,
                 parkingSessionRequest.getNumberPlate()));

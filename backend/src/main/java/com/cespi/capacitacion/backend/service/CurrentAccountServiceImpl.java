@@ -2,7 +2,6 @@ package com.cespi.capacitacion.backend.service;
 
 import com.cespi.capacitacion.backend.dto.CurrentAccountBalanceResponse;
 import com.cespi.capacitacion.backend.entity.User;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service

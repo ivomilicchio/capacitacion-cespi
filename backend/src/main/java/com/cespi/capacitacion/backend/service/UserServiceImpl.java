@@ -9,11 +9,7 @@ import com.cespi.capacitacion.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-
-import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -29,7 +25,6 @@ public class UserServiceImpl implements UserService {
         this.parkingSessionRepository = parkingSessionRepository;
     }
 
-
     @Transactional
     public Optional<ParkingSession> hasSessionStarted(String authHeader) {
         User user = this.getUserFromAuthHeader(authHeader);
@@ -37,24 +32,19 @@ public class UserServiceImpl implements UserService {
         return parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId);
     }
 
-//
-//
-//    //ELIMINAR CUANDO NO HAYA MAS INVOCACIONES
-//    public User getUserFromToken(String token) {
-//        String phoneNumber = jwtService.getPhoneNumberFromToken(token);
-//        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() ->
-//                new ResourceNotFoundException("Usuario"));
-//    }
-
     public User getUserFromAuthHeader(String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         String phoneNumber = jwtService.getPhoneNumberFromToken(token);
-        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() ->
-                new ResourceNotFoundException("Usuario"));
+        return this.findByPhoneNumber(phoneNumber);
     }
 
     public User save(User user) {
         return userRepository.save(user);
+    }
+
+    public User findByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(()
+                -> new ResourceNotFoundException("Usuario"));
     }
 
 }

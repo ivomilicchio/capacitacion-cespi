@@ -1,13 +1,8 @@
 package com.cespi.capacitacion.backend.auth;
 
-import com.cespi.capacitacion.backend.entity.User;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -24,6 +19,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
+    //Todavía no está implementado por completo
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));
