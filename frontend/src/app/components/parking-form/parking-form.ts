@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ParkingService } from '../../services/parking-service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 
 declare var bootstrap: any;
@@ -16,6 +17,7 @@ export class ParkingForm implements OnInit {
 
   service = inject(ParkingService);
   router = inject(Router);
+  toastr = inject(ToastrService); 
   numberPlates: Set<String> = new Set();
   balance: number | undefined;
 
@@ -53,14 +55,15 @@ export class ParkingForm implements OnInit {
     this.service.addNumberPlate(this.numberPlateForm.value).subscribe({
       next: (result: any) => {
         this.numberPlates.add(result.number);
-
+        const modalEl = document.getElementById('numberPlateModal');
+        if (modalEl) {
+          const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+          modalInstance.hide();
+        }
+        this.toastr.success("Patente registrada con éxito");
       }
     });
-    const modalEl = document.getElementById('numberPlateModal');
-    if (modalEl) {
-      const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-      modalInstance.hide();
-    }
+
   }
 
 }
