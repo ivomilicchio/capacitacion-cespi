@@ -6,13 +6,11 @@
            class="me-2">
     </a>
 
-    <!-- Botón hamburguesa -->
     <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
       aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Contenido colapsable -->
     <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
       <ul class="navbar-nav mb-2 mb-lg-0">
         <li class="nav-item">
@@ -20,7 +18,7 @@
             <a class="text-white link-hover-underline fs-5" (click)="authService.logout()">Cerrar sesión</a>
           }
           @else {
-            <a href="" class="text-white link-hover-underline fs-5">Registrate</a>
+            <a href="/register" class="text-white link-hover-underline fs-5">Registrate</a>
           }
         </li>
       </ul>

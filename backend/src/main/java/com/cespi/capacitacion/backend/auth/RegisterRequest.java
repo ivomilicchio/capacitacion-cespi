@@ -1,19 +1,26 @@
 package com.cespi.capacitacion.backend.auth;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+
 public class RegisterRequest {
 
+    @NotEmpty(message = "El campo 'phoneNumber' es requerido")
     private String phoneNumber;
-    private String password;
+    @NotEmpty(message = "El campo 'mail' es requerido")
+    @Email(message = "El mail ingresado tiene un formato inválido")
     private String mail;
+    @NotEmpty(message = "El campo 'password' es requerido")
+    private String password;
 
     public RegisterRequest() {
 
     }
 
-    public RegisterRequest(String phoneNumber, String password, String mail) {
+    public RegisterRequest(String phoneNumber, String mail, String password) {
         this.phoneNumber = phoneNumber;
-        this.password = password;
         this.mail = mail;
+        this.password = password;
     }
 
     public String getPhoneNumber() {

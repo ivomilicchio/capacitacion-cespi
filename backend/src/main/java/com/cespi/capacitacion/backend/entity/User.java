@@ -30,7 +30,14 @@ public class User implements UserDetails {
     )
     private String password;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @Column(
+            unique = true,
+            nullable = false,
+            length = 320
+    )
+    private String mail;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_number_plates",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -46,8 +53,9 @@ public class User implements UserDetails {
 
     }
 
-    public User(String phoneNumber, String password) {
+    public User(String phoneNumber, String mail, String password) {
         this.phoneNumber = phoneNumber;
+        this.mail = mail;
         this.password = password;
         numberPlates = new HashSet<>();
         currentAccount = new CurrentAccount();
@@ -67,6 +75,14 @@ public class User implements UserDetails {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 
     public String getPassword() {

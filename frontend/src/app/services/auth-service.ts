@@ -17,6 +17,10 @@ export class AuthService {
     return this.http.post("http://localhost:8080/api/auth/login", formValue);
   }
 
+  register(formValue: any) {
+    return this.http.post("http://localhost:8080/api/auth/register", formValue);
+  }
+
   isLoggedIn() {
     const token = localStorage.getItem('token');
     return (token && !this.isTokenExpired(token));

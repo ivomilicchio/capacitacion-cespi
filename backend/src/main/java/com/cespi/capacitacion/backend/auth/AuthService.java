@@ -2,6 +2,8 @@ package com.cespi.capacitacion.backend.auth;
 
 import com.cespi.capacitacion.backend.entity.User;
 import com.cespi.capacitacion.backend.exception.BadFormatPhoneNumberException;
+import com.cespi.capacitacion.backend.exception.ExistMailException;
+import com.cespi.capacitacion.backend.exception.ExistPhoneNumberException;
 import com.cespi.capacitacion.backend.jwt.JwtService;
 import com.cespi.capacitacion.backend.repository.UserRepository;
 import com.cespi.capacitacion.backend.service.UserService;
@@ -35,7 +37,11 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
-        User user = new User(request.getPhoneNumber(), request.getPassword());
+        String sanitizedPhoneNumber = this.sanitizePhoneNumber(request.getPhoneNumber());
+        this.validFormatOfPhoneNumber(sanitizedPhoneNumber);
+        checkIfExistPhoneNumber(sanitizedPhoneNumber);
+        checkIfExistMail(request.getMail());
+        User user = new User(request.getPhoneNumber(), request.getMail(), request.getPassword());
         userService.save(user);
         return new AuthResponse(jwtService.getToken(user));
     }
@@ -50,6 +56,18 @@ public class AuthService {
 
         if  (!matcher.matches()) {
             throw new BadFormatPhoneNumberException();
+        }
+    }
+
+    private void checkIfExistPhoneNumber(String phoneNumber) {
+        if (userService.existPhoneNumber(phoneNumber)) {
+            throw new ExistPhoneNumberException();
+        }
+    }
+
+    private void checkIfExistMail(String mail) {
+        if (userService.existMail(mail)) {
+            throw new ExistMailException();
         }
     }
 }

@@ -5,6 +5,7 @@ import { authGuard } from './guards/auth-guard';
 import { ParkingSession } from './components/parking-session/parking-session';
 import { parkingSessionGuard } from './guards/parking-session-guard';
 import { parkingFormGuard } from './guards/parking-form-guard';
+import { RegisterForm } from './components/register-form/register-form';
 
 export const routes: Routes = [
 
@@ -29,5 +30,10 @@ export const routes: Routes = [
         component: ParkingSession,
         title: 'SEM',
         canActivate:[authGuard, parkingSessionGuard]
-    }, 
+    },
+    {
+        path: 'register',
+        component: RegisterForm,
+        title: 'SEM',
+    },
 ];

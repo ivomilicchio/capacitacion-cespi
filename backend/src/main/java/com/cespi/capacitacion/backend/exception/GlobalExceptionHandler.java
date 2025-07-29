@@ -109,4 +109,20 @@ public class GlobalExceptionHandler {
                 false));
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ExistPhoneNumberException.class)
+    public ResponseEntity<ErrorResponse> handleExistPhoneNumberException(ExistPhoneNumberException exception,
+                                                                             WebRequest webRequest) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+                false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ExistMailException.class)
+    public ResponseEntity<ErrorResponse> handleExistMailException(ExistMailException exception,
+                                                                         WebRequest webRequest) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+                false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
 }

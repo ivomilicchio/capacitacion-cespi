@@ -47,4 +47,12 @@ public class UserServiceImpl implements UserService {
                 -> new ResourceNotFoundException("Usuario"));
     }
 
+    public boolean existPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber).isPresent();
+    }
+
+    public boolean existMail(String mail) {
+        return userRepository.findByMail(mail).isPresent();
+    }
+
 }
