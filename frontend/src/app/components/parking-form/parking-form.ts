@@ -17,7 +17,7 @@ export class ParkingForm implements OnInit {
 
   service = inject(ParkingService);
   router = inject(Router);
-  toastr = inject(ToastrService); 
+  toastr = inject(ToastrService);
   numberPlates: Set<String> = new Set();
   balance: number | undefined;
 
@@ -27,6 +27,10 @@ export class ParkingForm implements OnInit {
 
   numberPlateForm: FormGroup = new FormGroup({
     number: new FormControl("", [Validators.required]),
+  });
+
+  balanceForm: FormGroup = new FormGroup({
+    balance: new FormControl("100", [Validators.required]),
   });
 
   ngOnInit(): void {
@@ -61,6 +65,21 @@ export class ParkingForm implements OnInit {
           modalInstance.hide();
         }
         this.toastr.success("Patente registrada con éxito");
+      }
+    });
+
+  }
+
+  onSubmitBalanceForm() {
+    this.service.addBalance(this.balanceForm.value).subscribe({
+      next: (result: any) => {
+        this.balance = result.balance;
+        const modalEl = document.getElementById('balanceModal');
+        if (modalEl) {
+          const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+          modalInstance.hide();
+        }
+        this.toastr.success("Fondos añadidos con éxito");
       }
     });
 

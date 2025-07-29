@@ -1,12 +1,10 @@
 package com.cespi.capacitacion.backend.controller;
 
-import com.cespi.capacitacion.backend.dto.CurrentAccountBalanceResponse;
+import com.cespi.capacitacion.backend.dto.CurrentAccountBalance;
 import com.cespi.capacitacion.backend.service.CurrentAccountService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/current-accounts")
@@ -19,8 +17,15 @@ public class CurrentAccountController {
     }
 
     @GetMapping("/balance")
-    public ResponseEntity<CurrentAccountBalanceResponse> getCurrentAccountBalance(
+    public ResponseEntity<CurrentAccountBalance> getCurrentAccountBalance(
             @RequestHeader("Authorization") String authHeader) {
         return ResponseEntity.ok(currentAccountService.getCurrentAccountBalance(authHeader));
+    }
+
+    @PostMapping("/balance")
+    public ResponseEntity<CurrentAccountBalance> addBalanceToAccount(
+            @RequestBody @Valid CurrentAccountBalance currentAccountBalance,
+            @RequestHeader("Authorization") String authHeader) {
+        return ResponseEntity.ok(currentAccountService.addBalanceToAccount(authHeader, currentAccountBalance));
     }
 }

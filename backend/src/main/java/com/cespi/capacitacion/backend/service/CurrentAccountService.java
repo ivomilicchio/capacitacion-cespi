@@ -1,9 +1,11 @@
 package com.cespi.capacitacion.backend.service;
 
-import com.cespi.capacitacion.backend.dto.CurrentAccountBalanceResponse;
+import com.cespi.capacitacion.backend.dto.CurrentAccountBalance;
 
 public interface CurrentAccountService {
 
-    CurrentAccountBalanceResponse getCurrentAccountBalance(String authHeader);
+    CurrentAccountBalance getCurrentAccountBalance(String authHeader);
+    CurrentAccountBalance addBalanceToAccount(String authHeader, CurrentAccountBalance currentAccountBalance);
+
 }
 

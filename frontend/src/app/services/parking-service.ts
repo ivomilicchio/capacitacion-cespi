@@ -29,4 +29,8 @@ export class ParkingService {
   return this.http.get("http://localhost:8080/api/current-accounts/balance");
   }
 
+  addBalance(formValue: any) {
+    return this.http.post("http://localhost:8080/api/current-accounts/balance", formValue);
+  }
+
 }

@@ -1,14 +1,17 @@
 package com.cespi.capacitacion.backend.dto;
 
-public class CurrentAccountBalanceResponse {
+import jakarta.validation.constraints.DecimalMin;
 
+public class CurrentAccountBalance {
+
+    @DecimalMin(value = "100.00", message = "El monto mínimo de carga es de $100")
     private float balance;
 
-    public CurrentAccountBalanceResponse() {
+    public CurrentAccountBalance() {
 
     }
 
-    public CurrentAccountBalanceResponse(float balance) {
+    public CurrentAccountBalance(float balance) {
         this.balance = balance;
     }
 

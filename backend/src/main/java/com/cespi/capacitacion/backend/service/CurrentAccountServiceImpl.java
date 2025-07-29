@@ -1,6 +1,7 @@
 package com.cespi.capacitacion.backend.service;
 
-import com.cespi.capacitacion.backend.dto.CurrentAccountBalanceResponse;
+import com.cespi.capacitacion.backend.dto.CurrentAccountBalance;
+import com.cespi.capacitacion.backend.entity.CurrentAccount;
 import com.cespi.capacitacion.backend.entity.User;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +14,17 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
         this.userService = userService;
     }
 
-    public CurrentAccountBalanceResponse getCurrentAccountBalance(String authHeader) {
+    public CurrentAccountBalance getCurrentAccountBalance(String authHeader) {
         User user = userService.getUserFromAuthHeader(authHeader);
-        return new CurrentAccountBalanceResponse(user.getCurrentAccount().getBalance());
+        return new CurrentAccountBalance(user.getCurrentAccount().getBalance());
+    }
+
+    public CurrentAccountBalance addBalanceToAccount(String authHeader, CurrentAccountBalance currentAccountBalance) {
+        User user = userService.getUserFromAuthHeader(authHeader);
+        CurrentAccount currentAccount = user.getCurrentAccount();
+        float balance = currentAccount.getBalance() + currentAccountBalance.getBalance();
+        currentAccount.setBalance(balance);
+        userService.save(user);
+        return new CurrentAccountBalance(balance);
     }
 }
