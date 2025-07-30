@@ -6,6 +6,7 @@ import { ParkingSession } from './components/parking-session/parking-session';
 import { parkingSessionGuard } from './guards/parking-session-guard';
 import { parkingFormGuard } from './guards/parking-form-guard';
 import { RegisterForm } from './components/register-form/register-form';
+import { loginGuard } from './guards/login-guard';
 
 export const routes: Routes = [
 
@@ -17,7 +18,8 @@ export const routes: Routes = [
     {
         path: 'login',
         component: LoginForm,
-        title: 'SEM'
+        title: 'SEM',
+        canActivate:[loginGuard]
     },
     {
         path: 'parking',
