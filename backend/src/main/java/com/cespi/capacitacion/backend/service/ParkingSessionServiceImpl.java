@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -25,8 +26,10 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     private LocalTime startTime;
     @Value("${parking.end-time}")
     private LocalTime endTime;
-    @Value("${parking.price-per-hour}")
-    private Double pricePerHour;
+    @Value("${parking.fraction-in-minutes}")
+    private int fractionInMinutes;
+    @Value("${parking.price-per-fraction}")
+    private Double pricePerFraction;
 
     public ParkingSessionServiceImpl(NumberPlateService numberPlateService,
                                      ParkingSessionRepository parkingSessionRepository, UserService userService) {
@@ -69,7 +72,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     }
 
     private void checkInsufficientBalance(CurrentAccount currentAccount) {
-        if (currentAccount.getBalance() < this.pricePerHour) {
+        if (currentAccount.getBalance() < this.pricePerFraction) {
             throw new InsufficientBalanceException();
         }
     }
@@ -94,9 +97,17 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     }
 
     private void chargeService(CurrentAccount currentAccount, ParkingSession parkingSession) {
-        Double amount = parkingSession.getHours() * this.pricePerHour;
+        Double amount = this.calculateAmount(parkingSession.getDurationInMinutes());
         Double balance = currentAccount.getBalance();
         currentAccount.setBalance(balance - amount);
         parkingSession.setAmount(amount);
+    }
+
+    private Double calculateAmount(long durationInMinutes) {
+        long fractions = durationInMinutes / this.fractionInMinutes;
+        if (durationInMinutes % this.fractionInMinutes > 0) {
+            fractions++;
+        }
+        return fractions * this.pricePerFraction;
     }
 }
