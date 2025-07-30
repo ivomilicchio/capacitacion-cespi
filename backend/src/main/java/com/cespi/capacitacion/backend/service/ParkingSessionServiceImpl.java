@@ -72,7 +72,8 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     }
 
     private void checkInsufficientBalance(CurrentAccount currentAccount) {
-        if (currentAccount.getBalance() < this.pricePerFraction) {
+
+        if (currentAccount.getBalance() < this.calculateAmount(60)) {
             throw new InsufficientBalanceException();
         }
     }
