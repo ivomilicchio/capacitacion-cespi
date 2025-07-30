@@ -17,12 +17,12 @@ public class CurrentAccount {
     @Column(
             nullable = false
     )
-    private float balance;
+    private Double balance;
     @OneToMany(mappedBy = "currentAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ParkingSession> parkingSessions;
 
     public CurrentAccount() {
-        this.balance = 0;
+        this.balance = 0.0;
     }
 
     public Long getId() {
@@ -33,11 +33,11 @@ public class CurrentAccount {
         this.id = id;
     }
 
-    public float getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
-    public void setBalance(float balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 }

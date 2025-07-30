@@ -20,6 +20,8 @@ public class ParkingSession {
     private Date startTime;
     @Column
     private Date endTime;
+    @Column
+    private Double amount;
     @ManyToOne
     @JoinColumn(name = "number_plate_id")
     private NumberPlate numberPlate;
@@ -68,6 +70,14 @@ public class ParkingSession {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public long getHours() {

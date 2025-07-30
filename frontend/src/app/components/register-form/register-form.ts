@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { AuthService } from '../../services/auth-service';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register-form',
@@ -13,6 +14,7 @@ export class RegisterForm {
 
   service = inject(AuthService);
   router = inject(Router);
+  toastr = inject(ToastrService);
 
   registerForm: FormGroup = new FormGroup({
     phoneNumber: new FormControl("", [Validators.required]),
@@ -25,6 +27,7 @@ export class RegisterForm {
       next: (result: any) => {
         localStorage.setItem('token', result.token);
         this.router.navigateByUrl('/parking');
+        this.toastr.success("Usuario creado con éxito")
       }
     })
 

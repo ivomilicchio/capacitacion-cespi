@@ -27,7 +27,7 @@
 
                         <div class="d-flex gap-3">
                             <select class="form-control form-control-lg" formControlName="numberPlate"
-                                style="font-size: 1.3rem; height: 60px; padding: 15px;">
+                                style="font-size: 1.5rem; height: 60px; padding: 15px;">
                                 <option disabled selected>Seleccione la patente</option>
                                 @for (item of numberPlates; track $index) {
                                 <option>{{item}}</option>
@@ -42,7 +42,7 @@
                         <div class="col-12 mt-4">
                             <div class="d-grid">
                                 <button class="btn btn-lg btn-success rounded-2 text-white" type="submit"
-                                    style="height: 60px; font-size: 1.3rem; padding: 15px;"
+                                    style="height: 60px; font-size: 1.5rem; padding: 15px;"
                                     (click)="onSubmitParkingForm()">
                                     Iniciar estacionamiento
                                 </button>

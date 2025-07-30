@@ -5,21 +5,21 @@ import jakarta.validation.constraints.DecimalMin;
 public class CurrentAccountBalance {
 
     @DecimalMin(value = "100.00", message = "El monto mínimo de carga es de $100")
-    private float balance;
+    private Double balance;
 
     public CurrentAccountBalance() {
 
     }
 
-    public CurrentAccountBalance(float balance) {
+    public CurrentAccountBalance(Double balance) {
         this.balance = balance;
     }
 
-    public float getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
-    public void setBalance(float balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 }

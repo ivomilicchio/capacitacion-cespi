@@ -84,7 +84,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
         CurrentAccount currentAccount = user.getCurrentAccount();
         ParkingSession parkingSession = this.getSessionStarted(currentAccount.getId());
         parkingSession.setEndTime(new Date());
-        this.chargeService(currentAccount, parkingSession.getHours());
+        this.chargeService(currentAccount, parkingSession);
         parkingSessionRepository.save(parkingSession);
     }
 
@@ -93,8 +93,10 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
                 orElseThrow(NotSessionStartedException::new);
     }
 
-    private void chargeService(CurrentAccount currentAccount, long hours) {
-        float balance = currentAccount.getBalance();
-        currentAccount.setBalance((float) (balance - hours * this.pricePerHour));
+    private void chargeService(CurrentAccount currentAccount, ParkingSession parkingSession) {
+        Double amount = parkingSession.getHours() * this.pricePerHour;
+        Double balance = currentAccount.getBalance();
+        currentAccount.setBalance(balance - amount);
+        parkingSession.setAmount(amount);
     }
 }

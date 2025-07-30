@@ -22,7 +22,7 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
     public CurrentAccountBalance addBalanceToAccount(String authHeader, CurrentAccountBalance currentAccountBalance) {
         User user = userService.getUserFromAuthHeader(authHeader);
         CurrentAccount currentAccount = user.getCurrentAccount();
-        float balance = currentAccount.getBalance() + currentAccountBalance.getBalance();
+        Double balance = currentAccount.getBalance() + currentAccountBalance.getBalance();
         currentAccount.setBalance(balance);
         userService.save(user);
         return new CurrentAccountBalance(balance);

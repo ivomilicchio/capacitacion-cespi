@@ -49,7 +49,8 @@ export class ParkingForm implements OnInit {
   onSubmitParkingForm() {
     this.service.startParkingSession(this.parkingForm.value).subscribe({
       next: (result: any) => {
-        this.router.navigateByUrl('/parking-session')
+        this.router.navigateByUrl('/parking-session');
+        this.toastr.success("Servicio de estacionamiento iniciado con éxito");
       }
     });
 
