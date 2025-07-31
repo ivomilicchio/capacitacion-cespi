@@ -1,6 +1,7 @@
 package com.cespi.capacitacion.backend.service;
 
 import com.cespi.capacitacion.backend.dto.CurrentAccountBalance;
+import com.cespi.capacitacion.backend.entity.BalanceTopUp;
 import com.cespi.capacitacion.backend.entity.CurrentAccount;
 import com.cespi.capacitacion.backend.entity.User;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,10 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
         CurrentAccount currentAccount = user.getCurrentAccount();
         Double balance = currentAccount.getBalance() + currentAccountBalance.getBalance();
         currentAccount.setBalance(balance);
+        BalanceTopUp balanceTopUp = new BalanceTopUp(currentAccountBalance.getBalance(), currentAccount);
+        currentAccount.addBalanceTopUp(balanceTopUp);
         userService.save(user);
         return new CurrentAccountBalance(balance);
     }
+
 }

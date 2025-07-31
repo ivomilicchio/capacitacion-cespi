@@ -21,6 +21,9 @@ public class CurrentAccount {
     @OneToMany(mappedBy = "currentAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ParkingSession> parkingSessions;
 
+    @OneToMany(mappedBy = "currentAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BalanceTopUp> balanceTopUps;
+
     public CurrentAccount() {
         this.balance = 0.0;
     }
@@ -39,5 +42,9 @@ public class CurrentAccount {
 
     public void setBalance(Double balance) {
         this.balance = balance;
+    }
+
+    public void addBalanceTopUp(BalanceTopUp balanceTopUp) {
+        this.balanceTopUps.add(balanceTopUp);
     }
 }
