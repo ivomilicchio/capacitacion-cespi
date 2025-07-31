@@ -4,6 +4,7 @@ import com.cespi.capacitacion.backend.dto.CurrentAccountBalance;
 import com.cespi.capacitacion.backend.entity.BalanceTopUp;
 import com.cespi.capacitacion.backend.entity.CurrentAccount;
 import com.cespi.capacitacion.backend.entity.User;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,11 +16,13 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
         this.userService = userService;
     }
 
+    @Transactional
     public CurrentAccountBalance getCurrentAccountBalance(String authHeader) {
         User user = userService.getUserFromAuthHeader(authHeader);
         return new CurrentAccountBalance(user.getCurrentAccount().getBalance());
     }
 
+    @Transactional
     public CurrentAccountBalance addBalanceToAccount(String authHeader, CurrentAccountBalance currentAccountBalance) {
         User user = userService.getUserFromAuthHeader(authHeader);
         CurrentAccount currentAccount = user.getCurrentAccount();
