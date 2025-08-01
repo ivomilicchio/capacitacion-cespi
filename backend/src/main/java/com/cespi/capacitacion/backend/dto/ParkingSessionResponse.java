@@ -2,43 +2,49 @@ package com.cespi.capacitacion.backend.dto;
 
 public class ParkingSessionResponse {
 
-    private String startTime;
-    private String endTime;
+    private String startTimeDay;
+    private String startTimeHour;
+    private String endTimeHour;
     private Double amount;
 
     public ParkingSessionResponse() {
 
     }
 
-    public ParkingSessionResponse(String startTime, String endTime, Double amount) {
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public ParkingSessionResponse(String startTimeDay, String startTimeHour, String endTimeHour, Double amount) {
+        this.startTimeDay = startTimeDay;
+        this.startTimeHour = startTimeHour;
+        this.endTimeHour = endTimeHour;
         this.amount = amount;
     }
 
-    public ParkingSessionResponse(String startTime, Double amount) {
-        this.startTime = startTime;
-        this.amount = amount;
+    public ParkingSessionResponse(String startTimeDay, String startTimeHour) {
+        this.startTimeDay = startTimeDay;
+        this.startTimeHour = startTimeHour;
     }
 
-    public ParkingSessionResponse(String startTime) {
-        this.startTime = startTime;
+    public String getStartTimeDay() {
+        return startTimeDay;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public void setStartTimeDay(String startTimeDay) {
+        this.startTimeDay = startTimeDay;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public String getStartTimeHour() {
+        return startTimeHour;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public void setStartTimeHour(String startTimeHour) {
+        this.startTimeHour = startTimeHour;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public String getEndTimeHour() {
+        return endTimeHour;
+    }
+
+    public void setEndTimeHour(String endTimeHour) {
+        this.endTimeHour = endTimeHour;
     }
 
     public Double getAmount() {

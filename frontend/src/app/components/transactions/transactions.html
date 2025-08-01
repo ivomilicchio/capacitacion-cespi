@@ -1,0 +1,27 @@
+<div class="container" style="font-size: 2rem;">
+    <h2 class="display-4 mb-3 text-center">Historial de transacciones</h2>
+
+    <!-- Tabla de resultados -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark text-center fs-3">
+                <tr>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Hora de inicio</th>
+                    <th scope="col">Hora de fin</th>
+                    <th scope="col">Monto</th>
+                </tr>
+            </thead>
+            <tbody class="text-center fs-3">
+                 @for (item of parkingSessionHistory; track $index) {
+                <tr>
+                    <td>{{item.startTimeDay}}</td>
+                    <td>{{item.startTimeHour}}</td>
+                    <td>{{item.endTimeHour}}</td>
+                    <td>{{item.amount}}</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

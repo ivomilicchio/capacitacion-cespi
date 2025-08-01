@@ -45,7 +45,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
         this.checkInsufficientBalance(currentAccount);
         ParkingSession parkingSession = new ParkingSession(numberPlate, currentAccount);
         parkingSession = this.save(parkingSession);
-        return new ParkingSessionResponse(parkingSession.getStartTime().toString());
+        return new ParkingSessionResponse(parkingSession.getStarTimeDay(), parkingSession.getStarTimeHour());
     }
 
     private void checkOutOfServiceHour() {
@@ -110,8 +110,8 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     private ParkingSessionHistory getHistory(List<ParkingSession> parkingSessions) {
         ParkingSessionHistory history = new ParkingSessionHistory();
         for (ParkingSession p: parkingSessions) {
-            ParkingSessionResponse actual = new ParkingSessionResponse(p.getStartTime().toString(),
-                    p.getEndTime().toString(), p.getAmount());
+            ParkingSessionResponse actual = new ParkingSessionResponse(p.getStarTimeDay(),
+                    p.getStarTimeHour(), p.getEndTimeHour(), p.getAmount());
             history.addParkingSession(actual);
         }
         return history;

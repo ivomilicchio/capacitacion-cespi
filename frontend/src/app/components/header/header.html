@@ -1,13 +1,20 @@
 <nav class="navbar navbar-expand-lg py-3" style="background-color: rgb(52, 58, 84); font-size: 1.1rem;">
   <div class="container-fluid">
     <a class="navbar-brand d-flex align-items-center" href="/login">
-      <img src="/assets/img/logo-sem-cespi.png" alt="Logo" 
-           style="width: 120px; height: auto; object-fit: contain;" 
-           class="me-2">
+      <img src="/assets/img/logo-sem-cespi.png" alt="Logo" style="width: 120px; height: auto; object-fit: contain;"
+        class="me-2">
     </a>
 
-    <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+    @if(authService.isLoggedIn()) {
+    <div class="d-flex">
+      <a href="/parking" class="text-white link-hover-underline fs-5 me-4">Inicio</a>
+      <a href="/transactions" class="text-white link-hover-underline fs-5">Transacciones</a>
+    </div>
+
+    }
+    <button class="navbar-toggler bg-light ms-auto" type="button" data-bs-toggle="collapse"
+      data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false"
+      aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -15,10 +22,10 @@
       <ul class="navbar-nav mb-2 mb-lg-0">
         <li class="nav-item">
           @if (authService.isLoggedIn()) {
-            <a class="text-white link-hover-underline fs-5" (click)="authService.logout()">Cerrar sesión</a>
+          <a class="text-white link-hover-underline fs-5" (click)="authService.logout()">Cerrar sesión</a>
           }
           @else {
-            <a href="/register" class="text-white link-hover-underline fs-5">Registrate</a>
+          <a href="/register" class="text-white link-hover-underline fs-5">Registrate</a>
           }
         </li>
       </ul>

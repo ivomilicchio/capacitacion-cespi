@@ -7,6 +7,7 @@ import { parkingSessionGuard } from './guards/parking-session-guard';
 import { parkingFormGuard } from './guards/parking-form-guard';
 import { RegisterForm } from './components/register-form/register-form';
 import { loginGuard } from './guards/login-guard';
+import { Transactions } from './components/transactions/transactions';
 
 export const routes: Routes = [
 
@@ -19,24 +20,35 @@ export const routes: Routes = [
         path: 'login',
         component: LoginForm,
         title: 'SEM',
-        canActivate:[loginGuard]
+        canActivate: [loginGuard]
     },
     {
         path: 'parking',
         component: ParkingForm,
         title: 'SEM',
-        canActivate:[authGuard, parkingFormGuard]
+        canActivate: [authGuard, parkingFormGuard]
     },
     {
         path: 'parking-session',
         component: ParkingSession,
         title: 'SEM',
-        canActivate:[authGuard, parkingSessionGuard]
+        canActivate: [authGuard, parkingSessionGuard]
     },
     {
         path: 'register',
         component: RegisterForm,
         title: 'SEM',
-        canActivate:[loginGuard]  
+        canActivate: [loginGuard]
     },
+    {
+        path: 'transactions',
+        component: Transactions,
+        title: 'SEM',
+        canActivate: [authGuard]
+    },
+    {
+        path: '**',
+        redirectTo: '/login',
+        pathMatch: 'full'
+    }
 ];
