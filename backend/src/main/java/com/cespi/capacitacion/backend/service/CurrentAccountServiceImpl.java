@@ -1,6 +1,7 @@
 package com.cespi.capacitacion.backend.service;
 
 import com.cespi.capacitacion.backend.dto.BalanceTopUpHistory;
+import com.cespi.capacitacion.backend.dto.BalanceTopUpResponse;
 import com.cespi.capacitacion.backend.dto.CurrentAccountBalance;
 import com.cespi.capacitacion.backend.entity.BalanceTopUp;
 import com.cespi.capacitacion.backend.entity.CurrentAccount;
@@ -42,7 +43,16 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
     public BalanceTopUpHistory getBalanceTopUpHistory(String authHeader) {
         User user = this.userService.getUserFromAuthHeader(authHeader);
         List<BalanceTopUp> balanceTopUps =  user.getCurrentAccount().getBalanceTopUps();
-        return new BalanceTopUpHistory(balanceTopUps);
+        return this.getHistory(balanceTopUps);
+    }
+
+    private BalanceTopUpHistory getHistory(List<BalanceTopUp> balanceTopUps) {
+        BalanceTopUpHistory history = new BalanceTopUpHistory();
+        for (BalanceTopUp b: balanceTopUps) {
+            BalanceTopUpResponse actual = new BalanceTopUpResponse(b.getTime().toString(), b.getAmount());
+            history.addBalanceTopUp(actual);
+        }
+        return history;
     }
 
 }
