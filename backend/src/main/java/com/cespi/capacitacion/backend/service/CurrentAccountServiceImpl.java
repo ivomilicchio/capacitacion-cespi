@@ -1,11 +1,15 @@
 package com.cespi.capacitacion.backend.service;
 
+import com.cespi.capacitacion.backend.dto.BalanceTopUpHistory;
 import com.cespi.capacitacion.backend.dto.CurrentAccountBalance;
 import com.cespi.capacitacion.backend.entity.BalanceTopUp;
 import com.cespi.capacitacion.backend.entity.CurrentAccount;
 import com.cespi.capacitacion.backend.entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CurrentAccountServiceImpl implements CurrentAccountService {
@@ -32,6 +36,13 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
         currentAccount.addBalanceTopUp(balanceTopUp);
         userService.save(user);
         return new CurrentAccountBalance(balance);
+    }
+
+    @Transactional
+    public BalanceTopUpHistory getBalanceTopUpHistory(String authHeader) {
+        User user = this.userService.getUserFromAuthHeader(authHeader);
+        List<BalanceTopUp> balanceTopUps =  user.getCurrentAccount().getBalanceTopUps();
+        return new BalanceTopUpHistory(balanceTopUps);
     }
 
 }

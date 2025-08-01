@@ -1,10 +1,8 @@
 package com.cespi.capacitacion.backend.service;
 
+import com.cespi.capacitacion.backend.dto.ParkingSessionHistory;
 import com.cespi.capacitacion.backend.dto.ParkingSessionResponse;
-import com.cespi.capacitacion.backend.entity.CurrentAccount;
-import com.cespi.capacitacion.backend.entity.NumberPlate;
-import com.cespi.capacitacion.backend.entity.ParkingSession;
-import com.cespi.capacitacion.backend.entity.User;
+import com.cespi.capacitacion.backend.entity.*;
 import com.cespi.capacitacion.backend.exception.*;
 import com.cespi.capacitacion.backend.repository.ParkingSessionRepository;
 import jakarta.transaction.Transactional;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ParkingSessionServiceImpl implements ParkingSessionService {
@@ -99,4 +98,24 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
         currentAccount.setBalance(balance - amount);
         parkingSession.setAmount(amount);
     }
+
+    @Transactional
+    public ParkingSessionHistory getParkingSessionHistory(String authHeader) {
+        User user = this.userService.getUserFromAuthHeader(authHeader);
+        List<ParkingSession> parkingSessions =  parkingSessionRepository.findAllByCurrentAccountIdAndEndTimeNotNull(
+                user.getCurrentAccount().getId());
+        return getHistory(parkingSessions);
+    }
+
+    private ParkingSessionHistory getHistory(List<ParkingSession> parkingSessions) {
+        ParkingSessionHistory history = new ParkingSessionHistory();
+        for (ParkingSession p: parkingSessions) {
+            ParkingSessionResponse actual = new ParkingSessionResponse(p.getStartTime().toString(),
+                    p.getEndTime().toString(), p.getAmount());
+            history.addParkingSession(actual);
+        }
+        return history;
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package com.cespi.capacitacion.backend.controller;
 
+import com.cespi.capacitacion.backend.dto.BalanceTopUpHistory;
 import com.cespi.capacitacion.backend.dto.CurrentAccountBalance;
 import com.cespi.capacitacion.backend.service.CurrentAccountService;
 import jakarta.validation.Valid;
@@ -28,4 +29,12 @@ public class CurrentAccountController {
             @RequestHeader("Authorization") String authHeader) {
         return ResponseEntity.ok(currentAccountService.addBalanceToAccount(authHeader, currentAccountBalance));
     }
+
+    @GetMapping("/balance/history")
+    public ResponseEntity<BalanceTopUpHistory> getBalanceTopUpHistory(
+            @RequestHeader("Authorization") String authHeader) {
+        return ResponseEntity.ok(currentAccountService.getBalanceTopUpHistory(authHeader));
+    }
+
+
 }
