@@ -9,6 +9,12 @@ interface ParkingSessionTransaction {
   amount: number;
 }
 
+interface ParkingSessionTransaction {
+  day: String;
+  hour: string;
+  amount: number;
+}
+
 @Component({
   selector: 'app-transactions',
   imports: [],
@@ -19,6 +25,8 @@ export class Transactions implements OnInit {
 
 parkingSessionHistory: ParkingSessionTransaction[] = [];
 
+BalanceTopUpHistory: ParkingSessionTransaction[] = [];
+
 
 service = inject(TransactionsService);
 
@@ -26,6 +34,12 @@ ngOnInit(): void {
   this.service.getParkingSessionHistory().subscribe({
     next: (result: any) => {
       this.parkingSessionHistory = result.parkingSessions;
+
+    }
+  });
+  this.service.getBalanceTopUpHistory().subscribe({
+    next: (result: any) => {
+      this.BalanceTopUpHistory = result.balanceTopUps;
 
     }
   });

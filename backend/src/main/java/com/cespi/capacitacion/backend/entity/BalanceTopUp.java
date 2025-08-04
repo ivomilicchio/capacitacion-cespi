@@ -2,6 +2,7 @@ package com.cespi.capacitacion.backend.entity;
 
 import jakarta.persistence.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -48,5 +49,15 @@ public class BalanceTopUp {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public String getDay() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return dateFormat.format(this.time);
+    }
+
+    public String getHour() {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        return timeFormat.format(this.time);
     }
 }

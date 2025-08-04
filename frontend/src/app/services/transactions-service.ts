@@ -12,4 +12,8 @@ export class TransactionsService {
     return this.http.get("http://localhost:8080/api/parking-sessions/history");
   }
 
+    getBalanceTopUpHistory(): any {
+    return this.http.get("http://localhost:8080/api/current-accounts/balance/history");
+  }
+
 }

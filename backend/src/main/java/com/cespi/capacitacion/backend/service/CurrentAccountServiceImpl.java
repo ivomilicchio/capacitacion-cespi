@@ -49,7 +49,7 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
     private BalanceTopUpHistory getHistory(List<BalanceTopUp> balanceTopUps) {
         BalanceTopUpHistory history = new BalanceTopUpHistory();
         for (BalanceTopUp b: balanceTopUps) {
-            BalanceTopUpResponse actual = new BalanceTopUpResponse(b.getTime().toString(), b.getAmount());
+            BalanceTopUpResponse actual = new BalanceTopUpResponse(b.getDay(), b.getHour(), b.getAmount());
             history.addBalanceTopUp(actual);
         }
         return history;
