@@ -62,8 +62,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(OutOfServiceHourException.class)
-    public ResponseEntity<ErrorResponse> handleOutOfServiceHourException(OutOfServiceHourException exception,
+    @ExceptionHandler(OutOfServiceException.class)
+    public ResponseEntity<ErrorResponse> handleOutOfServiceHourException(OutOfServiceException exception,
                                                                          WebRequest webRequest) {
         ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
                 false));

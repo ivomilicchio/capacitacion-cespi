@@ -11,8 +11,12 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 @Service
 public class ParkingSessionServiceImpl implements ParkingSessionService {
@@ -21,6 +25,10 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     private final ParkingSessionRepository parkingSessionRepository;
     private final UserService userService;
 
+    @Value("${parking.bussiness-days}")
+    private List<String> bussinessDays;
+    @Value("${parking.enable}")
+    private boolean enable;
     @Value("${parking.start-time}")
     private LocalTime startTime;
     @Value("${parking.end-time}")
@@ -37,7 +45,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
 
     @Transactional
     public ParkingSessionResponse startParkingSession(String authHeader, String number) {
-        this.checkOutOfServiceHour();
+        this.checkOutOfService();
         User user = userService.getUserFromAuthHeader(authHeader);
         CurrentAccount currentAccount = user.getCurrentAccount();
         this.checkHasSessionStarted(currentAccount.getId());
@@ -49,11 +57,16 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
         return new ParkingSessionResponse(parkingSession.getStartTime().toString());
     }
 
-    private void checkOutOfServiceHour() {
+    private void checkOutOfService() {
+        String day = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+        if (!bussinessDays.contains(day) || !this.enable) {
+            throw new OutOfServiceException();
+        }
         LocalTime now = LocalTime.now();
         if (now.isBefore(startTime) || now.isAfter(endTime)) {
-            throw new OutOfServiceHourException(this.startTime.toString(), this.endTime.toString());
+            throw new OutOfServiceException(this.startTime.toString(), this.endTime.toString());
         }
+
     }
 
     private void checkHasSessionStarted(Long accountId) {
