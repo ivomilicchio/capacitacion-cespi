@@ -2,6 +2,7 @@ package com.cespi.capacitacion.backend.entity;
 
 import jakarta.persistence.*;
 
+import java.time.Duration;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -80,13 +81,8 @@ public class ParkingSession {
         this.amount = amount;
     }
 
-    public long getHours() {
+    public long getDurationInMinutes() {
         long diffMillis = endTime.getTime() - startTime.getTime();
-        long hours = TimeUnit.MILLISECONDS.toHours(diffMillis);
-        long minutes =  TimeUnit.MILLISECONDS.toMinutes(diffMillis) % 60;
-        if (minutes > 0) {
-            hours++;
-        }
-        return hours;
+        return TimeUnit.MILLISECONDS.toMinutes(diffMillis);
     }
 }
