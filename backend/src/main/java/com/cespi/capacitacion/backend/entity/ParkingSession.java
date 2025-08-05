@@ -2,7 +2,7 @@ package com.cespi.capacitacion.backend.entity;
 
 import jakarta.persistence.*;
 
-import java.time.Duration;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -85,4 +85,20 @@ public class ParkingSession {
         long diffMillis = endTime.getTime() - startTime.getTime();
         return TimeUnit.MILLISECONDS.toMinutes(diffMillis);
     }
+
+    public String getStarTimeDay() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return dateFormat.format(this.startTime);
+    }
+
+    public String getStarTimeHour() {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        return timeFormat.format(this.startTime);
+    }
+
+    public String getEndTimeHour() {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        return timeFormat.format(this.endTime);
+    }
+
 }

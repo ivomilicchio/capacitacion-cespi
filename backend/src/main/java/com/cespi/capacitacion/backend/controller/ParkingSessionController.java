@@ -1,5 +1,6 @@
 package com.cespi.capacitacion.backend.controller;
 
+import com.cespi.capacitacion.backend.dto.ParkingSessionHistory;
 import com.cespi.capacitacion.backend.dto.ParkingSessionRequest;
 import com.cespi.capacitacion.backend.dto.ParkingSessionResponse;
 import com.cespi.capacitacion.backend.entity.ParkingSession;
@@ -42,9 +43,16 @@ public class ParkingSessionController {
         Optional<ParkingSession> optionalParkingSession = userService.hasSessionStarted(authHeader);
         if (optionalParkingSession.isPresent()) {
             ParkingSession parkingSession = optionalParkingSession.get();
-            ParkingSessionResponse response = new ParkingSessionResponse(parkingSession.getStartTime().toString());
+            ParkingSessionResponse response = new ParkingSessionResponse(parkingSession.getStarTimeDay(),
+                    parkingSession.getStarTimeHour());
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<ParkingSessionHistory> getParkingSessionHistory(
+            @RequestHeader("Authorization") String authHeader) {
+        return ResponseEntity.ok(this.parkingSessionService.getParkingSessionHistory(authHeader));
     }
 }

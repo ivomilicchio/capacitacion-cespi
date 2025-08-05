@@ -1,0 +1,54 @@
+<div class="container-fluid" style="font-size: 2rem;">
+    <h2 class="display-2 mb-4 text-center">Historial de transacciones</h2>
+
+    <div class="row gx-5">
+        <div class="col-lg-6 pe-lg-4" style="max-height: 500px; overflow-y: auto;">
+            <div class="table-responsive bg-light p-2 rounded-3">
+                    <h3 class="display-5 mb-4 text-center">Sesiones de estacionamiento</h3>
+                <table class="table table-bordered table-hover align-middle m-0" style="width: 100%">
+                    <thead class="table-dark text-center fs-3">
+                        <tr>
+                            <th scope="col" style="white-space: nowrap; min-width: 150px;">Fecha</th>
+                            <th scope="col" style="white-space: nowrap; min-width: 150px;">Hora de inicio</th>
+                            <th scope="col" style="white-space: nowrap; min-width: 150px;">Hora de fin</th>
+                            <th scope="col" style="white-space: nowrap; min-width: 120px;">Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center fs-3">
+                        @for (item of parkingSessionHistory; track $index) {
+                        <tr>
+                            <td>{{item.startTimeDay}}</td>
+                            <td>{{item.startTimeHour}}</td>
+                            <td>{{item.endTimeHour}}</td>
+                            <td class="text-danger">-${{item.amount}}</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-6 ps-lg-4" style="max-height: 500px; overflow-y: auto;">
+            <div class="table-responsive bg-light p-2 rounded-3">
+                <h3 class="display-5 mb-4 text-center">Cargas de saldo</h3>
+                <table class="table table-bordered table-hover align-middle m-0" style="width: 100%">
+                    <thead class="table-dark text-center fs-3">
+                        <tr>
+                            <th scope="col" style="white-space: nowrap; min-width: 200px;">Fecha</th>
+                            <th scope="col" style="white-space: nowrap; min-width: 200px;">Hora</th>
+                            <th scope="col" style="white-space: nowrap; min-width: 200px;">Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center fs-3">
+                        @for (item of BalanceTopUpHistory; track $index) {
+                        <tr>
+                            <td>{{item.day}}</td>
+                            <td>{{item.hour}}</td>
+                            <td class="text-success">+${{item.amount}}</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
