@@ -4,6 +4,7 @@ import com.cespi.capacitacion.backend.entity.ParkingSession;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ParkingSessionHistory {
 
@@ -28,5 +29,18 @@ public class ParkingSessionHistory {
 
     public void setParkingSessions(List<ParkingSessionResponse> parkingSessions) {
         this.parkingSessions = parkingSessions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ParkingSessionHistory)) return false;
+        ParkingSessionHistory that = (ParkingSessionHistory) o;
+        return Objects.equals(parkingSessions, that.parkingSessions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(parkingSessions);
     }
 }

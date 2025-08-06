@@ -1,5 +1,7 @@
 package com.cespi.capacitacion.backend.dto;
 
+import java.util.Objects;
+
 public class ParkingSessionResponse {
 
     private String startTimeDay;
@@ -53,5 +55,21 @@ public class ParkingSessionResponse {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ParkingSessionResponse)) return false;
+        ParkingSessionResponse that = (ParkingSessionResponse) o;
+        return Objects.equals(startTimeDay, that.startTimeDay) &&
+                Objects.equals(startTimeHour, that.startTimeHour) &&
+                Objects.equals(endTimeHour, that.endTimeHour) &&
+                Objects.equals(amount, that.amount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(startTimeDay, startTimeHour, endTimeHour, amount);
     }
 }

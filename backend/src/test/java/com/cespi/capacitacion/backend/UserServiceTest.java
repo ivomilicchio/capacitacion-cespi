@@ -1,6 +1,5 @@
 package com.cespi.capacitacion.backend;
 
-import com.cespi.capacitacion.backend.entity.ParkingSession;
 import com.cespi.capacitacion.backend.entity.User;
 import com.cespi.capacitacion.backend.exception.ResourceNotFoundException;
 import com.cespi.capacitacion.backend.jwt.JwtService;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -52,6 +50,8 @@ public class UserServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> userService.findByPhoneNumber("2210123456"));
 
     }
+
+    //Pensaba testear el metodo hasSessionStarted() pero tengo que mockear muchos métodos y siento que no tiene sentido
 
 //    @Test
 //    public void testHasSessionStarted() {
