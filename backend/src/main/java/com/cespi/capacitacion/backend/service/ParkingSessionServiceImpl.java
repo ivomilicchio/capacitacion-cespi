@@ -99,7 +99,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
         ParkingSession parkingSession = this.getSessionStarted(currentAccount.getId());
         parkingSession.setEndTime(new Date());
         this.chargeService(currentAccount, parkingSession);
-        parkingSessionRepository.save(parkingSession);
+        this.save(parkingSession);
     }
 
     private ParkingSession getSessionStarted(Long accountId) {

@@ -6,6 +6,7 @@ import com.cespi.capacitacion.backend.jwt.JwtService;
 import com.cespi.capacitacion.backend.repository.ParkingSessionRepository;
 import com.cespi.capacitacion.backend.repository.UserRepository;
 import com.cespi.capacitacion.backend.service.UserServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,10 +33,17 @@ public class UserServiceTest {
     @InjectMocks
     private UserServiceImpl userService;
 
+    private User user;
+
+    @BeforeEach
+    public void setUp() {
+        this.user = new User("2211234567", "usuario@gmail.com", "1234");
+    }
+
     @Test
     public void testExistMail() {
         when(userRepository.findByMail("usuario@gmail.com"))
-                .thenReturn(Optional.of(new User("2211234567", "usuario@gmail.com", "1234")));
+                .thenReturn(Optional.of(user));
 
         assertTrue(userService.existMail("usuario@gmail.com"));
         assertFalse(userService.existMail("usuario2@gmail.com"));
@@ -43,7 +51,6 @@ public class UserServiceTest {
 
     @Test
     public void testFindByPhoneNumber() {
-        User user = new User("2211234567", "usuario@gmail.com", "1234");
         when(userRepository.findByPhoneNumber("2211234567"))
                 .thenReturn(Optional.of(user));
         assertEquals(user, userService.findByPhoneNumber("2211234567"));

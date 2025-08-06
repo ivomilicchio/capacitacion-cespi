@@ -45,8 +45,9 @@ public class CurrentAccountServiceTest {
     public void testGetCurrentAccountBalance() {
 
         currentAccount.setBalance(1000.0);
+        currentAccountService.addBalanceToAccount("authHeader", new CurrentAccountBalance(2000.0));
 
-        assertEquals(1000.0, currentAccountService.getCurrentAccountBalance("authHeader")
+        assertEquals(3000.0, currentAccountService.getCurrentAccountBalance("authHeader")
                 .getBalance());
     }
 
