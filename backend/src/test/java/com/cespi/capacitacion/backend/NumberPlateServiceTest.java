@@ -6,6 +6,7 @@ import com.cespi.capacitacion.backend.exception.BadFormatNumberPlateException;
 import com.cespi.capacitacion.backend.repository.NumberPlateRepository;
 import com.cespi.capacitacion.backend.service.NumberPlateServiceImpl;
 import com.cespi.capacitacion.backend.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,11 +32,16 @@ public class NumberPlateServiceTest {
     @InjectMocks
     private NumberPlateServiceImpl numberPlateService;
 
+    private User user;
+
+    @BeforeEach
+    public void setUp() {
+        this.user = new User("2211234567", "usuario@gmail.com", "1234");
+        when(userService.getUserFromAuthHeader("authHeader")).thenReturn(user);
+    }
+
     @Test
     public void testSaveNumberPlate() {
-
-        User user = new User("2211234567", "usuario@gmail.com", "1234");
-        when(userService.getUserFromAuthHeader("authHeader")).thenReturn(user);
 
         NumberPlate numberPlate = new NumberPlate("ABC123");
         when(numberPlateRepository.findByNumber("ABC123")).thenReturn(Optional.of(numberPlate));
@@ -57,9 +63,6 @@ public class NumberPlateServiceTest {
 
     @Test
     public void testGetNumberPlatesOfUser() {
-
-        User user = new User("2211234567", "usuario@gmail.com", "1234");
-        when(userService.getUserFromAuthHeader("authHeader")).thenReturn(user);
 
         NumberPlate numberPlate1 = new NumberPlate("AAA111");
         NumberPlate numberPlate2 = new NumberPlate("BBB222");

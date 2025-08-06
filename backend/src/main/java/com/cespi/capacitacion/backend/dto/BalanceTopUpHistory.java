@@ -4,6 +4,7 @@ import com.cespi.capacitacion.backend.entity.BalanceTopUp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class BalanceTopUpHistory {
 
@@ -27,5 +28,18 @@ public class BalanceTopUpHistory {
 
     public void addBalanceTopUp(BalanceTopUpResponse balanceTopUpResponse) {
         this.balanceTopUps.add(balanceTopUpResponse);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BalanceTopUpHistory)) return false;
+        BalanceTopUpHistory that = (BalanceTopUpHistory) o;
+        return Objects.equals(balanceTopUps, that.balanceTopUps);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(balanceTopUps);
     }
 }

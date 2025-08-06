@@ -1,5 +1,7 @@
 package com.cespi.capacitacion.backend.dto;
 
+import java.util.Objects;
+
 public class BalanceTopUpResponse {
 
     private String day;
@@ -38,5 +40,21 @@ public class BalanceTopUpResponse {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BalanceTopUpResponse)) return false;
+        BalanceTopUpResponse that = (BalanceTopUpResponse) o;
+        return Objects.equals(day, that.day) &&
+                Objects.equals(hour, that.hour) &&
+                Objects.equals(amount, that.amount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(day, hour, amount);
     }
 }

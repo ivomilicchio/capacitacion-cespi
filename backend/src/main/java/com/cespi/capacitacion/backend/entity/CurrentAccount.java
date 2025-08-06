@@ -2,6 +2,7 @@ package com.cespi.capacitacion.backend.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,6 +29,7 @@ public class CurrentAccount {
 
     public CurrentAccount() {
         this.balance = 0.0;
+        this.balanceTopUps = new ArrayList<>();
     }
 
     public Long getId() {
