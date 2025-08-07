@@ -22,6 +22,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     private final NumberPlateService numberPlateService;
     private final ParkingSessionRepository parkingSessionRepository;
     private final UserService userService;
+    private final ClockService clockService;
 
     @Value("${parking.bussiness-days}")
     private List<String> bussinessDays;
@@ -37,10 +38,12 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     private Double pricePerFraction;
 
     public ParkingSessionServiceImpl(NumberPlateService numberPlateService,
-                                     ParkingSessionRepository parkingSessionRepository, UserService userService) {
+                                     ParkingSessionRepository parkingSessionRepository, UserService userService,
+                                     ClockService clockService) {
         this.numberPlateService = numberPlateService;
         this.parkingSessionRepository = parkingSessionRepository;
         this.userService = userService;
+        this.clockService = clockService;
     }
 
     @Transactional
@@ -58,11 +61,11 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     }
 
     private void checkOutOfService() {
-        String day = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+        String day = clockService.getDayOfWeek();
         if (!bussinessDays.contains(day) || !this.enable) {
             throw new OutOfServiceException();
         }
-        LocalTime now = LocalTime.now();
+        LocalTime now = clockService.getCurrentTime();
         if (now.isBefore(startTime) || now.isAfter(endTime)) {
             throw new OutOfServiceException(this.startTime.toString(), this.endTime.toString());
         }
