@@ -18,21 +18,18 @@ public class CurrentAccountController {
     }
 
     @GetMapping
-    public ResponseEntity<CurrentAccountBalance> getCurrentAccountBalance(
-            @RequestHeader("Authorization") String authHeader) {
-        return ResponseEntity.ok(currentAccountService.getCurrentAccountBalance(authHeader));
+    public ResponseEntity<CurrentAccountBalance> getCurrentAccountBalance() {
+        return ResponseEntity.ok(currentAccountService.getCurrentAccountBalance());
     }
 
     @PostMapping
     public ResponseEntity<CurrentAccountBalance> addBalanceToAccount(
-            @RequestBody @Valid CurrentAccountBalance currentAccountBalance,
-            @RequestHeader("Authorization") String authHeader) {
-        return ResponseEntity.ok(currentAccountService.addBalanceToAccount(authHeader, currentAccountBalance));
+            @RequestBody @Valid CurrentAccountBalance currentAccountBalance) {
+        return ResponseEntity.ok(currentAccountService.addBalanceToAccount(currentAccountBalance));
     }
 
     @GetMapping("/history")
-    public ResponseEntity<BalanceTopUpHistory> getBalanceTopUpHistory(
-            @RequestHeader("Authorization") String authHeader) {
-        return ResponseEntity.ok(currentAccountService.getBalanceTopUpHistory(authHeader));
+    public ResponseEntity<BalanceTopUpHistory> getBalanceTopUpHistory () {
+        return ResponseEntity.ok(currentAccountService.getBalanceTopUpHistory());
     }
 }

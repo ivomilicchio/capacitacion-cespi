@@ -51,14 +51,12 @@ public class NumberPlateServiceTest {
 
         when(userService.save(user)).thenReturn(user);
 
-        assertEquals("ABC123", numberPlateService.saveNumberPlate("abc-123", "authHeader")
-                .getNumber());
+        assertEquals("ABC123", numberPlateService.saveNumberPlate("abc-123").getNumber());
 
-        assertEquals("AA123BB", numberPlateService.saveNumberPlate("aa 123 bb", "authHeader")
-                .getNumber());
+        assertEquals("AA123BB", numberPlateService.saveNumberPlate("aa 123 bb").getNumber());
 
         assertThrows(BadFormatNumberPlateException.class,
-                () -> numberPlateService.saveNumberPlate("ABCD123", "authHeader"));
+                () -> numberPlateService.saveNumberPlate("ABCD123"));
     }
 
     @Test
@@ -77,8 +75,7 @@ public class NumberPlateServiceTest {
         user.addNumberPlate(numberPlate2);
         user.addNumberPlate(numberPlate3);
 
-        assertEquals(numberPlateSet, numberPlateService.getNumberPlatesOfUser
-                ("authHeader").getNumberPlates());
+        assertEquals(numberPlateSet, numberPlateService.getNumberPlatesOfUser().getNumberPlates());
 
 
 

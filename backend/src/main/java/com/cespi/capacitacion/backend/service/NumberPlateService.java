@@ -6,8 +6,8 @@ import com.cespi.capacitacion.backend.entity.NumberPlate;
 
 public interface NumberPlateService {
 
-    NumberPlateListResponse getNumberPlatesOfUser(String authHeader);
-    NumberPlateCreation saveNumberPlate(String number, String authHeader);
+    NumberPlateListResponse getNumberPlatesOfUser();
+    NumberPlateCreation saveNumberPlate(String number);
     NumberPlate  findByNumber(String number);
 
 

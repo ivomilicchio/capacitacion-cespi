@@ -19,17 +19,15 @@ public class NumberPlateController {
     }
 
     @GetMapping
-    public ResponseEntity<NumberPlateListResponse> getNumberPlatesOfUser(
-            @RequestHeader("Authorization") String authHeader) {
-        return ResponseEntity.ok(numberPlateService.getNumberPlatesOfUser(authHeader));
+    public ResponseEntity<NumberPlateListResponse> getNumberPlatesOfUser() {
+        return ResponseEntity.ok(numberPlateService.getNumberPlatesOfUser());
     }
 
     @PostMapping
     public ResponseEntity<NumberPlateCreation> saveNumberPlate(
-            @RequestBody @Valid NumberPlateCreation numberPlateCreation,
-            @RequestHeader("Authorization") String authHeader) {
+            @RequestBody @Valid NumberPlateCreation numberPlateCreation) {
         return ResponseEntity.status(HttpStatus.CREATED).body(numberPlateService.saveNumberPlate(
-                numberPlateCreation.getNumber(), authHeader));
+                numberPlateCreation.getNumber()));
     }
 
 }

@@ -5,9 +5,9 @@ import com.cespi.capacitacion.backend.dto.CurrentAccountBalance;
 
 public interface CurrentAccountService {
 
-    CurrentAccountBalance getCurrentAccountBalance(String authHeader);
-    CurrentAccountBalance addBalanceToAccount(String authHeader, CurrentAccountBalance currentAccountBalance);
-    BalanceTopUpHistory getBalanceTopUpHistory(String authHeader);
+    CurrentAccountBalance getCurrentAccountBalance();
+    CurrentAccountBalance addBalanceToAccount(CurrentAccountBalance currentAccountBalance);
+    BalanceTopUpHistory getBalanceTopUpHistory();
 
 }
 

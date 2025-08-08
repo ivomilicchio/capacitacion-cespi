@@ -124,7 +124,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
         }
         return fractions * this.pricePerFraction;
     }
-    @Transactional
+
     public ParkingSessionHistory getParkingSessionHistory(String authHeader) {
         User user = this.userService.getUserFromAuthHeader(authHeader);
         List<ParkingSession> parkingSessions =  parkingSessionRepository.findAllByCurrentAccountIdAndEndTimeNotNull(

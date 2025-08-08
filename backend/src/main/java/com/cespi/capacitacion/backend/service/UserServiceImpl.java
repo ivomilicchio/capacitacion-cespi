@@ -47,6 +47,10 @@ public class UserServiceImpl implements UserService {
                 -> new ResourceNotFoundException("Usuario"));
     }
 
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuario"));
+    }
+
     public boolean existPhoneNumber(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber).isPresent();
     }

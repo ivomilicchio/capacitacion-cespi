@@ -44,9 +44,9 @@ public class CurrentAccountServiceTest {
     public void testGetCurrentAccountBalance() {
 
         currentAccount.setBalance(1000.0);
-        currentAccountService.addBalanceToAccount("authHeader", new CurrentAccountBalance(2000.0));
+        currentAccountService.addBalanceToAccount(new CurrentAccountBalance(2000.0));
 
-        assertEquals(3000.0, currentAccountService.getCurrentAccountBalance("authHeader")
+        assertEquals(3000.0, currentAccountService.getCurrentAccountBalance()
                 .getBalance());
     }
 
@@ -60,7 +60,7 @@ public class CurrentAccountServiceTest {
         CurrentAccountBalance currentAccountBalance = new CurrentAccountBalance(500.0);
 
         assertEquals(1500, currentAccountService.addBalanceToAccount
-                ("authHeader", currentAccountBalance).getBalance());
+                (currentAccountBalance).getBalance());
     }
 
     @Test
@@ -82,7 +82,7 @@ public class CurrentAccountServiceTest {
         balanceTopUpHistory.addBalanceTopUp(new BalanceTopUpResponse(b2.getDay(), b2.getHour(), b2.getAmount()));
         balanceTopUpHistory.addBalanceTopUp(new BalanceTopUpResponse(b3.getDay(), b3.getHour(), b3.getAmount()));
 
-        assertEquals(balanceTopUpHistory, currentAccountService.getBalanceTopUpHistory("authHeader"));
+        assertEquals(balanceTopUpHistory, currentAccountService.getBalanceTopUpHistory());
 
     }
 

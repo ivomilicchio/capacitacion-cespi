@@ -1,5 +1,6 @@
 package com.cespi.capacitacion.backend.service;
 
+import com.cespi.capacitacion.backend.auth.AuthService;
 import com.cespi.capacitacion.backend.dto.NumberPlateCreation;
 import com.cespi.capacitacion.backend.dto.NumberPlateListResponse;
 import com.cespi.capacitacion.backend.entity.NumberPlate;
@@ -19,23 +20,25 @@ public class NumberPlateServiceImpl implements NumberPlateService {
 
     private final NumberPlateRepository numberPlateRepository;
     private final UserService userService;
+    private final AuthService authService;
 
-    public NumberPlateServiceImpl(NumberPlateRepository numberPlateRepository, UserService userService) {
+    public NumberPlateServiceImpl(NumberPlateRepository numberPlateRepository, UserService userService,
+                                  AuthService authService) {
         this.numberPlateRepository = numberPlateRepository;
         this.userService = userService;
+        this.authService = authService;
     }
 
-    @Transactional
-    public NumberPlateListResponse getNumberPlatesOfUser(String authHeader) {
-        User user = userService.getUserFromAuthHeader(authHeader);
+    public NumberPlateListResponse getNumberPlatesOfUser() {
+        User user = authService.getUser();
         return new NumberPlateListResponse(user.getAllNumberPlatesStrings());
     }
 
     @Transactional
-    public NumberPlateCreation saveNumberPlate(String number, String authHeader) {
+    public NumberPlateCreation saveNumberPlate(String number) {
         String sanitizedNumber = sanitizeNumberPlate(number);
         validFormatOfNumberPlate(sanitizedNumber);
-        User user = userService.getUserFromAuthHeader(authHeader);
+        User user = authService.getUser();
         NumberPlate numberPlate;
         try {
             numberPlate = this.findByNumber(sanitizedNumber);

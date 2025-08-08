@@ -1,5 +1,6 @@
 package com.cespi.capacitacion.backend.service;
 
+import com.cespi.capacitacion.backend.auth.AuthService;
 import com.cespi.capacitacion.backend.dto.BalanceTopUpHistory;
 import com.cespi.capacitacion.backend.dto.BalanceTopUpResponse;
 import com.cespi.capacitacion.backend.dto.CurrentAccountBalance;
@@ -7,6 +8,8 @@ import com.cespi.capacitacion.backend.entity.BalanceTopUp;
 import com.cespi.capacitacion.backend.entity.CurrentAccount;
 import com.cespi.capacitacion.backend.entity.User;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,20 +18,21 @@ import java.util.List;
 public class CurrentAccountServiceImpl implements CurrentAccountService {
 
     private final UserService userService;
+    private final AuthService authService;
 
-    public CurrentAccountServiceImpl(UserService userService) {
+    public CurrentAccountServiceImpl(UserService userService, AuthService authService) {
         this.userService = userService;
+        this.authService = authService;
     }
 
-    @Transactional
-    public CurrentAccountBalance getCurrentAccountBalance(String authHeader) {
-        User user = userService.getUserFromAuthHeader(authHeader);
+    public CurrentAccountBalance getCurrentAccountBalance() {
+        User user = authService.getUser();
         return new CurrentAccountBalance(user.getCurrentAccount().getBalance());
     }
 
     @Transactional
-    public CurrentAccountBalance addBalanceToAccount(String authHeader, CurrentAccountBalance currentAccountBalance) {
-        User user = userService.getUserFromAuthHeader(authHeader);
+    public CurrentAccountBalance addBalanceToAccount(CurrentAccountBalance currentAccountBalance) {
+        User user = authService.getUser();
         CurrentAccount currentAccount = user.getCurrentAccount();
         Double balance = currentAccount.getBalance() + currentAccountBalance.getBalance();
         currentAccount.setBalance(balance);
@@ -38,9 +42,8 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
         return new CurrentAccountBalance(balance);
     }
 
-    @Transactional
-    public BalanceTopUpHistory getBalanceTopUpHistory(String authHeader) {
-        User user = this.userService.getUserFromAuthHeader(authHeader);
+    public BalanceTopUpHistory getBalanceTopUpHistory() {
+        User user = authService.getUser();
         List<BalanceTopUp> balanceTopUps =  user.getCurrentAccount().getBalanceTopUps();
         return this.getHistory(balanceTopUps);
     }

@@ -10,6 +10,8 @@ import com.cespi.capacitacion.backend.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,7 +30,6 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
-    @Transactional
     public AuthResponse login(LoginRequest request) {
         String sanitizedPhoneNumber = this.sanitizePhoneNumber(request.getPhoneNumber());
         this.validFormatOfPhoneNumber(sanitizedPhoneNumber);
@@ -72,5 +73,11 @@ public class AuthService {
         if (userService.existMail(mail)) {
             throw new ExistMailException();
         }
+    }
+
+    public User getUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        return userService.findById(user.getId());
     }
 }

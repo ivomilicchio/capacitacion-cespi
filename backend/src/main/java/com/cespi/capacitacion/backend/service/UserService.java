@@ -11,6 +11,7 @@ public interface UserService {
     User getUserFromAuthHeader(String authHeader);
     User save(User user);
     User findByPhoneNumber(String phoneNumber);
+    User findById(Long id);
     boolean existPhoneNumber(String phoneNumber);
     boolean existMail(String mail);
 
