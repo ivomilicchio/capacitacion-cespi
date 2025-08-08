@@ -86,12 +86,12 @@ public class ParkingSession {
         return TimeUnit.MILLISECONDS.toMinutes(diffMillis);
     }
 
-    public String getStarTimeDay() {
+    public String getStartTimeDay() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         return dateFormat.format(this.startTime);
     }
 
-    public String getStarTimeHour() {
+    public String getStartTimeHour() {
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
         return timeFormat.format(this.startTime);
     }

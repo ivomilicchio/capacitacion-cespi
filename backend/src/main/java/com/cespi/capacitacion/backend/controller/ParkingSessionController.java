@@ -43,8 +43,8 @@ public class ParkingSessionController {
         Optional<ParkingSession> optionalParkingSession = userService.hasSessionStarted(authHeader);
         if (optionalParkingSession.isPresent()) {
             ParkingSession parkingSession = optionalParkingSession.get();
-            ParkingSessionResponse response = new ParkingSessionResponse(parkingSession.getStarTimeDay(),
-                    parkingSession.getStarTimeHour());
+            ParkingSessionResponse response = new ParkingSessionResponse(parkingSession.getStartTimeDay(),
+                    parkingSession.getStartTimeHour());
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.noContent().build();

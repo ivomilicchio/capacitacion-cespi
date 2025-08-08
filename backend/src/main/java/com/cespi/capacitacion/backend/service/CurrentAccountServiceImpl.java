@@ -9,7 +9,6 @@ import com.cespi.capacitacion.backend.entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

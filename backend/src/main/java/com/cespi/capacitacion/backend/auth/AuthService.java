@@ -7,6 +7,7 @@ import com.cespi.capacitacion.backend.exception.ExistPhoneNumberException;
 import com.cespi.capacitacion.backend.jwt.JwtService;
 import com.cespi.capacitacion.backend.repository.UserRepository;
 import com.cespi.capacitacion.backend.service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
+    @Transactional
     public AuthResponse login(LoginRequest request) {
         String sanitizedPhoneNumber = this.sanitizePhoneNumber(request.getPhoneNumber());
         this.validFormatOfPhoneNumber(sanitizedPhoneNumber);
@@ -36,6 +38,7 @@ public class AuthService {
         return new AuthResponse(jwtService.getToken(user));
     }
 
+    @Transactional
     public AuthResponse register(RegisterRequest request) {
         String sanitizedPhoneNumber = this.sanitizePhoneNumber(request.getPhoneNumber());
         this.validFormatOfPhoneNumber(sanitizedPhoneNumber);
