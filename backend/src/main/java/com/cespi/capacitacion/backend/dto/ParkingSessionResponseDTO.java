@@ -4,49 +4,50 @@ import java.util.Objects;
 
 public class ParkingSessionResponseDTO {
 
-    private String startTimeDay;
-    private String startTimeHour;
-    private String endTimeHour;
+    private String day;
+    private String startHour;
+    private String endHour;
     private Double amount;
+
 
     public ParkingSessionResponseDTO() {
 
     }
 
-    public ParkingSessionResponseDTO(String startTimeDay, String startTimeHour, String endTimeHour, Double amount) {
-        this.startTimeDay = startTimeDay;
-        this.startTimeHour = startTimeHour;
-        this.endTimeHour = endTimeHour;
+    public ParkingSessionResponseDTO(String day, String startHour, String endHour, Double amount) {
+        this.day = day;
+        this.startHour = startHour;
+        this.endHour = endHour;
         this.amount = amount;
     }
 
-    public ParkingSessionResponseDTO(String startTimeDay, String startTimeHour) {
-        this.startTimeDay = startTimeDay;
-        this.startTimeHour = startTimeHour;
+    public ParkingSessionResponseDTO(String day, String startHour) {
+        this.day = day;
+        this.startHour = startHour;
     }
 
-    public String getStartTimeDay() {
-        return startTimeDay;
+    public String getDay() {
+        return day;
     }
 
-    public void setStartTimeDay(String startTimeDay) {
-        this.startTimeDay = startTimeDay;
+    public void setDay(String day) {
+        this.day = day;
     }
 
-    public String getStartTimeHour() {
-        return startTimeHour;
+    public String getStartHour() {
+        return startHour;
     }
 
-    public void setStartTimeHour(String startTimeHour) {
-        this.startTimeHour = startTimeHour;
+    public void setStartHour(String startHour) {
+        this.startHour = startHour;
     }
 
-    public String getEndTimeHour() {
-        return endTimeHour;
+    public String getEndHour() {
+        return endHour;
     }
 
-    public void setEndTimeHour(String endTimeHour) {
-        this.endTimeHour = endTimeHour;
+    public void setEndHour(String endHour) {
+        this.endHour = endHour;
     }
 
     public Double getAmount() {
@@ -62,14 +63,14 @@ public class ParkingSessionResponseDTO {
         if (this == o) return true;
         if (!(o instanceof ParkingSessionResponseDTO)) return false;
         ParkingSessionResponseDTO that = (ParkingSessionResponseDTO) o;
-        return Objects.equals(startTimeDay, that.startTimeDay) &&
-                Objects.equals(startTimeHour, that.startTimeHour) &&
-                Objects.equals(endTimeHour, that.endTimeHour) &&
+        return Objects.equals(day, that.day) &&
+                Objects.equals(startHour, that.startHour) &&
+                Objects.equals(endHour, that.endHour) &&
                 Objects.equals(amount, that.amount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(startTimeDay, startTimeHour, endTimeHour, amount);
+        return Objects.hash(day, startHour, endHour, amount);
     }
 }

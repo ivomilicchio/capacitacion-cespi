@@ -17,11 +17,9 @@ import java.util.Optional;
 public class ParkingSessionController {
 
     private final ParkingSessionService parkingSessionService;
-    private final UserService userService;
 
-    public ParkingSessionController(ParkingSessionService parkingSessionService, UserService userService) {
+    public ParkingSessionController(ParkingSessionService parkingSessionService) {
         this.parkingSessionService = parkingSessionService;
-        this.userService = userService;
     }
 
     @PostMapping

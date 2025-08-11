@@ -1,9 +1,8 @@
 package com.cespi.capacitacion.backend;
 
-import com.cespi.capacitacion.backend.auth.AuthResponse;
 import com.cespi.capacitacion.backend.auth.AuthService;
-import com.cespi.capacitacion.backend.auth.LoginRequest;
-import com.cespi.capacitacion.backend.auth.RegisterRequest;
+import com.cespi.capacitacion.backend.auth.LoginRequestDTO;
+import com.cespi.capacitacion.backend.auth.RegisterRequestDTO;
 import com.cespi.capacitacion.backend.entity.User;
 import com.cespi.capacitacion.backend.exception.BadFormatPhoneNumberException;
 import com.cespi.capacitacion.backend.exception.ExistMailException;
@@ -37,51 +36,51 @@ public class AuthServiceTest {
     @InjectMocks
     private AuthService authService;
 
-    private RegisterRequest registerRequest;
-    private LoginRequest loginRequest;
+    private RegisterRequestDTO registerRequestDTO;
+    private LoginRequestDTO loginRequestDTO;
 
     @Test
     public void testRegisterWithInvalidPhoneNumberFormat() {
 
-        this.registerRequest = new RegisterRequest("2211234", "usuario@gmail.com", "1234");
+        this.registerRequestDTO = new RegisterRequestDTO("2211234", "usuario@gmail.com", "1234");
 
-        assertThrows(BadFormatPhoneNumberException.class, () -> authService.register(registerRequest));
+        assertThrows(BadFormatPhoneNumberException.class, () -> authService.register(registerRequestDTO));
 
     }
 
     @Test
     public void testRegisterWithAlreadyUsedPhoneNumber() {
 
-        this.registerRequest = new RegisterRequest("2211234567", "usuario@gmail.com", "1234");
+        this.registerRequestDTO = new RegisterRequestDTO("2211234567", "usuario@gmail.com", "1234");
 
         when(userService.existPhoneNumber("2211234567")).thenReturn(true);
 
-        assertThrows(ExistPhoneNumberException.class, () -> authService.register(registerRequest));
+        assertThrows(ExistPhoneNumberException.class, () -> authService.register(registerRequestDTO));
     }
 
     @Test
     public void testRegisterWithAlreadyUsedMail() {
 
-        this.registerRequest = new RegisterRequest("2211234567", "usuario@gmail.com", "1234");
+        this.registerRequestDTO = new RegisterRequestDTO("2211234567", "usuario@gmail.com", "1234");
 
         when(userService.existPhoneNumber("2211234567")).thenReturn(false);
         when(userService.existMail("usuario@gmail.com")).thenReturn(true);
 
-        assertThrows(ExistMailException.class, () -> authService.register(registerRequest));
+        assertThrows(ExistMailException.class, () -> authService.register(registerRequestDTO));
     }
 
     @Test
     public void testLoginWithInvalidPhoneNumberFormat() {
 
-        loginRequest = new LoginRequest("2211234", "1234");
+        loginRequestDTO = new LoginRequestDTO("2211234", "1234");
 
-        assertThrows(BadFormatPhoneNumberException.class, () -> authService.login(loginRequest));
+        assertThrows(BadFormatPhoneNumberException.class, () -> authService.login(loginRequestDTO));
     }
 
     @Test
     public void testLogin() {
 
-        loginRequest = new LoginRequest("221 1234-567", "1234");
+        loginRequestDTO = new LoginRequestDTO("221 1234-567", "1234");
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(null);
 
@@ -91,7 +90,7 @@ public class AuthServiceTest {
 
         when(jwtService.getToken(user)).thenReturn("token");
 
-        assertEquals("token", authService.login(loginRequest).getToken());
+        assertEquals("token", authService.login(loginRequestDTO).getToken());
     }
 
 }

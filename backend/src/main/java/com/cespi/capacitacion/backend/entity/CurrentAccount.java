@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,6 +23,12 @@ public class CurrentAccount {
             nullable = false
     )
     private BigDecimal balance;
+
+    @Column(
+            nullable = false
+    )
+    private Date createdAt;
+
     @OneToMany(mappedBy = "currentAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ParkingSession> parkingSessions;
 
@@ -31,6 +38,7 @@ public class CurrentAccount {
     public CurrentAccount() {
         this.balance = new BigDecimal(0);
         this.balanceTopUps = new ArrayList<>();
+        this.createdAt = new Date();
     }
 
     public Long getId() {
@@ -59,6 +67,14 @@ public class CurrentAccount {
 
     public List<BalanceTopUp> getBalanceTopUps() {
         return balanceTopUps;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Set<String> getAllParkingSessionStrings() {

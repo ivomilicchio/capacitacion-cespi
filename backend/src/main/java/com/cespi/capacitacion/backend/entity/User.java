@@ -21,7 +21,7 @@ public class User implements UserDetails {
     @Column(
             unique = true,
             nullable = false,
-            length = 10
+            length = 15
     )
     private String phoneNumber;
 
@@ -36,6 +36,11 @@ public class User implements UserDetails {
             length = 320
     )
     private String mail;
+
+    @Column(
+            nullable = false
+    )
+    private Date createdAt;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
@@ -57,6 +62,7 @@ public class User implements UserDetails {
         this.phoneNumber = phoneNumber;
         this.mail = mail;
         this.password = password;
+        createdAt = new Date();
         numberPlates = new HashSet<>();
         currentAccount = new CurrentAccount();
     }
@@ -111,6 +117,14 @@ public class User implements UserDetails {
 
     public void addNumberPlate(NumberPlate numberPlate) {
         this.numberPlates.add(numberPlate);
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Set<String> getAllNumberPlatesStrings() {

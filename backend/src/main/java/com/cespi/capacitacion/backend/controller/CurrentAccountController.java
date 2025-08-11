@@ -29,7 +29,7 @@ public class CurrentAccountController {
     }
 
     @GetMapping("/history")
-    public ResponseEntity<BalanceTopUpHistoryDTO> getBalanceTopUpHistory () {
+    public ResponseEntity<BalanceTopUpHistoryDTO> getBalanceTopUpHistory() {
         return ResponseEntity.ok(currentAccountService.getBalanceTopUpHistory());
     }
 }

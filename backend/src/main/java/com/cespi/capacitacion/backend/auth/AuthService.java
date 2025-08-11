@@ -30,24 +30,24 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
-    public AuthResponse login(LoginRequest request) {
+    public AuthResponseDTO login(LoginRequestDTO request) {
         String sanitizedPhoneNumber = this.sanitizePhoneNumber(request.getPhoneNumber());
         this.validFormatOfPhoneNumber(sanitizedPhoneNumber);
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(sanitizedPhoneNumber,
                 request.getPassword()));
         User user = userService.findByPhoneNumber(sanitizedPhoneNumber);
-        return new AuthResponse(jwtService.getToken(user));
+        return new AuthResponseDTO(jwtService.getToken(user));
     }
 
     @Transactional
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResponseDTO register(RegisterRequestDTO request) {
         String sanitizedPhoneNumber = this.sanitizePhoneNumber(request.getPhoneNumber());
         this.validFormatOfPhoneNumber(sanitizedPhoneNumber);
         checkIfExistPhoneNumber(sanitizedPhoneNumber);
         checkIfExistMail(request.getMail());
         User user = new User(request.getPhoneNumber(), request.getMail(), request.getPassword());
         userService.save(user);
-        return new AuthResponse(jwtService.getToken(user));
+        return new AuthResponseDTO(jwtService.getToken(user));
     }
 
     private String sanitizePhoneNumber(String phoneNumber) {

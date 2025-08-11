@@ -1,14 +1,14 @@
 package com.cespi.capacitacion.backend.auth;
 
-public class AuthResponse {
+public class AuthResponseDTO {
 
     private String token;
 
-    public AuthResponse() {
+    public AuthResponseDTO() {
 
     }
 
-    public AuthResponse(String token) {
+    public AuthResponseDTO(String token) {
         this.token = token;
     }
 

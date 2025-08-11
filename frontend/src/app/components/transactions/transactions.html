@@ -17,9 +17,9 @@
                     <tbody class="text-center fs-3">
                         @for (item of parkingSessionHistory; track $index) {
                         <tr>
-                            <td>{{item.startTimeDay}}</td>
-                            <td>{{item.startTimeHour}}</td>
-                            <td>{{item.endTimeHour}}</td>
+                            <td>{{item.day}}</td>
+                            <td>{{item.startHour}}</td>
+                            <td>{{item.endHour}}</td>
                             <td class="text-danger">-${{item.amount}}</td>
                         </tr>
                         }
@@ -35,7 +35,7 @@
                         <tr>
                             <th scope="col" style="white-space: nowrap; min-width: 200px;">Fecha</th>
                             <th scope="col" style="white-space: nowrap; min-width: 200px;">Hora</th>
-                            <th scope="col" style="white-space: nowrap; min-width: 200px;">Monto</th>
+                            <th scope="col" style="white-space: nowrap; min-width: 186px;">Monto</th>
                         </tr>
                     </thead>
                     <tbody class="text-center fs-3">

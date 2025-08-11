@@ -189,8 +189,8 @@ public class ParkingSessionServiceTest {
         ParkingSessionResponseDTO parkingSessionResponseDTO = parkingSessionService
                 .startParkingSession("AAA123");
 
-        assertEquals(parkingSession.getStartTimeDay(), parkingSessionResponseDTO.getStartTimeDay());
-        assertEquals(parkingSession.getStartTimeHour(), parkingSessionResponseDTO.getStartTimeHour());
+        assertEquals(parkingSession.getStartTimeDay(), parkingSessionResponseDTO.getDay());
+        assertEquals(parkingSession.getStartTimeHour(), parkingSessionResponseDTO.getStartHour());
     }
 
 

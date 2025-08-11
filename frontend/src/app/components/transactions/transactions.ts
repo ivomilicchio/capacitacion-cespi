@@ -3,13 +3,13 @@ import { TransactionsService } from '../../services/transactions-service';
 
 
 interface ParkingSessionTransaction {
-  startTimeDay: String;
-  startTimeHour: string;
-  endTimeHour: string;
+  day: String;
+  startHour: string;
+  endHour: string;
   amount: number;
 }
 
-interface ParkingSessionTransaction {
+interface BalanceTopUpTransaction {
   day: String;
   hour: string;
   amount: number;
@@ -25,7 +25,7 @@ export class Transactions implements OnInit {
 
 parkingSessionHistory: ParkingSessionTransaction[] = [];
 
-BalanceTopUpHistory: ParkingSessionTransaction[] = [];
+BalanceTopUpHistory: BalanceTopUpTransaction[] = [];
 
 
 service = inject(TransactionsService);
