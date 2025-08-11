@@ -8,10 +8,10 @@ import com.cespi.capacitacion.backend.entity.BalanceTopUp;
 import com.cespi.capacitacion.backend.entity.CurrentAccount;
 import com.cespi.capacitacion.backend.entity.User;
 import jakarta.transaction.Transactional;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -34,12 +34,13 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
     public CurrentAccountBalance addBalanceToAccount(CurrentAccountBalance currentAccountBalance) {
         User user = authService.getUser();
         CurrentAccount currentAccount = user.getCurrentAccount();
-        Double balance = currentAccount.getBalance() + currentAccountBalance.getBalance();
-        currentAccount.setBalance(balance);
-        BalanceTopUp balanceTopUp = new BalanceTopUp(currentAccountBalance.getBalance(), currentAccount);
+        BigDecimal newBalance = currentAccount.getBalance().add(currentAccountBalance.getBalance());
+        currentAccount.setBalance(newBalance);
+        BalanceTopUp balanceTopUp = new BalanceTopUp(currentAccountBalance.getBalance(),
+                currentAccount);
         currentAccount.addBalanceTopUp(balanceTopUp);
         userService.save(user);
-        return new CurrentAccountBalance(balance);
+        return new CurrentAccountBalance(newBalance.setScale(2, RoundingMode.HALF_UP));
     }
 
     public BalanceTopUpHistory getBalanceTopUpHistory() {
@@ -51,7 +52,8 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
     private BalanceTopUpHistory getHistory(List<BalanceTopUp> balanceTopUps) {
         BalanceTopUpHistory history = new BalanceTopUpHistory();
         for (BalanceTopUp b: balanceTopUps) {
-            BalanceTopUpResponse actual = new BalanceTopUpResponse(b.getDay(), b.getHour(), b.getAmount());
+            BalanceTopUpResponse actual = new BalanceTopUpResponse(b.getDay(), b.getHour(),
+                    b.getAmount());
             history.addBalanceTopUp(actual);
         }
         return history;

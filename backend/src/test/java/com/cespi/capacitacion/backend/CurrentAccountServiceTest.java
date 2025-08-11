@@ -1,5 +1,6 @@
 package com.cespi.capacitacion.backend;
 
+import com.cespi.capacitacion.backend.auth.AuthService;
 import com.cespi.capacitacion.backend.dto.BalanceTopUpHistory;
 import com.cespi.capacitacion.backend.dto.BalanceTopUpResponse;
 import com.cespi.capacitacion.backend.dto.CurrentAccountBalance;
@@ -15,11 +16,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class CurrentAccountServiceTest {
+
+    @Mock
+    private AuthService authService;
 
     @Mock
     private UserService userService;
@@ -37,14 +43,14 @@ public class CurrentAccountServiceTest {
         this.currentAccount = new CurrentAccount();
         user.setCurrentAccount(currentAccount);
 
-        when(userService.getUserFromAuthHeader("authHeader")).thenReturn(user);
+        when(authService.getUser()).thenReturn(user);
     }
 
     @Test
     public void testGetCurrentAccountBalance() {
 
-        currentAccount.setBalance(1000.0);
-        currentAccountService.addBalanceToAccount(new CurrentAccountBalance(2000.0));
+        currentAccount.setBalance(BigDecimal.valueOf(1000));
+        currentAccountService.addBalanceToAccount(new CurrentAccountBalance(BigDecimal.valueOf(2000)));
 
         assertEquals(3000.0, currentAccountService.getCurrentAccountBalance()
                 .getBalance());
@@ -53,11 +59,9 @@ public class CurrentAccountServiceTest {
     @Test
     public void testAddBalanceToAccount() {
 
-        currentAccount.setBalance(1000.0);
+        currentAccount.setBalance(BigDecimal.valueOf(1000));
 
-        when(userService.save(user)).thenReturn(user);
-
-        CurrentAccountBalance currentAccountBalance = new CurrentAccountBalance(500.0);
+        CurrentAccountBalance currentAccountBalance = new CurrentAccountBalance(BigDecimal.valueOf(500));
 
         assertEquals(1500, currentAccountService.addBalanceToAccount
                 (currentAccountBalance).getBalance());
@@ -66,11 +70,11 @@ public class CurrentAccountServiceTest {
     @Test
     public void testGetBalanceTopUpHistory() {
 
-        currentAccount.setBalance(1000.0);
+        currentAccount.setBalance(BigDecimal.valueOf(1000));
 
-        BalanceTopUp b1 = new BalanceTopUp(500.0, currentAccount);
-        BalanceTopUp b2 = new BalanceTopUp(600.0, currentAccount);
-        BalanceTopUp b3 = new BalanceTopUp(1400.0, currentAccount);
+        BalanceTopUp b1 = new BalanceTopUp(BigDecimal.valueOf(500), currentAccount);
+        BalanceTopUp b2 = new BalanceTopUp(BigDecimal.valueOf(600), currentAccount);
+        BalanceTopUp b3 = new BalanceTopUp(BigDecimal.valueOf(1400), currentAccount);
 
         currentAccount.addBalanceTopUp(b1);
         currentAccount.addBalanceTopUp(b2);
@@ -78,9 +82,12 @@ public class CurrentAccountServiceTest {
 
         BalanceTopUpHistory balanceTopUpHistory = new BalanceTopUpHistory();
 
-        balanceTopUpHistory.addBalanceTopUp(new BalanceTopUpResponse(b1.getDay(), b1.getHour(), b1.getAmount()));
-        balanceTopUpHistory.addBalanceTopUp(new BalanceTopUpResponse(b2.getDay(), b2.getHour(), b2.getAmount()));
-        balanceTopUpHistory.addBalanceTopUp(new BalanceTopUpResponse(b3.getDay(), b3.getHour(), b3.getAmount()));
+        balanceTopUpHistory.addBalanceTopUp(new BalanceTopUpResponse(b1.getDay(), b1.getHour(),
+                b1.getAmount()));
+        balanceTopUpHistory.addBalanceTopUp(new BalanceTopUpResponse(b2.getDay(), b2.getHour(),
+                b2.getAmount()));
+        balanceTopUpHistory.addBalanceTopUp(new BalanceTopUpResponse(b3.getDay(), b3.getHour(),
+                b3.getAmount()));
 
         assertEquals(balanceTopUpHistory, currentAccountService.getBalanceTopUpHistory());
 

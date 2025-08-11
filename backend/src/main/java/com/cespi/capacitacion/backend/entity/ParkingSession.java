@@ -2,6 +2,7 @@ package com.cespi.capacitacion.backend.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -22,7 +23,7 @@ public class ParkingSession {
     @Column
     private Date endTime;
     @Column
-    private Double amount;
+    private BigDecimal amount;
     @ManyToOne
     @JoinColumn(name = "number_plate_id")
     private NumberPlate numberPlate;
@@ -73,11 +74,11 @@ public class ParkingSession {
         this.endTime = endTime;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

@@ -2,6 +2,7 @@ package com.cespi.capacitacion.backend.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +21,7 @@ public class CurrentAccount {
     @Column(
             nullable = false
     )
-    private Double balance;
+    private BigDecimal balance;
     @OneToMany(mappedBy = "currentAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ParkingSession> parkingSessions;
 
@@ -28,7 +29,7 @@ public class CurrentAccount {
     private List<BalanceTopUp> balanceTopUps;
 
     public CurrentAccount() {
-        this.balance = 0.0;
+        this.balance = new BigDecimal(0);
         this.balanceTopUps = new ArrayList<>();
     }
 
@@ -40,11 +41,11 @@ public class CurrentAccount {
         this.id = id;
     }
 
-    public Double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

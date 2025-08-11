@@ -1,18 +1,19 @@
 package com.cespi.capacitacion.backend.dto;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class BalanceTopUpResponse {
 
     private String day;
     private String hour;
-    private Double amount;
+    private BigDecimal amount;
 
     public BalanceTopUpResponse() {
 
     }
 
-    public BalanceTopUpResponse(String day, String hour, Double amount) {
+    public BalanceTopUpResponse(String day, String hour, BigDecimal amount) {
         this.day = day;
         this.hour = hour;
         this.amount = amount;
@@ -34,11 +35,11 @@ public class BalanceTopUpResponse {
         this.hour = hour;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

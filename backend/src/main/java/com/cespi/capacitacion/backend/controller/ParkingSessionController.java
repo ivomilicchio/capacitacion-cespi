@@ -26,21 +26,19 @@ public class ParkingSessionController {
 
     @PostMapping
     public ResponseEntity<ParkingSessionResponse> startParkingSession(
-            @RequestBody @Valid ParkingSessionRequest parkingSessionRequest,
-            @RequestHeader("Authorization") String authHeader) {
-        return ResponseEntity.ok(parkingSessionService.startParkingSession(authHeader,
-                parkingSessionRequest.getNumberPlate()));
+            @RequestBody @Valid ParkingSessionRequest parkingSessionRequest) {
+        return ResponseEntity.ok(parkingSessionService.startParkingSession(parkingSessionRequest.getNumberPlate()));
 
     }
     @GetMapping
-    public ResponseEntity<Void> finishParkingSession(@RequestHeader("Authorization") String authHeader) {
-        parkingSessionService.finishParkingSession(authHeader);
+    public ResponseEntity<Void> finishParkingSession() {
+        parkingSessionService.finishParkingSession();
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/started")
-    public ResponseEntity<ParkingSessionResponse> hasSessionStarted(@RequestHeader("Authorization") String authHeader) {
-        Optional<ParkingSession> optionalParkingSession = userService.hasSessionStarted(authHeader);
+    public ResponseEntity<ParkingSessionResponse> hasSessionStarted() {
+        Optional<ParkingSession> optionalParkingSession = parkingSessionService.hasSessionStarted();
         if (optionalParkingSession.isPresent()) {
             ParkingSession parkingSession = optionalParkingSession.get();
             ParkingSessionResponse response = new ParkingSessionResponse(parkingSession.getStartTimeDay(),
@@ -51,8 +49,7 @@ public class ParkingSessionController {
     }
 
     @GetMapping("/history")
-    public ResponseEntity<ParkingSessionHistory> getParkingSessionHistory(
-            @RequestHeader("Authorization") String authHeader) {
-        return ResponseEntity.ok(this.parkingSessionService.getParkingSessionHistory(authHeader));
+    public ResponseEntity<ParkingSessionHistory> getParkingSessionHistory() {
+        return ResponseEntity.ok(this.parkingSessionService.getParkingSessionHistory());
     }
 }

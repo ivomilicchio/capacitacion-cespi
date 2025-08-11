@@ -1,5 +1,6 @@
 package com.cespi.capacitacion.backend;
 
+import com.cespi.capacitacion.backend.auth.AuthService;
 import com.cespi.capacitacion.backend.dto.ParkingSessionHistory;
 import com.cespi.capacitacion.backend.dto.ParkingSessionResponse;
 import com.cespi.capacitacion.backend.entity.CurrentAccount;
@@ -11,7 +12,6 @@ import com.cespi.capacitacion.backend.repository.ParkingSessionRepository;
 import com.cespi.capacitacion.backend.service.ClockService;
 import com.cespi.capacitacion.backend.service.NumberPlateService;
 import com.cespi.capacitacion.backend.service.ParkingSessionServiceImpl;
-import com.cespi.capacitacion.backend.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -31,7 +31,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,7 +43,7 @@ public class ParkingSessionServiceTest {
     private ParkingSessionRepository parkingSessionRepository;
 
     @Mock
-    private UserService userService;
+    private AuthService authService;
 
     @Mock
     private ClockService clockService;
@@ -55,8 +54,6 @@ public class ParkingSessionServiceTest {
     private User user;
     private CurrentAccount currentAccount;
     private NumberPlate numberPlate;
-
-
 
     @BeforeEach
     public void setUp() {
@@ -85,7 +82,7 @@ public class ParkingSessionServiceTest {
         when(clockService.getDayOfWeek()).thenReturn("Thursday");
 
         assertThrows(OutOfServiceException.class, () -> parkingSessionService.
-                startParkingSession("authHeader", "AAA123"));
+                startParkingSession("AAA123"));
     }
 
     @Test
@@ -96,7 +93,7 @@ public class ParkingSessionServiceTest {
         when(clockService.getDayOfWeek()).thenReturn("Monday");
 
         assertThrows(OutOfServiceException.class, () -> parkingSessionService.
-                startParkingSession("authHeader", "AAA123"));
+                startParkingSession("AAA123"));
     }
 
     @Test
@@ -106,7 +103,7 @@ public class ParkingSessionServiceTest {
         when(clockService.getCurrentTime()).thenReturn(LocalTime.of(21, 0));
 
         assertThrows(OutOfServiceException.class, () -> parkingSessionService.
-                startParkingSession("authHeader", "AAA123"));
+                startParkingSession("AAA123"));
     }
 
     @Test
@@ -114,7 +111,7 @@ public class ParkingSessionServiceTest {
 
         when(clockService.getDayOfWeek()).thenReturn("Monday");
         when(clockService.getCurrentTime()).thenReturn(LocalTime.of(16, 0));
-        when(userService.getUserFromAuthHeader("authHeader")).thenReturn(user);
+        when(authService.getUser()).thenReturn(user);
 
         ParkingSession parkingSession = new ParkingSession(numberPlate, currentAccount);
 
@@ -122,7 +119,7 @@ public class ParkingSessionServiceTest {
                 .thenReturn(Optional.of(parkingSession));
 
         assertThrows(HasSessionStartedException.class, () -> parkingSessionService
-                .startParkingSession("authHeader", "AAA123"));
+                .startParkingSession("AAA123"));
 
     }
 
@@ -131,7 +128,7 @@ public class ParkingSessionServiceTest {
 
         when(clockService.getDayOfWeek()).thenReturn("Monday");
         when(clockService.getCurrentTime()).thenReturn(LocalTime.of(16, 0));
-        when(userService.getUserFromAuthHeader("authHeader")).thenReturn(user);
+        when(authService.getUser()).thenReturn(user);
         when(parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(1L))
                 .thenReturn(Optional.ofNullable(null));
         when(numberPlateService.findByNumber("AAA123")).thenReturn(numberPlate);
@@ -142,7 +139,7 @@ public class ParkingSessionServiceTest {
         when(parkingSessionRepository.findByNumberPlateIdAndEndTimeIsNull(1L)).thenReturn(Optional.of(parkingSession));
 
         assertThrows(AlreadyUsedNumberPlateException.class,
-                () -> parkingSessionService.startParkingSession("authHeader", "AAA123"));
+                () -> parkingSessionService.startParkingSession("AAA123"));
 
     }
 
@@ -151,7 +148,7 @@ public class ParkingSessionServiceTest {
 
         when(clockService.getDayOfWeek()).thenReturn("Monday");
         when(clockService.getCurrentTime()).thenReturn(LocalTime.of(16, 0));
-        when(userService.getUserFromAuthHeader("authHeader")).thenReturn(user);
+        when(authService.getUser()).thenReturn(user);
         when(parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(1L))
                 .thenReturn(Optional.ofNullable(null));
         when(numberPlateService.findByNumber("AAA123")).thenReturn(numberPlate);
@@ -159,12 +156,12 @@ public class ParkingSessionServiceTest {
         when(parkingSessionRepository.findByNumberPlateIdAndEndTimeIsNull(1L))
                 .thenReturn(Optional.ofNullable(null));
 
-        currentAccount.setBalance(10.0);
+        currentAccount.setBalance(BigDecimal.valueOf(10));
         ReflectionTestUtils.setField(parkingSessionService, "fractionInMinutes", 15);
         ReflectionTestUtils.setField(parkingSessionService, "pricePerFraction", 20.0);
 
         assertThrows(InsufficientBalanceException.class,
-                () -> parkingSessionService.startParkingSession("authHeader", "AAA123"));
+                () -> parkingSessionService.startParkingSession("AAA123"));
 
     }
 
@@ -173,7 +170,7 @@ public class ParkingSessionServiceTest {
 
         when(clockService.getDayOfWeek()).thenReturn("Monday");
         when(clockService.getCurrentTime()).thenReturn(LocalTime.of(16, 0));
-        when(userService.getUserFromAuthHeader("authHeader")).thenReturn(user);
+        when(authService.getUser()).thenReturn(user);
         when(parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(1L))
                 .thenReturn(Optional.ofNullable(null));
         when(numberPlateService.findByNumber("AAA123")).thenReturn(numberPlate);
@@ -181,7 +178,7 @@ public class ParkingSessionServiceTest {
         when(parkingSessionRepository.findByNumberPlateIdAndEndTimeIsNull(1L))
                 .thenReturn(Optional.ofNullable(null));
 
-        currentAccount.setBalance(1000.0);
+        currentAccount.setBalance(BigDecimal.valueOf(1000));
         ReflectionTestUtils.setField(parkingSessionService, "fractionInMinutes", 15);
         ReflectionTestUtils.setField(parkingSessionService, "pricePerFraction", 20.0);
 
@@ -190,7 +187,7 @@ public class ParkingSessionServiceTest {
         when(parkingSessionRepository.save(any(ParkingSession.class))).thenReturn(parkingSession);
 
         ParkingSessionResponse parkingSessionResponse = parkingSessionService
-                .startParkingSession("authHeader", "AAA123");
+                .startParkingSession("AAA123");
 
         assertEquals(parkingSession.getStartTimeDay(), parkingSessionResponse.getStartTimeDay());
         assertEquals(parkingSession.getStartTimeHour(), parkingSessionResponse.getStartTimeHour());
@@ -200,24 +197,24 @@ public class ParkingSessionServiceTest {
     @Test
     public void testFinishParkingSessionWithoutSessionStarted() {
 
-        when(userService.getUserFromAuthHeader("authHeader")).thenReturn(user);
+        when(authService.getUser()).thenReturn(user);
 
         when(parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(1L))
                 .thenReturn(Optional.ofNullable(null));
 
         assertThrows(NotSessionStartedException.class,
-                () -> parkingSessionService.finishParkingSession("authHeader"));
+                () -> parkingSessionService.finishParkingSession());
     }
 
 
     @Test
     public void testFinishParkingSession() {
 
-        when(userService.getUserFromAuthHeader("authHeader")).thenReturn(user);
+        when(authService.getUser()).thenReturn(user);
 
         ParkingSession parkingSession = new ParkingSession(numberPlate, currentAccount);
 
-        currentAccount.setBalance(100.0);
+        currentAccount.setBalance(BigDecimal.valueOf(100));
 
         LocalDateTime thirtyMinutesAgo = LocalDateTime.now().minusMinutes(30);
         Date date = Date.from(thirtyMinutesAgo.atZone(ZoneId.systemDefault()).toInstant());
@@ -231,18 +228,18 @@ public class ParkingSessionServiceTest {
 
         when(parkingSessionRepository.save(parkingSession)).thenReturn(parkingSession);
 
-        parkingSessionService.finishParkingSession("authHeader");
+        parkingSessionService.finishParkingSession();
 
         assertNotNull(parkingSession.getEndTime());
 
-        assertEquals(40.0, currentAccount.getBalance());
+        assertEquals(BigDecimal.valueOf(40), currentAccount.getBalance());
 
     }
 
     @Test
     public void testGetParkingSessionHistory() {
 
-        when(userService.getUserFromAuthHeader("authHeader")).thenReturn(user);
+        when(authService.getUser()).thenReturn(user);
 
         List<ParkingSession> parkingSessions = new ArrayList<>();
 
@@ -254,9 +251,9 @@ public class ParkingSessionServiceTest {
         p2.setEndTime(new Date());
         p3.setEndTime(new Date());
 
-        p1.setAmount(100.0);
-        p2.setAmount(680.0);
-        p3.setAmount(2500.0);
+        p1.setAmount(BigDecimal.valueOf(100));
+        p2.setAmount(BigDecimal.valueOf(680));
+        p3.setAmount(BigDecimal.valueOf(2500));
 
         parkingSessions.add(p1);
         parkingSessions.add(p2);
@@ -267,19 +264,19 @@ public class ParkingSessionServiceTest {
         ParkingSessionHistory parkingSessionHistory = new ParkingSessionHistory();
 
         ParkingSessionResponse pr1 = new ParkingSessionResponse(p1.getStartTimeDay(), p1.getStartTimeHour(),
-                p1.getEndTimeHour(), p1.getAmount());
+                p1.getEndTimeHour(), p1.getAmount().doubleValue());
 
         ParkingSessionResponse pr2 = new ParkingSessionResponse(p2.getStartTimeDay(), p2.getStartTimeHour(),
-                p2.getEndTimeHour(), p2.getAmount());
+                p2.getEndTimeHour(), p2.getAmount().doubleValue());
 
         ParkingSessionResponse pr3 = new ParkingSessionResponse(p3.getStartTimeDay(), p3.getStartTimeHour(),
-                p3.getEndTimeHour(), p3.getAmount());
+                p3.getEndTimeHour(), p3.getAmount().doubleValue());
 
         parkingSessionHistory.addParkingSession(pr1);
         parkingSessionHistory.addParkingSession(pr2);
         parkingSessionHistory.addParkingSession(pr3);
 
-        assertEquals(parkingSessionHistory, parkingSessionService.getParkingSessionHistory("authHeader"));
+        assertEquals(parkingSessionHistory, parkingSessionService.getParkingSessionHistory());
 
     }
 }

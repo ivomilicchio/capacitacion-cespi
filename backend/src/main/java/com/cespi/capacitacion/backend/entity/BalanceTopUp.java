@@ -2,6 +2,7 @@ package com.cespi.capacitacion.backend.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,7 +20,7 @@ public class BalanceTopUp {
     @Column(
             nullable = false
     )
-    private Double amount;
+    private BigDecimal amount;
 
     @ManyToOne
     @JoinColumn(name = "current_account_id")
@@ -29,7 +30,7 @@ public class BalanceTopUp {
 
     }
 
-    public BalanceTopUp(Double amount, CurrentAccount currentAccount) {
+    public BalanceTopUp(BigDecimal amount, CurrentAccount currentAccount) {
         this.time = new Date();
         this.amount = amount;
         this.currentAccount = currentAccount;
@@ -43,11 +44,11 @@ public class BalanceTopUp {
         this.time = time;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

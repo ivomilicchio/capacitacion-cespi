@@ -1,5 +1,6 @@
 package com.cespi.capacitacion.backend.service;
 
+import com.cespi.capacitacion.backend.auth.AuthService;
 import com.cespi.capacitacion.backend.dto.ParkingSessionHistory;
 import com.cespi.capacitacion.backend.dto.ParkingSessionResponse;
 import com.cespi.capacitacion.backend.entity.*;
@@ -9,19 +10,18 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 import java.time.LocalTime;
-import java.time.format.TextStyle;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+import java.util.Optional;
 
 @Service
 public class ParkingSessionServiceImpl implements ParkingSessionService {
 
     private final NumberPlateService numberPlateService;
     private final ParkingSessionRepository parkingSessionRepository;
-    private final UserService userService;
+    private final AuthService authService;
     private final ClockService clockService;
 
     @Value("${parking.bussiness-days}")
@@ -38,18 +38,25 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     private Double pricePerFraction;
 
     public ParkingSessionServiceImpl(NumberPlateService numberPlateService,
-                                     ParkingSessionRepository parkingSessionRepository, UserService userService,
+                                     ParkingSessionRepository parkingSessionRepository, AuthService authService,
                                      ClockService clockService) {
         this.numberPlateService = numberPlateService;
         this.parkingSessionRepository = parkingSessionRepository;
-        this.userService = userService;
+        this.authService = authService;
         this.clockService = clockService;
     }
 
+
+    public Optional<ParkingSession> hasSessionStarted() {
+        User user = authService.getUser();
+        Long accountId = user.getCurrentAccount().getId();
+        return parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId);
+    }
+
     @Transactional
-    public ParkingSessionResponse startParkingSession(String authHeader, String number) {
+    public ParkingSessionResponse startParkingSession(String number) {
         this.checkOutOfService();
-        User user = userService.getUserFromAuthHeader(authHeader);
+        User user = authService.getUser();
         CurrentAccount currentAccount = user.getCurrentAccount();
         this.checkHasSessionStarted(currentAccount.getId());
         NumberPlate numberPlate = numberPlateService.findByNumber(number);
@@ -86,7 +93,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
 
     private void checkInsufficientBalance(CurrentAccount currentAccount) {
 
-        if (currentAccount.getBalance() < this.calculateAmount(60)) {
+        if (currentAccount.getBalance().compareTo(this.calculateAmount(60)) < 0) {
             throw new InsufficientBalanceException();
         }
     }
@@ -96,8 +103,8 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     }
 
     @Transactional
-    public void finishParkingSession(String authHeader) {
-        User user = userService.getUserFromAuthHeader(authHeader);
+    public void finishParkingSession() {
+        User user = authService.getUser();
         CurrentAccount currentAccount = user.getCurrentAccount();
         ParkingSession parkingSession = this.getSessionStarted(currentAccount.getId());
         parkingSession.setEndTime(new Date());
@@ -111,22 +118,22 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     }
 
     private void chargeService(CurrentAccount currentAccount, ParkingSession parkingSession) {
-        Double amount = this.calculateAmount(parkingSession.getDurationInMinutes());
-        Double balance = currentAccount.getBalance();
-        currentAccount.setBalance(balance - amount);
+        BigDecimal amount = this.calculateAmount(parkingSession.getDurationInMinutes());
+        BigDecimal balance = currentAccount.getBalance();
+        currentAccount.setBalance(balance.subtract(amount));
         parkingSession.setAmount(amount);
     }
 
-    private Double calculateAmount(long durationInMinutes) {
+    private BigDecimal calculateAmount(long durationInMinutes) {
         long fractions = durationInMinutes / this.fractionInMinutes;
         if (durationInMinutes % this.fractionInMinutes > 0) {
             fractions++;
         }
-        return fractions * this.pricePerFraction;
+        return BigDecimal.valueOf(fractions * this.pricePerFraction);
     }
 
-    public ParkingSessionHistory getParkingSessionHistory(String authHeader) {
-        User user = this.userService.getUserFromAuthHeader(authHeader);
+    public ParkingSessionHistory getParkingSessionHistory() {
+        User user = authService.getUser();
         List<ParkingSession> parkingSessions =  parkingSessionRepository.findAllByCurrentAccountIdAndEndTimeNotNull(
                 user.getCurrentAccount().getId());
         return getHistory(parkingSessions);
@@ -136,7 +143,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
         ParkingSessionHistory history = new ParkingSessionHistory();
         for (ParkingSession p: parkingSessions) {
             ParkingSessionResponse actual = new ParkingSessionResponse(p.getStartTimeDay(),
-                    p.getStartTimeHour(), p.getEndTimeHour(), p.getAmount());
+                    p.getStartTimeHour(), p.getEndTimeHour(), p.getAmount().doubleValue());
             history.addParkingSession(actual);
         }
         return history;

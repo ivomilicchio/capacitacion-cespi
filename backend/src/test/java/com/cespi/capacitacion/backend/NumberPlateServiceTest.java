@@ -1,5 +1,6 @@
 package com.cespi.capacitacion.backend;
 
+import com.cespi.capacitacion.backend.auth.AuthService;
 import com.cespi.capacitacion.backend.entity.NumberPlate;
 import com.cespi.capacitacion.backend.entity.User;
 import com.cespi.capacitacion.backend.exception.BadFormatNumberPlateException;
@@ -29,6 +30,9 @@ public class NumberPlateServiceTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    private AuthService authService;
+
     @InjectMocks
     private NumberPlateServiceImpl numberPlateService;
 
@@ -37,7 +41,7 @@ public class NumberPlateServiceTest {
     @BeforeEach
     public void setUp() {
         this.user = new User("2211234567", "usuario@gmail.com", "1234");
-        when(userService.getUserFromAuthHeader("authHeader")).thenReturn(user);
+        when(authService.getUser()).thenReturn(user);
     }
 
     @Test
