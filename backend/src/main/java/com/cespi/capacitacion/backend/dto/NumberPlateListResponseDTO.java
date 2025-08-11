@@ -3,15 +3,15 @@ package com.cespi.capacitacion.backend.dto;
 import java.util.HashSet;
 import java.util.Set;
 
-public class NumberPlateListResponse {
+public class NumberPlateListResponseDTO {
 
     Set<String> numberPlates;
 
-    public NumberPlateListResponse() {
+    public NumberPlateListResponseDTO() {
        numberPlates = new HashSet<>();
     }
 
-    public NumberPlateListResponse(Set<String> numberPlates) {
+    public NumberPlateListResponseDTO(Set<String> numberPlates) {
         this.numberPlates = numberPlates;
     }
 

@@ -1,7 +1,7 @@
 package com.cespi.capacitacion.backend.controller;
 
-import com.cespi.capacitacion.backend.dto.NumberPlateCreation;
-import com.cespi.capacitacion.backend.dto.NumberPlateListResponse;
+import com.cespi.capacitacion.backend.dto.NumberPlateCreationDTO;
+import com.cespi.capacitacion.backend.dto.NumberPlateListResponseDTO;
 import com.cespi.capacitacion.backend.service.NumberPlateService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -19,15 +19,15 @@ public class NumberPlateController {
     }
 
     @GetMapping
-    public ResponseEntity<NumberPlateListResponse> getNumberPlatesOfUser() {
+    public ResponseEntity<NumberPlateListResponseDTO> getNumberPlatesOfUser() {
         return ResponseEntity.ok(numberPlateService.getNumberPlatesOfUser());
     }
 
     @PostMapping
-    public ResponseEntity<NumberPlateCreation> saveNumberPlate(
-            @RequestBody @Valid NumberPlateCreation numberPlateCreation) {
+    public ResponseEntity<NumberPlateCreationDTO> saveNumberPlate(
+            @RequestBody @Valid NumberPlateCreationDTO numberPlateCreationDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(numberPlateService.saveNumberPlate(
-                numberPlateCreation.getNumber()));
+                numberPlateCreationDTO.getNumber()));
     }
 
 }

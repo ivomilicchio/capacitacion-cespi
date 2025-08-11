@@ -1,22 +1,21 @@
 package com.cespi.capacitacion.backend.dto;
 
-import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 
 import java.math.BigDecimal;
 
-public class CurrentAccountBalance {
+public class CurrentAccountBalanceDTO {
 
     @DecimalMin(value = "100.00", message = "El monto mínimo de carga es de $100")
     @Digits(integer = 36, fraction = 2, message = "El monto puede tener como máximo 2 decimales")
     private BigDecimal balance;
 
-    public CurrentAccountBalance() {
+    public CurrentAccountBalanceDTO() {
 
     }
 
-    public CurrentAccountBalance(BigDecimal balance) {
+    public CurrentAccountBalanceDTO(BigDecimal balance) {
         this.balance = balance;
     }
 

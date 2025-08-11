@@ -1,41 +1,39 @@
 package com.cespi.capacitacion.backend.dto;
 
-import com.cespi.capacitacion.backend.entity.ParkingSession;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ParkingSessionHistory {
+public class ParkingSessionHistoryDTO {
 
 
-    private List<ParkingSessionResponse> parkingSessions;
+    private List<ParkingSessionResponseDTO> parkingSessions;
 
-    public ParkingSessionHistory() {
+    public ParkingSessionHistoryDTO() {
         this.parkingSessions = new ArrayList<>();
     }
 
-    public ParkingSessionHistory(List<ParkingSessionResponse> parkingSessions) {
+    public ParkingSessionHistoryDTO(List<ParkingSessionResponseDTO> parkingSessions) {
         this.parkingSessions = parkingSessions;
     }
 
-    public void addParkingSession(ParkingSessionResponse parkingSession) {
+    public void addParkingSession(ParkingSessionResponseDTO parkingSession) {
         this.parkingSessions.add(parkingSession);
     }
 
-    public List<ParkingSessionResponse> getParkingSessions() {
+    public List<ParkingSessionResponseDTO> getParkingSessions() {
         return parkingSessions;
     }
 
-    public void setParkingSessions(List<ParkingSessionResponse> parkingSessions) {
+    public void setParkingSessions(List<ParkingSessionResponseDTO> parkingSessions) {
         this.parkingSessions = parkingSessions;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ParkingSessionHistory)) return false;
-        ParkingSessionHistory that = (ParkingSessionHistory) o;
+        if (!(o instanceof ParkingSessionHistoryDTO)) return false;
+        ParkingSessionHistoryDTO that = (ParkingSessionHistoryDTO) o;
         return Objects.equals(parkingSessions, that.parkingSessions);
     }
 

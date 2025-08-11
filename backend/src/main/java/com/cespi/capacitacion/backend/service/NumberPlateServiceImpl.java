@@ -1,8 +1,8 @@
 package com.cespi.capacitacion.backend.service;
 
 import com.cespi.capacitacion.backend.auth.AuthService;
-import com.cespi.capacitacion.backend.dto.NumberPlateCreation;
-import com.cespi.capacitacion.backend.dto.NumberPlateListResponse;
+import com.cespi.capacitacion.backend.dto.NumberPlateCreationDTO;
+import com.cespi.capacitacion.backend.dto.NumberPlateListResponseDTO;
 import com.cespi.capacitacion.backend.entity.NumberPlate;
 import com.cespi.capacitacion.backend.entity.User;
 import com.cespi.capacitacion.backend.exception.BadFormatNumberPlateException;
@@ -29,13 +29,13 @@ public class NumberPlateServiceImpl implements NumberPlateService {
         this.authService = authService;
     }
 
-    public NumberPlateListResponse getNumberPlatesOfUser() {
+    public NumberPlateListResponseDTO getNumberPlatesOfUser() {
         User user = authService.getUser();
-        return new NumberPlateListResponse(user.getAllNumberPlatesStrings());
+        return new NumberPlateListResponseDTO(user.getAllNumberPlatesStrings());
     }
 
     @Transactional
-    public NumberPlateCreation saveNumberPlate(String number) {
+    public NumberPlateCreationDTO saveNumberPlate(String number) {
         String sanitizedNumber = sanitizeNumberPlate(number);
         validFormatOfNumberPlate(sanitizedNumber);
         User user = authService.getUser();
@@ -48,7 +48,7 @@ public class NumberPlateServiceImpl implements NumberPlateService {
         }
         user.addNumberPlate(numberPlate);
         userService.save(user);
-        return new NumberPlateCreation(sanitizedNumber);
+        return new NumberPlateCreationDTO(sanitizedNumber);
     }
 
     public NumberPlate findByNumber(String number) {

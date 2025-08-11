@@ -1,8 +1,8 @@
 package com.cespi.capacitacion.backend.controller;
 
-import com.cespi.capacitacion.backend.dto.ParkingSessionHistory;
-import com.cespi.capacitacion.backend.dto.ParkingSessionRequest;
-import com.cespi.capacitacion.backend.dto.ParkingSessionResponse;
+import com.cespi.capacitacion.backend.dto.ParkingSessionHistoryDTO;
+import com.cespi.capacitacion.backend.dto.ParkingSessionRequestDTO;
+import com.cespi.capacitacion.backend.dto.ParkingSessionResponseDTO;
 import com.cespi.capacitacion.backend.entity.ParkingSession;
 import com.cespi.capacitacion.backend.service.ParkingSessionService;
 import com.cespi.capacitacion.backend.service.UserService;
@@ -25,9 +25,9 @@ public class ParkingSessionController {
     }
 
     @PostMapping
-    public ResponseEntity<ParkingSessionResponse> startParkingSession(
-            @RequestBody @Valid ParkingSessionRequest parkingSessionRequest) {
-        return ResponseEntity.ok(parkingSessionService.startParkingSession(parkingSessionRequest.getNumberPlate()));
+    public ResponseEntity<ParkingSessionResponseDTO> startParkingSession(
+            @RequestBody @Valid ParkingSessionRequestDTO parkingSessionRequestDTO) {
+        return ResponseEntity.ok(parkingSessionService.startParkingSession(parkingSessionRequestDTO.getNumberPlate()));
 
     }
     @GetMapping
@@ -37,11 +37,11 @@ public class ParkingSessionController {
     }
 
     @GetMapping("/started")
-    public ResponseEntity<ParkingSessionResponse> hasSessionStarted() {
+    public ResponseEntity<ParkingSessionResponseDTO> hasSessionStarted() {
         Optional<ParkingSession> optionalParkingSession = parkingSessionService.hasSessionStarted();
         if (optionalParkingSession.isPresent()) {
             ParkingSession parkingSession = optionalParkingSession.get();
-            ParkingSessionResponse response = new ParkingSessionResponse(parkingSession.getStartTimeDay(),
+            ParkingSessionResponseDTO response = new ParkingSessionResponseDTO(parkingSession.getStartTimeDay(),
                     parkingSession.getStartTimeHour());
             return ResponseEntity.ok(response);
         }
@@ -49,7 +49,7 @@ public class ParkingSessionController {
     }
 
     @GetMapping("/history")
-    public ResponseEntity<ParkingSessionHistory> getParkingSessionHistory() {
+    public ResponseEntity<ParkingSessionHistoryDTO> getParkingSessionHistory() {
         return ResponseEntity.ok(this.parkingSessionService.getParkingSessionHistory());
     }
 }

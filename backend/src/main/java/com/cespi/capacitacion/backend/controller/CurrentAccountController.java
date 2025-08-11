@@ -1,7 +1,7 @@
 package com.cespi.capacitacion.backend.controller;
 
-import com.cespi.capacitacion.backend.dto.BalanceTopUpHistory;
-import com.cespi.capacitacion.backend.dto.CurrentAccountBalance;
+import com.cespi.capacitacion.backend.dto.BalanceTopUpHistoryDTO;
+import com.cespi.capacitacion.backend.dto.CurrentAccountBalanceDTO;
 import com.cespi.capacitacion.backend.service.CurrentAccountService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +18,18 @@ public class CurrentAccountController {
     }
 
     @GetMapping
-    public ResponseEntity<CurrentAccountBalance> getCurrentAccountBalance() {
+    public ResponseEntity<CurrentAccountBalanceDTO> getCurrentAccountBalance() {
         return ResponseEntity.ok(currentAccountService.getCurrentAccountBalance());
     }
 
     @PostMapping
-    public ResponseEntity<CurrentAccountBalance> addBalanceToAccount(
-            @RequestBody @Valid CurrentAccountBalance currentAccountBalance) {
-        return ResponseEntity.ok(currentAccountService.addBalanceToAccount(currentAccountBalance));
+    public ResponseEntity<CurrentAccountBalanceDTO> addBalanceToAccount(
+            @RequestBody @Valid CurrentAccountBalanceDTO currentAccountBalanceDTO) {
+        return ResponseEntity.ok(currentAccountService.addBalanceToAccount(currentAccountBalanceDTO));
     }
 
     @GetMapping("/history")
-    public ResponseEntity<BalanceTopUpHistory> getBalanceTopUpHistory () {
+    public ResponseEntity<BalanceTopUpHistoryDTO> getBalanceTopUpHistory () {
         return ResponseEntity.ok(currentAccountService.getBalanceTopUpHistory());
     }
 }

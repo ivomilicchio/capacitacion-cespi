@@ -2,17 +2,17 @@ package com.cespi.capacitacion.backend.dto;
 
 import java.util.Date;
 
-public class ErrorResponse {
+public class ErrorResponseDTO {
 
     private Date tiempo;
     private String mensaje;
     private String uri;
 
-    public ErrorResponse() {
+    public ErrorResponseDTO() {
 
     }
 
-    public ErrorResponse(String mensaje, String uri) {
+    public ErrorResponseDTO(String mensaje, String uri) {
         this.tiempo = new Date();
         this.mensaje = mensaje;
         this.uri = uri.replace("uri=", "") ;

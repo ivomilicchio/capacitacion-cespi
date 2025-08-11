@@ -1,8 +1,8 @@
 package com.cespi.capacitacion.backend.service;
 
 import com.cespi.capacitacion.backend.auth.AuthService;
-import com.cespi.capacitacion.backend.dto.ParkingSessionHistory;
-import com.cespi.capacitacion.backend.dto.ParkingSessionResponse;
+import com.cespi.capacitacion.backend.dto.ParkingSessionHistoryDTO;
+import com.cespi.capacitacion.backend.dto.ParkingSessionResponseDTO;
 import com.cespi.capacitacion.backend.entity.*;
 import com.cespi.capacitacion.backend.exception.*;
 import com.cespi.capacitacion.backend.repository.ParkingSessionRepository;
@@ -54,7 +54,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     }
 
     @Transactional
-    public ParkingSessionResponse startParkingSession(String number) {
+    public ParkingSessionResponseDTO startParkingSession(String number) {
         this.checkOutOfService();
         User user = authService.getUser();
         CurrentAccount currentAccount = user.getCurrentAccount();
@@ -64,7 +64,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
         this.checkInsufficientBalance(currentAccount);
         ParkingSession parkingSession = new ParkingSession(numberPlate, currentAccount);
         parkingSession = this.save(parkingSession);
-        return new ParkingSessionResponse(parkingSession.getStartTimeDay(), parkingSession.getStartTimeHour());
+        return new ParkingSessionResponseDTO(parkingSession.getStartTimeDay(), parkingSession.getStartTimeHour());
     }
 
     private void checkOutOfService() {
@@ -132,17 +132,17 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
         return BigDecimal.valueOf(fractions * this.pricePerFraction);
     }
 
-    public ParkingSessionHistory getParkingSessionHistory() {
+    public ParkingSessionHistoryDTO getParkingSessionHistory() {
         User user = authService.getUser();
         List<ParkingSession> parkingSessions =  parkingSessionRepository.findAllByCurrentAccountIdAndEndTimeNotNull(
                 user.getCurrentAccount().getId());
         return getHistory(parkingSessions);
     }
 
-    private ParkingSessionHistory getHistory(List<ParkingSession> parkingSessions) {
-        ParkingSessionHistory history = new ParkingSessionHistory();
+    private ParkingSessionHistoryDTO getHistory(List<ParkingSession> parkingSessions) {
+        ParkingSessionHistoryDTO history = new ParkingSessionHistoryDTO();
         for (ParkingSession p: parkingSessions) {
-            ParkingSessionResponse actual = new ParkingSessionResponse(p.getStartTimeDay(),
+            ParkingSessionResponseDTO actual = new ParkingSessionResponseDTO(p.getStartTimeDay(),
                     p.getStartTimeHour(), p.getEndTimeHour(), p.getAmount().doubleValue());
             history.addParkingSession(actual);
         }

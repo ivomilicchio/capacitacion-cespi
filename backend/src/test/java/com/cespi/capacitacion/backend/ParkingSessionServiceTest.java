@@ -1,8 +1,8 @@
 package com.cespi.capacitacion.backend;
 
 import com.cespi.capacitacion.backend.auth.AuthService;
-import com.cespi.capacitacion.backend.dto.ParkingSessionHistory;
-import com.cespi.capacitacion.backend.dto.ParkingSessionResponse;
+import com.cespi.capacitacion.backend.dto.ParkingSessionHistoryDTO;
+import com.cespi.capacitacion.backend.dto.ParkingSessionResponseDTO;
 import com.cespi.capacitacion.backend.entity.CurrentAccount;
 import com.cespi.capacitacion.backend.entity.NumberPlate;
 import com.cespi.capacitacion.backend.entity.ParkingSession;
@@ -186,11 +186,11 @@ public class ParkingSessionServiceTest {
 
         when(parkingSessionRepository.save(any(ParkingSession.class))).thenReturn(parkingSession);
 
-        ParkingSessionResponse parkingSessionResponse = parkingSessionService
+        ParkingSessionResponseDTO parkingSessionResponseDTO = parkingSessionService
                 .startParkingSession("AAA123");
 
-        assertEquals(parkingSession.getStartTimeDay(), parkingSessionResponse.getStartTimeDay());
-        assertEquals(parkingSession.getStartTimeHour(), parkingSessionResponse.getStartTimeHour());
+        assertEquals(parkingSession.getStartTimeDay(), parkingSessionResponseDTO.getStartTimeDay());
+        assertEquals(parkingSession.getStartTimeHour(), parkingSessionResponseDTO.getStartTimeHour());
     }
 
 
@@ -261,22 +261,22 @@ public class ParkingSessionServiceTest {
 
         when(parkingSessionRepository.findAllByCurrentAccountIdAndEndTimeNotNull(1L)).thenReturn(parkingSessions);
 
-        ParkingSessionHistory parkingSessionHistory = new ParkingSessionHistory();
+        ParkingSessionHistoryDTO parkingSessionHistoryDTO = new ParkingSessionHistoryDTO();
 
-        ParkingSessionResponse pr1 = new ParkingSessionResponse(p1.getStartTimeDay(), p1.getStartTimeHour(),
+        ParkingSessionResponseDTO pr1 = new ParkingSessionResponseDTO(p1.getStartTimeDay(), p1.getStartTimeHour(),
                 p1.getEndTimeHour(), p1.getAmount().doubleValue());
 
-        ParkingSessionResponse pr2 = new ParkingSessionResponse(p2.getStartTimeDay(), p2.getStartTimeHour(),
+        ParkingSessionResponseDTO pr2 = new ParkingSessionResponseDTO(p2.getStartTimeDay(), p2.getStartTimeHour(),
                 p2.getEndTimeHour(), p2.getAmount().doubleValue());
 
-        ParkingSessionResponse pr3 = new ParkingSessionResponse(p3.getStartTimeDay(), p3.getStartTimeHour(),
+        ParkingSessionResponseDTO pr3 = new ParkingSessionResponseDTO(p3.getStartTimeDay(), p3.getStartTimeHour(),
                 p3.getEndTimeHour(), p3.getAmount().doubleValue());
 
-        parkingSessionHistory.addParkingSession(pr1);
-        parkingSessionHistory.addParkingSession(pr2);
-        parkingSessionHistory.addParkingSession(pr3);
+        parkingSessionHistoryDTO.addParkingSession(pr1);
+        parkingSessionHistoryDTO.addParkingSession(pr2);
+        parkingSessionHistoryDTO.addParkingSession(pr3);
 
-        assertEquals(parkingSessionHistory, parkingSessionService.getParkingSessionHistory());
+        assertEquals(parkingSessionHistoryDTO, parkingSessionService.getParkingSessionHistory());
 
     }
 }

@@ -1,6 +1,6 @@
 package com.cespi.capacitacion.backend.exception;
 
-import com.cespi.capacitacion.backend.dto.ErrorResponse;
+import com.cespi.capacitacion.backend.dto.ErrorResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -18,111 +18,111 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException exception,
-                                                                          WebRequest webRequest) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+    public ResponseEntity<ErrorResponseDTO> handleResourceNotFoundException(ResourceNotFoundException exception,
+                                                                            WebRequest webRequest) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
+    public ResponseEntity<ErrorResponseDTO> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException exception, WebRequest webRequest) {
         String errors = exception.getBindingResult().getAllErrors().stream().map( e -> e.getDefaultMessage())
                 .collect(Collectors.joining(" | "));
 
-        ErrorResponse errorResponse = new ErrorResponse(errors, webRequest.getDescription(
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(errors, webRequest.getDescription(
                 false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
+    public ResponseEntity<ErrorResponseDTO> handleHttpMessageNotReadableException(
             HttpMessageNotReadableException exception,WebRequest webRequest) {
-        ErrorResponse errorResponse = new ErrorResponse(
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 "El cuerpo de la solicitud no se pudo leer. Asegúrese de enviar un JSON válido.",
                 webRequest.getDescription(false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException exception,
-                                                                       WebRequest webRequest) {
-        ErrorResponse errorResponse = new ErrorResponse(
+    public ResponseEntity<ErrorResponseDTO> handleBadCredentialsException(BadCredentialsException exception,
+                                                                          WebRequest webRequest) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 "Número de teléfono o contraseña incorrectos",
                 webRequest.getDescription(false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(BadFormatNumberPlateException.class)
-    public ResponseEntity<ErrorResponse> handleBadFormatNumberPlateException(BadFormatNumberPlateException exception,
-                                                                             WebRequest webRequest) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+    public ResponseEntity<ErrorResponseDTO> handleBadFormatNumberPlateException(BadFormatNumberPlateException exception,
+                                                                                WebRequest webRequest) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(OutOfServiceException.class)
-    public ResponseEntity<ErrorResponse> handleOutOfServiceHourException(OutOfServiceException exception,
-                                                                         WebRequest webRequest) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+    public ResponseEntity<ErrorResponseDTO> handleOutOfServiceHourException(OutOfServiceException exception,
+                                                                            WebRequest webRequest) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.SERVICE_UNAVAILABLE);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     @ExceptionHandler(HasSessionStartedException.class)
-    public ResponseEntity<ErrorResponse> handleHasSessionStartedException(HasSessionStartedException exception,
-                                                                         WebRequest webRequest) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+    public ResponseEntity<ErrorResponseDTO> handleHasSessionStartedException(HasSessionStartedException exception,
+                                                                             WebRequest webRequest) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(AlreadyUsedNumberPlateException.class)
-    public ResponseEntity<ErrorResponse> handleAlreadyUsedNumberPlateException(AlreadyUsedNumberPlateException exception,
-                                                                          WebRequest webRequest) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+    public ResponseEntity<ErrorResponseDTO> handleAlreadyUsedNumberPlateException(AlreadyUsedNumberPlateException exception,
+                                                                                  WebRequest webRequest) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(InsufficientBalanceException.class)
-    public ResponseEntity<ErrorResponse> handleInsufficientBalanceException(InsufficientBalanceException exception,
+    public ResponseEntity<ErrorResponseDTO> handleInsufficientBalanceException(InsufficientBalanceException exception,
                                                                                WebRequest webRequest) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(NotSessionStartedException.class)
-    public ResponseEntity<ErrorResponse> handleNotSessionStartedException(NotSessionStartedException exception,
-                                                                            WebRequest webRequest) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+    public ResponseEntity<ErrorResponseDTO> handleNotSessionStartedException(NotSessionStartedException exception,
+                                                                             WebRequest webRequest) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(BadFormatPhoneNumberException.class)
-    public ResponseEntity<ErrorResponse> handleBadFormatPhoneNumberException(BadFormatPhoneNumberException exception,
-                                                                          WebRequest webRequest) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+    public ResponseEntity<ErrorResponseDTO> handleBadFormatPhoneNumberException(BadFormatPhoneNumberException exception,
+                                                                                WebRequest webRequest) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ExistPhoneNumberException.class)
-    public ResponseEntity<ErrorResponse> handleExistPhoneNumberException(ExistPhoneNumberException exception,
-                                                                             WebRequest webRequest) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+    public ResponseEntity<ErrorResponseDTO> handleExistPhoneNumberException(ExistPhoneNumberException exception,
+                                                                            WebRequest webRequest) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(ExistMailException.class)
-    public ResponseEntity<ErrorResponse> handleExistMailException(ExistMailException exception,
-                                                                         WebRequest webRequest) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), webRequest.getDescription(
+    public ResponseEntity<ErrorResponseDTO> handleExistMailException(ExistMailException exception,
+                                                                     WebRequest webRequest) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
     }
 }

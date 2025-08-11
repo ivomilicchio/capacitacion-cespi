@@ -2,25 +2,25 @@ package com.cespi.capacitacion.backend.dto;
 
 import java.util.Objects;
 
-public class ParkingSessionResponse {
+public class ParkingSessionResponseDTO {
 
     private String startTimeDay;
     private String startTimeHour;
     private String endTimeHour;
     private Double amount;
 
-    public ParkingSessionResponse() {
+    public ParkingSessionResponseDTO() {
 
     }
 
-    public ParkingSessionResponse(String startTimeDay, String startTimeHour, String endTimeHour, Double amount) {
+    public ParkingSessionResponseDTO(String startTimeDay, String startTimeHour, String endTimeHour, Double amount) {
         this.startTimeDay = startTimeDay;
         this.startTimeHour = startTimeHour;
         this.endTimeHour = endTimeHour;
         this.amount = amount;
     }
 
-    public ParkingSessionResponse(String startTimeDay, String startTimeHour) {
+    public ParkingSessionResponseDTO(String startTimeDay, String startTimeHour) {
         this.startTimeDay = startTimeDay;
         this.startTimeHour = startTimeHour;
     }
@@ -60,8 +60,8 @@ public class ParkingSessionResponse {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ParkingSessionResponse)) return false;
-        ParkingSessionResponse that = (ParkingSessionResponse) o;
+        if (!(o instanceof ParkingSessionResponseDTO)) return false;
+        ParkingSessionResponseDTO that = (ParkingSessionResponseDTO) o;
         return Objects.equals(startTimeDay, that.startTimeDay) &&
                 Objects.equals(startTimeHour, that.startTimeHour) &&
                 Objects.equals(endTimeHour, that.endTimeHour) &&

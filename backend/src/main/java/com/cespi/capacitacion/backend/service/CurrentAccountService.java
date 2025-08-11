@@ -1,13 +1,13 @@
 package com.cespi.capacitacion.backend.service;
 
-import com.cespi.capacitacion.backend.dto.BalanceTopUpHistory;
-import com.cespi.capacitacion.backend.dto.CurrentAccountBalance;
+import com.cespi.capacitacion.backend.dto.BalanceTopUpHistoryDTO;
+import com.cespi.capacitacion.backend.dto.CurrentAccountBalanceDTO;
 
 public interface CurrentAccountService {
 
-    CurrentAccountBalance getCurrentAccountBalance();
-    CurrentAccountBalance addBalanceToAccount(CurrentAccountBalance currentAccountBalance);
-    BalanceTopUpHistory getBalanceTopUpHistory();
+    CurrentAccountBalanceDTO getCurrentAccountBalance();
+    CurrentAccountBalanceDTO addBalanceToAccount(CurrentAccountBalanceDTO currentAccountBalanceDTO);
+    BalanceTopUpHistoryDTO getBalanceTopUpHistory();
 
 }
 

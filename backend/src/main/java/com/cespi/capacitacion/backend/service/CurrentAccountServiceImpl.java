@@ -1,9 +1,9 @@
 package com.cespi.capacitacion.backend.service;
 
 import com.cespi.capacitacion.backend.auth.AuthService;
-import com.cespi.capacitacion.backend.dto.BalanceTopUpHistory;
-import com.cespi.capacitacion.backend.dto.BalanceTopUpResponse;
-import com.cespi.capacitacion.backend.dto.CurrentAccountBalance;
+import com.cespi.capacitacion.backend.dto.BalanceTopUpHistoryDTO;
+import com.cespi.capacitacion.backend.dto.BalanceTopUpResponseDTO;
+import com.cespi.capacitacion.backend.dto.CurrentAccountBalanceDTO;
 import com.cespi.capacitacion.backend.entity.BalanceTopUp;
 import com.cespi.capacitacion.backend.entity.CurrentAccount;
 import com.cespi.capacitacion.backend.entity.User;
@@ -25,34 +25,34 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
         this.authService = authService;
     }
 
-    public CurrentAccountBalance getCurrentAccountBalance() {
+    public CurrentAccountBalanceDTO getCurrentAccountBalance() {
         User user = authService.getUser();
-        return new CurrentAccountBalance(user.getCurrentAccount().getBalance());
+        return new CurrentAccountBalanceDTO(user.getCurrentAccount().getBalance());
     }
 
     @Transactional
-    public CurrentAccountBalance addBalanceToAccount(CurrentAccountBalance currentAccountBalance) {
+    public CurrentAccountBalanceDTO addBalanceToAccount(CurrentAccountBalanceDTO currentAccountBalanceDTO) {
         User user = authService.getUser();
         CurrentAccount currentAccount = user.getCurrentAccount();
-        BigDecimal newBalance = currentAccount.getBalance().add(currentAccountBalance.getBalance());
+        BigDecimal newBalance = currentAccount.getBalance().add(currentAccountBalanceDTO.getBalance());
         currentAccount.setBalance(newBalance);
-        BalanceTopUp balanceTopUp = new BalanceTopUp(currentAccountBalance.getBalance(),
+        BalanceTopUp balanceTopUp = new BalanceTopUp(currentAccountBalanceDTO.getBalance(),
                 currentAccount);
         currentAccount.addBalanceTopUp(balanceTopUp);
         userService.save(user);
-        return new CurrentAccountBalance(newBalance.setScale(2, RoundingMode.HALF_UP));
+        return new CurrentAccountBalanceDTO(newBalance.setScale(2, RoundingMode.HALF_UP));
     }
 
-    public BalanceTopUpHistory getBalanceTopUpHistory() {
+    public BalanceTopUpHistoryDTO getBalanceTopUpHistory() {
         User user = authService.getUser();
         List<BalanceTopUp> balanceTopUps =  user.getCurrentAccount().getBalanceTopUps();
         return this.getHistory(balanceTopUps);
     }
 
-    private BalanceTopUpHistory getHistory(List<BalanceTopUp> balanceTopUps) {
-        BalanceTopUpHistory history = new BalanceTopUpHistory();
+    private BalanceTopUpHistoryDTO getHistory(List<BalanceTopUp> balanceTopUps) {
+        BalanceTopUpHistoryDTO history = new BalanceTopUpHistoryDTO();
         for (BalanceTopUp b: balanceTopUps) {
-            BalanceTopUpResponse actual = new BalanceTopUpResponse(b.getDay(), b.getHour(),
+            BalanceTopUpResponseDTO actual = new BalanceTopUpResponseDTO(b.getDay(), b.getHour(),
                     b.getAmount());
             history.addBalanceTopUp(actual);
         }

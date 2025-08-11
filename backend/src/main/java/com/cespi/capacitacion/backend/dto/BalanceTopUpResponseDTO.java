@@ -3,17 +3,17 @@ package com.cespi.capacitacion.backend.dto;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class BalanceTopUpResponse {
+public class BalanceTopUpResponseDTO {
 
     private String day;
     private String hour;
     private BigDecimal amount;
 
-    public BalanceTopUpResponse() {
+    public BalanceTopUpResponseDTO() {
 
     }
 
-    public BalanceTopUpResponse(String day, String hour, BigDecimal amount) {
+    public BalanceTopUpResponseDTO(String day, String hour, BigDecimal amount) {
         this.day = day;
         this.hour = hour;
         this.amount = amount;
@@ -47,8 +47,8 @@ public class BalanceTopUpResponse {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BalanceTopUpResponse)) return false;
-        BalanceTopUpResponse that = (BalanceTopUpResponse) o;
+        if (!(o instanceof BalanceTopUpResponseDTO)) return false;
+        BalanceTopUpResponseDTO that = (BalanceTopUpResponseDTO) o;
         return Objects.equals(day, that.day) &&
                 Objects.equals(hour, that.hour) &&
                 Objects.equals(amount, that.amount);

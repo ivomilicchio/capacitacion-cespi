@@ -2,16 +2,16 @@ package com.cespi.capacitacion.backend.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 
-public class ParkingSessionRequest {
+public class ParkingSessionRequestDTO {
 
     @NotEmpty(message = "El campo 'numberPlate' es requerido")
     private String numberPlate;
 
-    public ParkingSessionRequest() {
+    public ParkingSessionRequestDTO() {
 
     }
 
-    public ParkingSessionRequest(String numberPlate) {
+    public ParkingSessionRequestDTO(String numberPlate) {
         this.numberPlate = numberPlate;
     }
 

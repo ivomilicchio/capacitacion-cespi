@@ -1,9 +1,9 @@
 package com.cespi.capacitacion.backend;
 
 import com.cespi.capacitacion.backend.auth.AuthService;
-import com.cespi.capacitacion.backend.dto.BalanceTopUpHistory;
-import com.cespi.capacitacion.backend.dto.BalanceTopUpResponse;
-import com.cespi.capacitacion.backend.dto.CurrentAccountBalance;
+import com.cespi.capacitacion.backend.dto.BalanceTopUpHistoryDTO;
+import com.cespi.capacitacion.backend.dto.BalanceTopUpResponseDTO;
+import com.cespi.capacitacion.backend.dto.CurrentAccountBalanceDTO;
 import com.cespi.capacitacion.backend.entity.BalanceTopUp;
 import com.cespi.capacitacion.backend.entity.CurrentAccount;
 import com.cespi.capacitacion.backend.entity.User;
@@ -50,7 +50,7 @@ public class CurrentAccountServiceTest {
     public void testGetCurrentAccountBalance() {
 
         currentAccount.setBalance(BigDecimal.valueOf(1000));
-        currentAccountService.addBalanceToAccount(new CurrentAccountBalance(BigDecimal.valueOf(2000)));
+        currentAccountService.addBalanceToAccount(new CurrentAccountBalanceDTO(BigDecimal.valueOf(2000)));
 
         assertEquals(3000.0, currentAccountService.getCurrentAccountBalance()
                 .getBalance());
@@ -61,10 +61,10 @@ public class CurrentAccountServiceTest {
 
         currentAccount.setBalance(BigDecimal.valueOf(1000));
 
-        CurrentAccountBalance currentAccountBalance = new CurrentAccountBalance(BigDecimal.valueOf(500));
+        CurrentAccountBalanceDTO currentAccountBalanceDTO = new CurrentAccountBalanceDTO(BigDecimal.valueOf(500));
 
         assertEquals(1500, currentAccountService.addBalanceToAccount
-                (currentAccountBalance).getBalance());
+                (currentAccountBalanceDTO).getBalance());
     }
 
     @Test
@@ -80,16 +80,16 @@ public class CurrentAccountServiceTest {
         currentAccount.addBalanceTopUp(b2);
         currentAccount.addBalanceTopUp(b3);
 
-        BalanceTopUpHistory balanceTopUpHistory = new BalanceTopUpHistory();
+        BalanceTopUpHistoryDTO balanceTopUpHistoryDTO = new BalanceTopUpHistoryDTO();
 
-        balanceTopUpHistory.addBalanceTopUp(new BalanceTopUpResponse(b1.getDay(), b1.getHour(),
+        balanceTopUpHistoryDTO.addBalanceTopUp(new BalanceTopUpResponseDTO(b1.getDay(), b1.getHour(),
                 b1.getAmount()));
-        balanceTopUpHistory.addBalanceTopUp(new BalanceTopUpResponse(b2.getDay(), b2.getHour(),
+        balanceTopUpHistoryDTO.addBalanceTopUp(new BalanceTopUpResponseDTO(b2.getDay(), b2.getHour(),
                 b2.getAmount()));
-        balanceTopUpHistory.addBalanceTopUp(new BalanceTopUpResponse(b3.getDay(), b3.getHour(),
+        balanceTopUpHistoryDTO.addBalanceTopUp(new BalanceTopUpResponseDTO(b3.getDay(), b3.getHour(),
                 b3.getAmount()));
 
-        assertEquals(balanceTopUpHistory, currentAccountService.getBalanceTopUpHistory());
+        assertEquals(balanceTopUpHistoryDTO, currentAccountService.getBalanceTopUpHistory());
 
     }
 
