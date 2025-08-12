@@ -12,10 +12,6 @@ public  final class ValidationUtils {
 
     }
 
-    public static String sanitizePhoneNumber(String phoneNumber) {
-        return phoneNumber.replaceAll("[\\s-]", "");
-    }
-
     public static void validFormatOfPhoneNumber(String phoneNumber) {
         Pattern pattern = Pattern.compile("[0-9]{10}");
         Matcher matcher = pattern.matcher(phoneNumber);
@@ -23,10 +19,6 @@ public  final class ValidationUtils {
         if  (!matcher.matches()) {
             throw new BadFormatPhoneNumberException();
         }
-    }
-
-    public static String sanitizeNumberPlate(String number) {
-        return number.toUpperCase().replaceAll("[\\s-]", "");
     }
 
     public static void validFormatOfNumberPlate(String number) {

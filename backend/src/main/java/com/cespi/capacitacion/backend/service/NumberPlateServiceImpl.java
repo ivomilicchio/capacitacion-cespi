@@ -10,7 +10,7 @@ import com.cespi.capacitacion.backend.repository.NumberPlateRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import static com.cespi.capacitacion.backend.util.ValidationUtils.sanitizeNumberPlate;
+import static com.cespi.capacitacion.backend.util.StringUtils.sanitizeNumberPlate;
 import static com.cespi.capacitacion.backend.util.ValidationUtils.validFormatOfNumberPlate;
 
 

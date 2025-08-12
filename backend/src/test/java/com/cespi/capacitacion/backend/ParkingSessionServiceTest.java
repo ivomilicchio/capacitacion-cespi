@@ -9,7 +9,6 @@ import com.cespi.capacitacion.backend.entity.ParkingSession;
 import com.cespi.capacitacion.backend.entity.User;
 import com.cespi.capacitacion.backend.exception.*;
 import com.cespi.capacitacion.backend.repository.ParkingSessionRepository;
-import com.cespi.capacitacion.backend.service.ClockService;
 import com.cespi.capacitacion.backend.service.NumberPlateService;
 import com.cespi.capacitacion.backend.service.ParkingSessionServiceImpl;
 import org.junit.jupiter.api.BeforeEach;

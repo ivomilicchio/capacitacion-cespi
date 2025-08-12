@@ -1,21 +1,17 @@
-package com.cespi.capacitacion.backend.service;
-
-import org.springframework.cglib.core.Local;
-import org.springframework.stereotype.Service;
+package com.cespi.capacitacion.backend.util;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
-@Service
-public class ClockService {
+public final class DateUtils {
 
-    public String getDayOfWeek() {
+    public static String getDayOfWeek() {
         return LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
     }
 
-    public LocalTime getCurrentTime() {
+    public static LocalTime getCurrentTime() {
         return LocalTime.now();
     }
 }

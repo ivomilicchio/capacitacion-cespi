@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.cespi.capacitacion.backend.util.ValidationUtils.sanitizePhoneNumber;
+import static com.cespi.capacitacion.backend.util.StringUtils.sanitizePhoneNumber;
 import static com.cespi.capacitacion.backend.util.ValidationUtils.validFormatOfPhoneNumber;
 
 @Service

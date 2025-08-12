@@ -6,6 +6,7 @@ import com.cespi.capacitacion.backend.dto.BalanceTopUpResponseDTO;
 import com.cespi.capacitacion.backend.dto.CurrentAccountBalanceDTO;
 import com.cespi.capacitacion.backend.entity.BalanceTopUp;
 import com.cespi.capacitacion.backend.entity.CurrentAccount;
+import com.cespi.capacitacion.backend.entity.ParkingSession;
 import com.cespi.capacitacion.backend.entity.User;
 import com.cespi.capacitacion.backend.repository.CurrentAccountRepository;
 import jakarta.transaction.Transactional;
@@ -14,17 +15,15 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CurrentAccountServiceImpl implements CurrentAccountService {
 
-    private final UserService userService;
     private final AuthService authService;
     private final CurrentAccountRepository currentAccountRepository;
 
-    public CurrentAccountServiceImpl(UserService userService, AuthService authService,
-                                     CurrentAccountRepository currentAccountRepository) {
-        this.userService = userService;
+    public CurrentAccountServiceImpl(AuthService authService, CurrentAccountRepository currentAccountRepository) {
         this.authService = authService;
         this.currentAccountRepository = currentAccountRepository;
     }
@@ -42,7 +41,7 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
         currentAccount.setBalance(newBalance);
         BalanceTopUp balanceTopUp = new BalanceTopUp(currentAccountBalanceDTO.getBalance());
         currentAccount.addBalanceTopUp(balanceTopUp);
-        userService.save(user);
+        this.save(currentAccount);
         return new CurrentAccountBalanceDTO(newBalance.setScale(2, RoundingMode.HALF_UP));
     }
 
@@ -64,6 +63,14 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
 
     public CurrentAccount save(CurrentAccount currentAccount) {
         return currentAccountRepository.save(currentAccount);
+    }
+
+    public Optional<ParkingSession> findByCurrentAccountIdAndEndTimeIsNull(Long accountId) {
+        return currentAccountRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId);
+    }
+
+    public List<ParkingSession> findAllByCurrentAccountIdAndEndTimeNotNull(Long accountId) {
+        return currentAccountRepository.findAllByCurrentAccountIdAndEndTimeNotNull(accountId);
     }
 
 }

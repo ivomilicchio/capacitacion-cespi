@@ -17,15 +17,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static com.cespi.capacitacion.backend.util.DateUtils.getCurrentTime;
+import static com.cespi.capacitacion.backend.util.DateUtils.getDayOfWeek;
+
 @Service
 public class ParkingSessionServiceImpl implements ParkingSessionService {
 
     private final NumberPlateService numberPlateService;
     private final CurrentAccountService currentAccountService;
     private final ParkingSessionRepository parkingSessionRepository;
-    private final CurrentAccountRepository currentAccountRepository;
     private final AuthService authService;
-    private final ClockService clockService;
 
     @Value("${parking.bussiness-days}")
     private List<String> bussinessDays;
@@ -41,22 +42,18 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     private Double pricePerFraction;
 
     public ParkingSessionServiceImpl(NumberPlateService numberPlateService, CurrentAccountService currentAccountService,
-                                     ParkingSessionRepository parkingSessionRepository,
-                                     CurrentAccountRepository currentAccountRepository, AuthService authService,
-                                     ClockService clockService) {
+                                     ParkingSessionRepository parkingSessionRepository, AuthService authService) {
         this.numberPlateService = numberPlateService;
         this.currentAccountService = currentAccountService;
         this.parkingSessionRepository = parkingSessionRepository;
-        this.currentAccountRepository = currentAccountRepository;
         this.authService = authService;
-        this.clockService = clockService;
     }
 
 
     public Optional<ParkingSession> hasSessionStarted() {
         User user = authService.getUser();
         Long accountId = user.getCurrentAccount().getId();
-        return currentAccountRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId);
+        return currentAccountService.findByCurrentAccountIdAndEndTimeIsNull(accountId);
     }
 
     @Transactional
@@ -75,11 +72,11 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     }
 
     private void checkOutOfService() {
-        String day = clockService.getDayOfWeek();
+        String day = getDayOfWeek();
         if (!bussinessDays.contains(day) || !this.enable) {
             throw new OutOfServiceException();
         }
-        LocalTime now = clockService.getCurrentTime();
+        LocalTime now = getCurrentTime();
         if (now.isBefore(startTime) || now.isAfter(endTime)) {
             throw new OutOfServiceException(this.startTime.toString(), this.endTime.toString());
         }
@@ -87,7 +84,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     }
 
     private void checkHasSessionStarted(Long accountId) {
-        if (currentAccountRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId).isPresent()) {
+        if (currentAccountService.findByCurrentAccountIdAndEndTimeIsNull(accountId).isPresent()) {
             throw new HasSessionStartedException();
         }
     }
@@ -120,7 +117,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     }
 
     private ParkingSession getSessionStarted(Long accountId) {
-        return currentAccountRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId).
+        return currentAccountService.findByCurrentAccountIdAndEndTimeIsNull(accountId).
                 orElseThrow(NotSessionStartedException::new);
     }
 
@@ -141,7 +138,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
 
     public ParkingSessionHistoryDTO getParkingSessionHistory() {
         User user = authService.getUser();
-        List<ParkingSession> parkingSessions =  currentAccountRepository.findAllByCurrentAccountIdAndEndTimeNotNull(
+        List<ParkingSession> parkingSessions =  currentAccountService.findAllByCurrentAccountIdAndEndTimeNotNull(
                 user.getCurrentAccount().getId());
         return getHistory(parkingSessions);
     }
