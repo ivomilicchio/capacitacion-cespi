@@ -22,15 +22,19 @@ export class RegisterForm {
     password: new FormControl("", Validators.required),
   });
 
-    register() {
-    this.service.register(this.registerForm.value).subscribe({
-      next: (result: any) => {
-        localStorage.setItem('token', result.token);
-        this.router.navigateByUrl('/parking');
-        this.toastr.success("Usuario creado con éxito")
-      }
-    })
+  register() {
+    if (!this.service.validPhoneNumber(this.registerForm.value.phoneNumber)) {
+      this.toastr.warning("El número de teléfono ingresado tiene un formato inválido");
+    }
+    else {
+      this.service.register(this.registerForm.value).subscribe({
+        next: (result: any) => {
+          localStorage.setItem('token', result.token);
+          this.router.navigateByUrl('/parking');
+          this.toastr.success("Usuario creado con éxito")
+        }
+      })
 
+    }
   }
-
 }

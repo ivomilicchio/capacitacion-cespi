@@ -57,33 +57,41 @@ export class ParkingForm implements OnInit {
   }
 
   onSubmitNumberPlateForm() {
-    this.service.addNumberPlate(this.numberPlateForm.value).subscribe({
-      next: (result: any) => {
-        this.numberPlates.add(result.number);
-        const modalEl = document.getElementById('numberPlateModal');
-        if (modalEl) {
-          const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-          modalInstance.hide();
+    if (!this.service.validNumberPlateFormat(this.numberPlateForm.value.number)) {
+      this.toastr.warning("Formato de patente inválido");
+    }
+    else {
+      this.service.addNumberPlate(this.numberPlateForm.value).subscribe({
+        next: (result: any) => {
+          this.numberPlates.add(result.number);
+          const modalEl = document.getElementById('numberPlateModal');
+          if (modalEl) {
+            const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            modalInstance.hide();
+          }
+          this.toastr.success("Patente registrada con éxito");
         }
-        this.toastr.success("Patente registrada con éxito");
-      }
-    });
-
+      });
+    }
   }
 
   onSubmitBalanceForm() {
-    this.service.addBalance(this.balanceForm.value).subscribe({
-      next: (result: any) => {
-        this.balance = result.balance;
-        const modalEl = document.getElementById('balanceModal');
-        if (modalEl) {
-          const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-          modalInstance.hide();
+    if (!this.service.validMinAmount(this.balanceForm.value.balance)) {
+      this.toastr.warning("El monto mínimo de carga es de $" + this.service.minAmount);
+    }
+    else {
+      this.service.addBalance(this.balanceForm.value).subscribe({
+        next: (result: any) => {
+          this.balance = result.balance;
+          const modalEl = document.getElementById('balanceModal');
+          if (modalEl) {
+            const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            modalInstance.hide();
+          }
+          this.toastr.success("Fondos añadidos con éxito");
         }
-        this.toastr.success("Fondos añadidos con éxito");
-      }
-    });
+      });
 
+    }
   }
-
 }

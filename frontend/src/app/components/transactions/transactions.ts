@@ -23,27 +23,27 @@ interface BalanceTopUpTransaction {
 })
 export class Transactions implements OnInit {
 
-parkingSessionHistory: ParkingSessionTransaction[] = [];
+  parkingSessionHistory: ParkingSessionTransaction[] = [];
 
-BalanceTopUpHistory: BalanceTopUpTransaction[] = [];
+  BalanceTopUpHistory: BalanceTopUpTransaction[] = [];
 
 
-service = inject(TransactionsService);
+  service = inject(TransactionsService);
 
-ngOnInit(): void {
-  this.service.getParkingSessionHistory().subscribe({
-    next: (result: any) => {
-      this.parkingSessionHistory = result.parkingSessions;
+  ngOnInit(): void {
+    this.service.getParkingSessionHistory().subscribe({
+      next: (result: any) => {
+        this.parkingSessionHistory = result.parkingSessions;
 
-    }
-  });
-  this.service.getBalanceTopUpHistory().subscribe({
-    next: (result: any) => {
-      this.BalanceTopUpHistory = result.balanceTopUps;
+      }
+    });
+    this.service.getBalanceTopUpHistory().subscribe({
+      next: (result: any) => {
+        this.BalanceTopUpHistory = result.balanceTopUps;
 
-    }
-  });
-}
+      }
+    });
+  }
 
 
 

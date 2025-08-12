@@ -54,4 +54,13 @@ export class AuthService {
     });
 
   }
+
+  validPhoneNumber(phoneNumber: string): boolean {
+
+    const sanitizedPhoneNumber = phoneNumber.replace(/[\s-]/g, "");
+    const pattern = /^[0-9]{10}$/;
+
+    return pattern.test(sanitizedPhoneNumber);
+
+  }
 }
