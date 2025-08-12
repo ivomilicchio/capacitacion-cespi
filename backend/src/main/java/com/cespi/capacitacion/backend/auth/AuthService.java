@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.cespi.capacitacion.backend.util.ValidationUtils.sanitizePhoneNumber;
+import static com.cespi.capacitacion.backend.util.ValidationUtils.validFormatOfPhoneNumber;
+
 @Service
 public class AuthService {
 
@@ -31,8 +34,8 @@ public class AuthService {
     }
 
     public AuthResponseDTO login(LoginRequestDTO request) {
-        String sanitizedPhoneNumber = this.sanitizePhoneNumber(request.getPhoneNumber());
-        this.validFormatOfPhoneNumber(sanitizedPhoneNumber);
+        String sanitizedPhoneNumber = sanitizePhoneNumber(request.getPhoneNumber());
+        validFormatOfPhoneNumber(sanitizedPhoneNumber);
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(sanitizedPhoneNumber,
                 request.getPassword()));
         User user = userService.findByPhoneNumber(sanitizedPhoneNumber);
@@ -41,8 +44,8 @@ public class AuthService {
 
     @Transactional
     public AuthResponseDTO register(RegisterRequestDTO request) {
-        String sanitizedPhoneNumber = this.sanitizePhoneNumber(request.getPhoneNumber());
-        this.validFormatOfPhoneNumber(sanitizedPhoneNumber);
+        String sanitizedPhoneNumber = sanitizePhoneNumber(request.getPhoneNumber());
+        validFormatOfPhoneNumber(sanitizedPhoneNumber);
         checkIfExistPhoneNumber(sanitizedPhoneNumber);
         checkIfExistMail(request.getMail());
         User user = new User(request.getPhoneNumber(), request.getMail(), request.getPassword());
@@ -50,18 +53,7 @@ public class AuthService {
         return new AuthResponseDTO(jwtService.getToken(user));
     }
 
-    private String sanitizePhoneNumber(String phoneNumber) {
-        return phoneNumber.replaceAll("[\\s-]", "");
-    }
 
-    private void validFormatOfPhoneNumber(String phoneNumber) {
-        Pattern pattern = Pattern.compile("[0-9]{10}");
-        Matcher matcher = pattern.matcher(phoneNumber);
-
-        if  (!matcher.matches()) {
-            throw new BadFormatPhoneNumberException();
-        }
-    }
 
     private void checkIfExistPhoneNumber(String phoneNumber) {
         if (userService.existPhoneNumber(phoneNumber)) {

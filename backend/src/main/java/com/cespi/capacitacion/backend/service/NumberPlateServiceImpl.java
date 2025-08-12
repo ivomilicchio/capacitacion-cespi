@@ -5,14 +5,13 @@ import com.cespi.capacitacion.backend.dto.NumberPlateCreationDTO;
 import com.cespi.capacitacion.backend.dto.NumberPlateListResponseDTO;
 import com.cespi.capacitacion.backend.entity.NumberPlate;
 import com.cespi.capacitacion.backend.entity.User;
-import com.cespi.capacitacion.backend.exception.BadFormatNumberPlateException;
 import com.cespi.capacitacion.backend.exception.ResourceNotFoundException;
 import com.cespi.capacitacion.backend.repository.NumberPlateRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import static com.cespi.capacitacion.backend.util.ValidationUtils.sanitizeNumberPlate;
+import static com.cespi.capacitacion.backend.util.ValidationUtils.validFormatOfNumberPlate;
 
 
 @Service
@@ -56,19 +55,4 @@ public class NumberPlateServiceImpl implements NumberPlateService {
                 new ResourceNotFoundException("Patente"));
     }
 
-    private String sanitizeNumberPlate(String number) {
-        return number.toUpperCase().replaceAll("[\\s-]", "");
-    }
-
-    private void validFormatOfNumberPlate(String number) {
-        Pattern pattern1 = Pattern.compile("[A-Z]{2}[0-9]{3}[A-Z]{2}");
-        Pattern pattern2 = Pattern.compile("[A-Z]{3}[0-9]{3}");
-
-        Matcher matcher1 = pattern1.matcher(number);
-        Matcher matcher2 = pattern2.matcher(number);
-
-        if (!(matcher1.matches() || matcher2.matches())) {
-            throw new BadFormatNumberPlateException();
-        }
-    }
 }

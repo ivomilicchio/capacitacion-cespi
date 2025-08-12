@@ -5,6 +5,7 @@ import com.cespi.capacitacion.backend.dto.ParkingSessionHistoryDTO;
 import com.cespi.capacitacion.backend.dto.ParkingSessionResponseDTO;
 import com.cespi.capacitacion.backend.entity.*;
 import com.cespi.capacitacion.backend.exception.*;
+import com.cespi.capacitacion.backend.repository.CurrentAccountRepository;
 import com.cespi.capacitacion.backend.repository.ParkingSessionRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +21,9 @@ import java.util.Optional;
 public class ParkingSessionServiceImpl implements ParkingSessionService {
 
     private final NumberPlateService numberPlateService;
+    private final CurrentAccountService currentAccountService;
     private final ParkingSessionRepository parkingSessionRepository;
+    private final CurrentAccountRepository currentAccountRepository;
     private final AuthService authService;
     private final ClockService clockService;
 
@@ -37,11 +40,14 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     @Value("${parking.price-per-fraction}")
     private Double pricePerFraction;
 
-    public ParkingSessionServiceImpl(NumberPlateService numberPlateService,
-                                     ParkingSessionRepository parkingSessionRepository, AuthService authService,
+    public ParkingSessionServiceImpl(NumberPlateService numberPlateService, CurrentAccountService currentAccountService,
+                                     ParkingSessionRepository parkingSessionRepository,
+                                     CurrentAccountRepository currentAccountRepository, AuthService authService,
                                      ClockService clockService) {
         this.numberPlateService = numberPlateService;
+        this.currentAccountService = currentAccountService;
         this.parkingSessionRepository = parkingSessionRepository;
+        this.currentAccountRepository = currentAccountRepository;
         this.authService = authService;
         this.clockService = clockService;
     }
@@ -50,7 +56,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     public Optional<ParkingSession> hasSessionStarted() {
         User user = authService.getUser();
         Long accountId = user.getCurrentAccount().getId();
-        return parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId);
+        return currentAccountRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId);
     }
 
     @Transactional
@@ -62,8 +68,9 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
         NumberPlate numberPlate = numberPlateService.findByNumber(number);
         this.checkAlreadyUsedNumberPlate(numberPlate.getId());
         this.checkInsufficientBalance(currentAccount);
-        ParkingSession parkingSession = new ParkingSession(numberPlate, currentAccount);
-        parkingSession = this.save(parkingSession);
+        ParkingSession parkingSession = new ParkingSession(numberPlate);
+        currentAccount.addParkingSession(parkingSession);
+        currentAccountService.save(currentAccount);
         return new ParkingSessionResponseDTO(parkingSession.getStartTimeDay(), parkingSession.getStartTimeHour());
     }
 
@@ -80,7 +87,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     }
 
     private void checkHasSessionStarted(Long accountId) {
-        if (parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId).isPresent()) {
+        if (currentAccountRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId).isPresent()) {
             throw new HasSessionStartedException();
         }
     }
@@ -113,7 +120,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     }
 
     private ParkingSession getSessionStarted(Long accountId) {
-        return parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId).
+        return currentAccountRepository.findByCurrentAccountIdAndEndTimeIsNull(accountId).
                 orElseThrow(NotSessionStartedException::new);
     }
 
@@ -134,7 +141,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
 
     public ParkingSessionHistoryDTO getParkingSessionHistory() {
         User user = authService.getUser();
-        List<ParkingSession> parkingSessions =  parkingSessionRepository.findAllByCurrentAccountIdAndEndTimeNotNull(
+        List<ParkingSession> parkingSessions =  currentAccountRepository.findAllByCurrentAccountIdAndEndTimeNotNull(
                 user.getCurrentAccount().getId());
         return getHistory(parkingSessions);
     }

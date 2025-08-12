@@ -1,5 +1,6 @@
 package com.cespi.capacitacion.backend.entity;
 
+import com.cespi.capacitacion.backend.repository.ParkingSessionRepository;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -29,10 +30,12 @@ public class CurrentAccount {
     )
     private Date createdAt;
 
-    @OneToMany(mappedBy = "currentAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "current_account_id")
     private List<ParkingSession> parkingSessions;
 
-    @OneToMany(mappedBy = "currentAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "current_account_id")
     private List<BalanceTopUp> balanceTopUps;
 
     public CurrentAccount() {
@@ -59,6 +62,10 @@ public class CurrentAccount {
 
     public void addBalanceTopUp(BalanceTopUp balanceTopUp) {
         this.balanceTopUps.add(balanceTopUp);
+    }
+
+    public boolean addParkingSession(ParkingSession parkingSession) {
+        return parkingSessions.add(parkingSession);
     }
 
     public List<ParkingSession> getParkingSessions() {

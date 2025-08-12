@@ -72,9 +72,9 @@ public class CurrentAccountServiceTest {
 
         currentAccount.setBalance(BigDecimal.valueOf(1000));
 
-        BalanceTopUp b1 = new BalanceTopUp(BigDecimal.valueOf(500), currentAccount);
-        BalanceTopUp b2 = new BalanceTopUp(BigDecimal.valueOf(600), currentAccount);
-        BalanceTopUp b3 = new BalanceTopUp(BigDecimal.valueOf(1400), currentAccount);
+        BalanceTopUp b1 = new BalanceTopUp(BigDecimal.valueOf(500));
+        BalanceTopUp b2 = new BalanceTopUp(BigDecimal.valueOf(600));
+        BalanceTopUp b3 = new BalanceTopUp(BigDecimal.valueOf(1400));
 
         currentAccount.addBalanceTopUp(b1);
         currentAccount.addBalanceTopUp(b2);

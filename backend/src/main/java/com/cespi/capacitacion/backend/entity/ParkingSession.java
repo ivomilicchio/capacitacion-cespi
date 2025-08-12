@@ -27,18 +27,13 @@ public class ParkingSession {
     @ManyToOne
     @JoinColumn(name = "number_plate_id")
     private NumberPlate numberPlate;
-    @ManyToOne
-    @JoinColumn(name = "current_account_id")
-    private CurrentAccount currentAccount;
-
 
     public ParkingSession() {
 
     }
 
-    public ParkingSession(NumberPlate numberPlate, CurrentAccount currentAccount) {
+    public ParkingSession(NumberPlate numberPlate) {
         this.numberPlate = numberPlate;
-        this.currentAccount = currentAccount;
         this.startTime = new Date();
     }
 

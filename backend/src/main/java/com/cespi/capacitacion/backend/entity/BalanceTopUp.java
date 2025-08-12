@@ -22,18 +22,13 @@ public class BalanceTopUp {
     )
     private BigDecimal amount;
 
-    @ManyToOne
-    @JoinColumn(name = "current_account_id")
-    private CurrentAccount currentAccount;
-
     public BalanceTopUp() {
 
     }
 
-    public BalanceTopUp(BigDecimal amount, CurrentAccount currentAccount) {
+    public BalanceTopUp(BigDecimal amount) {
         this.time = new Date();
         this.amount = amount;
-        this.currentAccount = currentAccount;
     }
 
     public Date getTime() {

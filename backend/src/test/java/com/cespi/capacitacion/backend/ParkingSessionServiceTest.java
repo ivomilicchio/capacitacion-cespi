@@ -113,7 +113,7 @@ public class ParkingSessionServiceTest {
         when(clockService.getCurrentTime()).thenReturn(LocalTime.of(16, 0));
         when(authService.getUser()).thenReturn(user);
 
-        ParkingSession parkingSession = new ParkingSession(numberPlate, currentAccount);
+        ParkingSession parkingSession = new ParkingSession(numberPlate);
 
         when(parkingSessionRepository.findByCurrentAccountIdAndEndTimeIsNull(1L))
                 .thenReturn(Optional.of(parkingSession));
@@ -134,7 +134,7 @@ public class ParkingSessionServiceTest {
         when(numberPlateService.findByNumber("AAA123")).thenReturn(numberPlate);
 
         CurrentAccount currentAccount1 = new CurrentAccount();
-        ParkingSession parkingSession = new ParkingSession(numberPlate, currentAccount1);
+        ParkingSession parkingSession = new ParkingSession(numberPlate);
 
         when(parkingSessionRepository.findByNumberPlateIdAndEndTimeIsNull(1L)).thenReturn(Optional.of(parkingSession));
 
@@ -182,7 +182,7 @@ public class ParkingSessionServiceTest {
         ReflectionTestUtils.setField(parkingSessionService, "fractionInMinutes", 15);
         ReflectionTestUtils.setField(parkingSessionService, "pricePerFraction", 20.0);
 
-        ParkingSession parkingSession = new ParkingSession(numberPlate, currentAccount);
+        ParkingSession parkingSession = new ParkingSession(numberPlate);
 
         when(parkingSessionRepository.save(any(ParkingSession.class))).thenReturn(parkingSession);
 
@@ -212,7 +212,7 @@ public class ParkingSessionServiceTest {
 
         when(authService.getUser()).thenReturn(user);
 
-        ParkingSession parkingSession = new ParkingSession(numberPlate, currentAccount);
+        ParkingSession parkingSession = new ParkingSession(numberPlate);
 
         currentAccount.setBalance(BigDecimal.valueOf(100));
 
@@ -243,9 +243,9 @@ public class ParkingSessionServiceTest {
 
         List<ParkingSession> parkingSessions = new ArrayList<>();
 
-        ParkingSession p1 = new ParkingSession(numberPlate, currentAccount);
-        ParkingSession p2 = new ParkingSession(numberPlate, currentAccount);
-        ParkingSession p3 = new ParkingSession(numberPlate, currentAccount);
+        ParkingSession p1 = new ParkingSession(numberPlate);
+        ParkingSession p2 = new ParkingSession(numberPlate);
+        ParkingSession p3 = new ParkingSession(numberPlate);
 
         p1.setEndTime(new Date());
         p2.setEndTime(new Date());

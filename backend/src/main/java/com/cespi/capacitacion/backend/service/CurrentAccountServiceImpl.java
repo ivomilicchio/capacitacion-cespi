@@ -7,6 +7,7 @@ import com.cespi.capacitacion.backend.dto.CurrentAccountBalanceDTO;
 import com.cespi.capacitacion.backend.entity.BalanceTopUp;
 import com.cespi.capacitacion.backend.entity.CurrentAccount;
 import com.cespi.capacitacion.backend.entity.User;
+import com.cespi.capacitacion.backend.repository.CurrentAccountRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,13 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
 
     private final UserService userService;
     private final AuthService authService;
+    private final CurrentAccountRepository currentAccountRepository;
 
-    public CurrentAccountServiceImpl(UserService userService, AuthService authService) {
+    public CurrentAccountServiceImpl(UserService userService, AuthService authService,
+                                     CurrentAccountRepository currentAccountRepository) {
         this.userService = userService;
         this.authService = authService;
+        this.currentAccountRepository = currentAccountRepository;
     }
 
     public CurrentAccountBalanceDTO getCurrentAccountBalance() {
@@ -36,8 +40,7 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
         CurrentAccount currentAccount = user.getCurrentAccount();
         BigDecimal newBalance = currentAccount.getBalance().add(currentAccountBalanceDTO.getBalance());
         currentAccount.setBalance(newBalance);
-        BalanceTopUp balanceTopUp = new BalanceTopUp(currentAccountBalanceDTO.getBalance(),
-                currentAccount);
+        BalanceTopUp balanceTopUp = new BalanceTopUp(currentAccountBalanceDTO.getBalance());
         currentAccount.addBalanceTopUp(balanceTopUp);
         userService.save(user);
         return new CurrentAccountBalanceDTO(newBalance.setScale(2, RoundingMode.HALF_UP));
@@ -57,6 +60,10 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
             history.addBalanceTopUp(actual);
         }
         return history;
+    }
+
+    public CurrentAccount save(CurrentAccount currentAccount) {
+        return currentAccountRepository.save(currentAccount);
     }
 
 }
