@@ -20,10 +20,18 @@ public class ParkingSession {
             nullable = false
     )
     private Date startTime;
+
     @Column
     private Date endTime;
+
     @Column
     private BigDecimal amount;
+
+    @Column(
+            nullable = false
+    )
+    private boolean deleted;
+
     @ManyToOne
     @JoinColumn(name = "number_plate_id")
     private NumberPlate numberPlate;
@@ -35,6 +43,7 @@ public class ParkingSession {
     public ParkingSession(NumberPlate numberPlate) {
         this.numberPlate = numberPlate;
         this.startTime = new Date();
+        this.deleted = false;
     }
 
     public Long getId() {
@@ -97,4 +106,11 @@ public class ParkingSession {
         return timeFormat.format(this.endTime);
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 }

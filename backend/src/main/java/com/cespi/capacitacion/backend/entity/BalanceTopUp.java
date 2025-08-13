@@ -22,6 +22,11 @@ public class BalanceTopUp {
     )
     private BigDecimal amount;
 
+    @Column(
+            nullable = false
+    )
+    private boolean deleted;
+
     public BalanceTopUp() {
 
     }
@@ -29,6 +34,7 @@ public class BalanceTopUp {
     public BalanceTopUp(BigDecimal amount) {
         this.time = new Date();
         this.amount = amount;
+        this.deleted = false;
     }
 
     public Date getTime() {
@@ -55,5 +61,13 @@ public class BalanceTopUp {
     public String getHour() {
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
         return timeFormat.format(this.time);
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

@@ -1,7 +1,6 @@
 package com.cespi.capacitacion.backend.auth;
 
 import com.cespi.capacitacion.backend.entity.User;
-import com.cespi.capacitacion.backend.exception.BadFormatPhoneNumberException;
 import com.cespi.capacitacion.backend.exception.ExistMailException;
 import com.cespi.capacitacion.backend.exception.ExistPhoneNumberException;
 import com.cespi.capacitacion.backend.jwt.JwtService;
@@ -13,8 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.cespi.capacitacion.backend.util.StringUtils.sanitizePhoneNumber;
 import static com.cespi.capacitacion.backend.util.ValidationUtils.validFormatOfPhoneNumber;

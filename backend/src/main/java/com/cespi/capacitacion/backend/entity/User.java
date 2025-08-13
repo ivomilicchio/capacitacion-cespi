@@ -42,6 +42,11 @@ public class User implements UserDetails {
     )
     private Date createdAt;
 
+    @Column(
+            nullable = false
+    )
+    private boolean deleted;
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_number_plates",
@@ -62,6 +67,7 @@ public class User implements UserDetails {
         this.phoneNumber = phoneNumber;
         this.mail = mail;
         this.password = password;
+        this.deleted = false;
         createdAt = new Date();
         numberPlates = new HashSet<>();
         currentAccount = new CurrentAccount();
@@ -127,6 +133,14 @@ public class User implements UserDetails {
         this.createdAt = createdAt;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public Set<String> getAllNumberPlatesStrings() {
         return this.numberPlates.stream().map(NumberPlate::getNumber).collect(Collectors.toSet());
     }
@@ -137,7 +151,7 @@ public class User implements UserDetails {
     }
 
     //Si bien el usuario en la aplicacion no posee username, debo implementar este metodo porque la clase User
-    // implementa la interfaz UserDetails
+    //implementa la interfaz UserDetails
     @Override
     public String getUsername() {
         return getPhoneNumber();

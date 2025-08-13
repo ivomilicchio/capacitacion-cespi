@@ -5,7 +5,6 @@ import com.cespi.capacitacion.backend.dto.ParkingSessionHistoryDTO;
 import com.cespi.capacitacion.backend.dto.ParkingSessionResponseDTO;
 import com.cespi.capacitacion.backend.entity.*;
 import com.cespi.capacitacion.backend.exception.*;
-import com.cespi.capacitacion.backend.repository.CurrentAccountRepository;
 import com.cespi.capacitacion.backend.repository.ParkingSessionRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;

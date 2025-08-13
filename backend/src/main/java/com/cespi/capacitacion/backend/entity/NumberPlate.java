@@ -16,12 +16,18 @@ public class NumberPlate {
             unique = true)
     private String number;
 
+    @Column(
+            nullable = false
+    )
+    private boolean deleted;
+
     public NumberPlate() {
 
     }
 
     public NumberPlate(String number) {
         this.number = number;
+        this.deleted = false;
     }
 
     public Long getId() {
@@ -38,5 +44,13 @@ public class NumberPlate {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

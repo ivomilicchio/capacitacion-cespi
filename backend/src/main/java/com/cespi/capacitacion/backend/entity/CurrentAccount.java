@@ -30,6 +30,11 @@ public class CurrentAccount {
     )
     private Date createdAt;
 
+    @Column(
+            nullable = false
+    )
+    private boolean deleted;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "current_account_id")
     private List<ParkingSession> parkingSessions;
@@ -42,6 +47,7 @@ public class CurrentAccount {
         this.balance = new BigDecimal(0);
         this.balanceTopUps = new ArrayList<>();
         this.createdAt = new Date();
+        this.deleted = false;
     }
 
     public Long getId() {
@@ -87,5 +93,13 @@ public class CurrentAccount {
     public Set<String> getAllParkingSessionStrings() {
         return this.parkingSessions.stream().map(p -> p.getStartTime()
                 .toString()).collect(Collectors.toSet());
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }
