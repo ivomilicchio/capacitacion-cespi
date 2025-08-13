@@ -9,13 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 @Entity
 @Table(name = "parking_sessions")
-public class ParkingSession {
+public class ParkingSession extends Transaction {
 
-    @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
-    private Long id;
     @Column(
             nullable = false
     )
@@ -23,14 +18,6 @@ public class ParkingSession {
 
     @Column
     private Date endTime;
-
-    @Column
-    private BigDecimal amount;
-
-    @Column(
-            nullable = false
-    )
-    private boolean deleted;
 
     @ManyToOne
     @JoinColumn(name = "number_plate_id")
@@ -41,17 +28,9 @@ public class ParkingSession {
     }
 
     public ParkingSession(NumberPlate numberPlate) {
+        super(TransactionType.PARKING_SESSION);
         this.numberPlate = numberPlate;
         this.startTime = new Date();
-        this.deleted = false;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public NumberPlate getNumberPlate() {
@@ -78,14 +57,6 @@ public class ParkingSession {
         this.endTime = endTime;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
     public long getDurationInMinutes() {
         long diffMillis = endTime.getTime() - startTime.getTime();
         return TimeUnit.MILLISECONDS.toMinutes(diffMillis);
@@ -104,13 +75,5 @@ public class ParkingSession {
     public String getEndTimeHour() {
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
         return timeFormat.format(this.endTime);
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
 }

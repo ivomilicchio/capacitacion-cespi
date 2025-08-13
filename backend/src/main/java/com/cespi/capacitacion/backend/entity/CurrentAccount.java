@@ -4,10 +4,7 @@ import com.cespi.capacitacion.backend.repository.ParkingSessionRepository;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -37,15 +34,12 @@ public class CurrentAccount {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "current_account_id")
-    private List<ParkingSession> parkingSessions;
+    private List<Transaction> transactions;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "current_account_id")
-    private List<BalanceTopUp> balanceTopUps;
 
     public CurrentAccount() {
         this.balance = new BigDecimal(0);
-        this.balanceTopUps = new ArrayList<>();
+        this.transactions = new ArrayList<>();
         this.createdAt = new Date();
         this.deleted = false;
     }
@@ -66,21 +60,13 @@ public class CurrentAccount {
         this.balance = balance;
     }
 
-    public void addBalanceTopUp(BalanceTopUp balanceTopUp) {
-        this.balanceTopUps.add(balanceTopUp);
+    public void addTransaction(Transaction transaction) {
+        this.transactions.add(transaction);
     }
 
-    public boolean addParkingSession(ParkingSession parkingSession) {
-        return parkingSessions.add(parkingSession);
-    }
-
-    public List<ParkingSession> getParkingSessions() {
-        return parkingSessions;
-    }
-
-    public List<BalanceTopUp> getBalanceTopUps() {
-        return balanceTopUps;
-    }
+//    public boolean addParkingSession(ParkingSession parkingSession) {
+//        return parkingSessions.add(parkingSession);
+//    }
 
     public Date getCreatedAt() {
         return createdAt;
@@ -90,10 +76,15 @@ public class CurrentAccount {
         this.createdAt = createdAt;
     }
 
-    public Set<String> getAllParkingSessionStrings() {
-        return this.parkingSessions.stream().map(p -> p.getStartTime()
-                .toString()).collect(Collectors.toSet());
-    }
+//    public Set<String> getAllParkingSessionStrings() {
+//        return this.parkingSessions.stream().map(p -> p.getStartTime()
+//                .toString()).collect(Collectors.toSet());
+//    }
+
+//    public Set<String> getAllParkingSessionStrings() {
+//        Set<ParkingSession>  parkingSessions = transactions.stream().
+//                filter(t -> t.getType() == TransactionType.PARKING).collect(Collectors.toSet());
+//    }
 
     public boolean isDeleted() {
         return deleted;
@@ -101,5 +92,13 @@ public class CurrentAccount {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 }

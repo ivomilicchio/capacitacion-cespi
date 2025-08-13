@@ -65,7 +65,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
         this.checkAlreadyUsedNumberPlate(numberPlate.getId());
         this.checkInsufficientBalance(currentAccount);
         ParkingSession parkingSession = new ParkingSession(numberPlate);
-        currentAccount.addParkingSession(parkingSession);
+        currentAccount.addTransaction(parkingSession);
         currentAccountService.save(currentAccount);
         return new ParkingSessionResponseDTO(parkingSession.getStartTimeDay(), parkingSession.getStartTimeHour());
     }
@@ -145,6 +145,7 @@ public class ParkingSessionServiceImpl implements ParkingSessionService {
     private ParkingSessionHistoryDTO getHistory(List<ParkingSession> parkingSessions) {
         ParkingSessionHistoryDTO history = new ParkingSessionHistoryDTO();
         for (ParkingSession p: parkingSessions) {
+            System.out.println(p.getType());
             ParkingSessionResponseDTO actual = new ParkingSessionResponseDTO(p.getStartTimeDay(),
                     p.getStartTimeHour(), p.getEndTimeHour(), p.getAmount().doubleValue());
             history.addParkingSession(actual);

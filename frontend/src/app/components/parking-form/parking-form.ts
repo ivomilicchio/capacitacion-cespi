@@ -47,13 +47,17 @@ export class ParkingForm implements OnInit {
   }
 
   onSubmitParkingForm() {
-    this.service.startParkingSession(this.parkingForm.value).subscribe({
-      next: (result: any) => {
-        this.router.navigateByUrl('/parking-session');
-        this.toastr.success("Servicio de estacionamiento iniciado con éxito");
-      }
-    });
-
+    if (this.parkingForm.value.numberPlate == "Seleccione la patente") {
+      this.toastr.warning("Debe seleccionar una patente");
+    }
+    else {
+      this.service.startParkingSession(this.parkingForm.value).subscribe({
+        next: (result: any) => {
+          this.router.navigateByUrl('/parking-session');
+          this.toastr.success("Servicio de estacionamiento iniciado con éxito");
+        }
+      });
+    }
   }
 
   onSubmitNumberPlateForm() {

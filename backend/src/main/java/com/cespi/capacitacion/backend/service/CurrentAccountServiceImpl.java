@@ -4,10 +4,7 @@ import com.cespi.capacitacion.backend.auth.AuthService;
 import com.cespi.capacitacion.backend.dto.BalanceTopUpHistoryDTO;
 import com.cespi.capacitacion.backend.dto.BalanceTopUpResponseDTO;
 import com.cespi.capacitacion.backend.dto.CurrentAccountBalanceDTO;
-import com.cespi.capacitacion.backend.entity.BalanceTopUp;
-import com.cespi.capacitacion.backend.entity.CurrentAccount;
-import com.cespi.capacitacion.backend.entity.ParkingSession;
-import com.cespi.capacitacion.backend.entity.User;
+import com.cespi.capacitacion.backend.entity.*;
 import com.cespi.capacitacion.backend.repository.CurrentAccountRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -40,14 +37,15 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
         BigDecimal newBalance = currentAccount.getBalance().add(currentAccountBalanceDTO.getBalance());
         currentAccount.setBalance(newBalance);
         BalanceTopUp balanceTopUp = new BalanceTopUp(currentAccountBalanceDTO.getBalance());
-        currentAccount.addBalanceTopUp(balanceTopUp);
+        currentAccount.addTransaction(balanceTopUp);
         this.save(currentAccount);
         return new CurrentAccountBalanceDTO(newBalance.setScale(2, RoundingMode.HALF_UP));
     }
 
     public BalanceTopUpHistoryDTO getBalanceTopUpHistory() {
         User user = authService.getUser();
-        List<BalanceTopUp> balanceTopUps =  user.getCurrentAccount().getBalanceTopUps();
+        List<BalanceTopUp> balanceTopUps = currentAccountRepository.findAllByCurrentAccountIdAndType(
+                user.getCurrentAccount().getId(), TransactionType.BALANCE_TOP_UP);
         return this.getHistory(balanceTopUps);
     }
 
