@@ -19,12 +19,12 @@
                                     </strong>
                                 </div>
                                 <button class="btn btn-success d-flex justify-content-center align-items-center"
-                                    style="font-size: 1.5rem; " data-bs-toggle="modal" data-bs-target="#balanceModal">
+                                    style="font-size: 1.5rem; " data-bs-toggle="modal"
+                                    (click)="openModal(balanceModal)">
                                     Añadir fondos
                                 </button>
                             </div>
                         </div>
-
                         <div class="d-flex gap-3">
                             <select class="form-control form-control-lg" formControlName="numberPlate"
                                 style="font-size: 1.5rem; height: 60px; padding: 15px;">
@@ -35,7 +35,7 @@
                             </select>
                             <button class="btn btn-primary d-flex justify-content-center align-items-center p-0"
                                 style="width: 60px; height: 60px; border-radius: 8px; font-size: 1.5rem;"
-                                data-bs-toggle="modal" data-bs-target="#numberPlateModal">
+                                data-bs-toggle="modal" (click)="openModal(numberPlateModal)">
                                 +
                             </button>
                         </div>
@@ -55,54 +55,39 @@
     </div>
 </section>
 
-<div class="modal fade" id="numberPlateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Ingrese la nueva patente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"></span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form [formGroup]="numberPlateForm">
-                    <input class="form-control border-bottom" placeholder="Patente" formControlName="number">
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" (click)="onSubmitNumberPlateForm()">Guardar</button>
-            </div>
+<ng-template #numberPlateModal let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Ingrese la nueva patente</h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="numberPlateForm">
+                <input class="form-control border-bottom" placeholder="Patente" formControlName="number" uppercase>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="modal.close('Cancel click')">Cancelar</button>
+            <button type="button" class="btn btn-primary" (click)="onSubmitNumberPlateForm()">Guardar</button>
         </div>
     </div>
-</div>
+</ng-template>
 
-<div class="modal fade" id="balanceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Ingrese el monto que desea cargar (mínimo $100,00)
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"></span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form [formGroup]="balanceForm">
-                    <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="number" class="form-control border-bottom" formControlName="balance"
-                            placeholder="100,00">
-                    </div>
-
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" (click)="onSubmitBalanceForm()">Cargar</button>
-            </div>
-        </div>
+<ng-template #balanceModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Ingrese el monto que desea cargar (mínimo $100,00)</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
-</div>
+    <div class="modal-body">
+        <form [formGroup]="balanceForm">
+            <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" class="form-control border-bottom" formControlName="balance" placeholder="100,00">
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Cancel click')">Cancelar</button>
+        <button type="button" class="btn btn-success" (click)="onSubmitBalanceForm()">Cargar</button>
+    </div>
+</ng-template>

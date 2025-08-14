@@ -1,8 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ParkingService } from '../../services/parking-service';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { BalanceService } from '../../services/balance-service';
+import { NumberPlateService } from '../../services/number-plate-service';
 
 
 declare var bootstrap: any;
@@ -15,7 +19,11 @@ declare var bootstrap: any;
 })
 export class ParkingForm implements OnInit {
 
-  service = inject(ParkingService);
+  balanceForm: FormGroup;
+  numberPlateForm: FormGroup;
+  parkingService = inject(ParkingService);
+  balanceService = inject(BalanceService);
+  numberPlateService = inject(NumberPlateService);
   router = inject(Router);
   toastr = inject(ToastrService);
   numberPlates: Set<String> = new Set();
@@ -25,21 +33,26 @@ export class ParkingForm implements OnInit {
     numberPlate: new FormControl("Seleccione la patente", [Validators.required])
   });
 
-  numberPlateForm: FormGroup = new FormGroup({
-    number: new FormControl("", [Validators.required]),
-  });
+    constructor(
+    private modalService: NgbModal,
+    private fb: FormBuilder
+  ) {
+    this.balanceForm = this.fb.group({
+      balance: ['', [Validators.required, Validators.min(100)]]
+    });
+    this.numberPlateForm = this.fb.group({
+      number: ['', [Validators.required]]
+    });
+  }
 
-  balanceForm: FormGroup = new FormGroup({
-    balance: new FormControl("100", [Validators.required]),
-  });
 
   ngOnInit(): void {
-    this.service.getNumberPlates().subscribe({
+    this.numberPlateService.getNumberPlates().subscribe({
       next: (result: any) => {
         this.numberPlates = new Set(result.numberPlates);
       }
     });
-    this.service.getBalance().subscribe({
+    this.balanceService.getBalance().subscribe({
       next: (result: any) => {
         this.balance = result.balance;
       }
@@ -51,7 +64,7 @@ export class ParkingForm implements OnInit {
       this.toastr.warning("Debe seleccionar una patente");
     }
     else {
-      this.service.startParkingSession(this.parkingForm.value).subscribe({
+      this.parkingService.startParkingSession(this.parkingForm.value).subscribe({
         next: (result: any) => {
           this.router.navigateByUrl('/parking-session');
           this.toastr.success("Servicio de estacionamiento iniciado con éxito");
@@ -60,42 +73,37 @@ export class ParkingForm implements OnInit {
     }
   }
 
+  openModal(content: any) {
+    this.modalService.open(content, { centered: true });
+  }
+
   onSubmitNumberPlateForm() {
-    if (!this.service.validNumberPlateFormat(this.numberPlateForm.value.number)) {
-      this.toastr.warning("Formato de patente inválido");
-    }
-    else {
-      this.service.addNumberPlate(this.numberPlateForm.value).subscribe({
+    if (this.numberPlateService.validNumberPlateFormat(this.numberPlateForm.value.number)) {
+      this.numberPlateService.addNumberPlate(this.numberPlateForm.value).subscribe({
         next: (result: any) => {
           this.numberPlates.add(result.number);
-          const modalEl = document.getElementById('numberPlateModal');
-          if (modalEl) {
-            const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-            modalInstance.hide();
-          }
           this.toastr.success("Patente registrada con éxito");
         }
       });
+      this.modalService.dismissAll();
+    }
+    else {
+      this.toastr.warning("Formato de patente inválido")
     }
   }
 
   onSubmitBalanceForm() {
-    if (!this.service.validMinAmount(this.balanceForm.value.balance)) {
-      this.toastr.warning("El monto mínimo de carga es de $" + this.service.minAmount);
-    }
-    else {
-      this.service.addBalance(this.balanceForm.value).subscribe({
+    if (this.balanceForm.valid) {
+      this.balanceService.addBalance(this.balanceForm.value).subscribe({
         next: (result: any) => {
           this.balance = result.balance;
-          const modalEl = document.getElementById('balanceModal');
-          if (modalEl) {
-            const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-            modalInstance.hide();
-          }
           this.toastr.success("Fondos añadidos con éxito");
         }
       });
-
+      this.modalService.dismissAll();
+    }
+    else {
+      this.toastr.warning("El monto mínimo de carga es de $" + this.balanceService.minAmount);
     }
   }
 }
