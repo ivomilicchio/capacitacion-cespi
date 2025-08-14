@@ -1,6 +1,7 @@
 package com.cespi.capacitacion.backend.exception;
 
 import com.cespi.capacitacion.backend.dto.ErrorResponseDTO;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -124,5 +125,14 @@ public class GlobalExceptionHandler {
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ErrorResponseDTO> handleDatabaseException(DataAccessException exception,
+                                                                    WebRequest webRequest) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
+                "Error interno del servidor. Por favor intentelo más tarde",
+                webRequest.getDescription(false));
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
