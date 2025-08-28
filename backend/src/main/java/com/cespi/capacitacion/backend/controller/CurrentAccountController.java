@@ -4,11 +4,13 @@ import com.cespi.capacitacion.backend.dto.BalanceTopUpHistoryDTO;
 import com.cespi.capacitacion.backend.dto.CurrentAccountBalanceDTO;
 import com.cespi.capacitacion.backend.service.CurrentAccountService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/current-accounts/balance")
+@Slf4j
 public class CurrentAccountController {
 
     private final CurrentAccountService currentAccountService;
@@ -19,17 +21,20 @@ public class CurrentAccountController {
 
     @GetMapping
     public ResponseEntity<CurrentAccountBalanceDTO> getCurrentAccountBalance() {
+        log.debug("Accessing method in CurrentAccountController /getCurrentAccountBalance()");
         return ResponseEntity.ok(currentAccountService.getCurrentAccountBalance());
     }
 
     @PostMapping
     public ResponseEntity<CurrentAccountBalanceDTO> addBalanceToAccount(
             @RequestBody @Valid CurrentAccountBalanceDTO currentAccountBalanceDTO) {
+        log.debug("Accessing method in CurrentAccountController /addBalanceToAccount()");
         return ResponseEntity.ok(currentAccountService.addBalanceToAccount(currentAccountBalanceDTO));
     }
 
     @GetMapping("/history")
     public ResponseEntity<BalanceTopUpHistoryDTO> getBalanceTopUpHistory() {
+        log.debug("Accessing method in CurrentAccountController /getBalanceTopUpHistory()");
         return ResponseEntity.ok(currentAccountService.getBalanceTopUpHistory());
     }
 }

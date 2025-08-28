@@ -1,6 +1,7 @@
 package com.cespi.capacitacion.backend.exception;
 
 import com.cespi.capacitacion.backend.dto.ErrorResponseDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +17,16 @@ import java.util.stream.Collectors;
 
 @Component
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleResourceNotFoundException(ResourceNotFoundException exception,
                                                                             WebRequest webRequest) {
+        log.error("error: resource {} not found", exception.getFieldName());
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
+
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
     }
 
@@ -31,7 +35,7 @@ public class GlobalExceptionHandler {
             MethodArgumentNotValidException exception, WebRequest webRequest) {
         String errors = exception.getBindingResult().getAllErrors().stream().map( e -> e.getDefaultMessage())
                 .collect(Collectors.joining(" | "));
-
+        log.error("error: argument not valid. {}", errors);
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(errors, webRequest.getDescription(
                 false));
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
@@ -40,6 +44,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponseDTO> handleHttpMessageNotReadableException(
             HttpMessageNotReadableException exception,WebRequest webRequest) {
+        log.error("error: the request body could not be read. invalid JSON");
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 "El cuerpo de la solicitud no se pudo leer. Asegúrese de enviar un JSON válido.",
                 webRequest.getDescription(false));
@@ -49,6 +54,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponseDTO> handleBadCredentialsException(BadCredentialsException exception,
                                                                           WebRequest webRequest) {
+        log.error("error: incorrect credentials");
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 "Número de teléfono o contraseña incorrectos",
                 webRequest.getDescription(false));
@@ -58,6 +64,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadFormatNumberPlateException.class)
     public ResponseEntity<ErrorResponseDTO> handleBadFormatNumberPlateException(BadFormatNumberPlateException exception,
                                                                                 WebRequest webRequest) {
+        log.error("error: incorrect format of number plate");
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
@@ -66,6 +73,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OutOfServiceException.class)
     public ResponseEntity<ErrorResponseDTO> handleOutOfServiceHourException(OutOfServiceException exception,
                                                                             WebRequest webRequest) {
+        log.error("error: outside of service operating hours");
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.SERVICE_UNAVAILABLE);
@@ -74,6 +82,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HasSessionStartedException.class)
     public ResponseEntity<ErrorResponseDTO> handleHasSessionStartedException(HasSessionStartedException exception,
                                                                              WebRequest webRequest) {
+        log.error("error: user already has a parking session started");
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
@@ -82,6 +91,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AlreadyUsedNumberPlateException.class)
     public ResponseEntity<ErrorResponseDTO> handleAlreadyUsedNumberPlateException(AlreadyUsedNumberPlateException exception,
                                                                                   WebRequest webRequest) {
+        log.error("error: The license plate is currently being used in a parking session");
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
@@ -90,6 +100,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InsufficientBalanceException.class)
     public ResponseEntity<ErrorResponseDTO> handleInsufficientBalanceException(InsufficientBalanceException exception,
                                                                                WebRequest webRequest) {
+        log.error("error: user does not have sufficient funds");
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
@@ -98,6 +109,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotSessionStartedException.class)
     public ResponseEntity<ErrorResponseDTO> handleNotSessionStartedException(NotSessionStartedException exception,
                                                                              WebRequest webRequest) {
+        log.error("error: user does not have active parking sessions");
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
@@ -106,6 +118,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadFormatPhoneNumberException.class)
     public ResponseEntity<ErrorResponseDTO> handleBadFormatPhoneNumberException(BadFormatPhoneNumberException exception,
                                                                                 WebRequest webRequest) {
+        log.error("error: incorrect format of phone number");
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
@@ -114,6 +127,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ExistPhoneNumberException.class)
     public ResponseEntity<ErrorResponseDTO> handleExistPhoneNumberException(ExistPhoneNumberException exception,
                                                                             WebRequest webRequest) {
+        log.error("error: there is already a user in the system registered with that phone number");
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
@@ -122,6 +136,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ExistMailException.class)
     public ResponseEntity<ErrorResponseDTO> handleExistMailException(ExistMailException exception,
                                                                      WebRequest webRequest) {
+        log.error("error: there is already a user in the system registered with that mail");
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(exception.getMessage(), webRequest.getDescription(
                 false));
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
@@ -130,6 +145,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ErrorResponseDTO> handleDatabaseException(DataAccessException exception,
                                                                     WebRequest webRequest) {
+        log.error("error: error accessing the database");
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 "Error interno del servidor. Por favor intentelo más tarde",
                 webRequest.getDescription(false));
